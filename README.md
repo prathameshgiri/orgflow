@@ -294,5 +294,5 @@ This project is licensed under the MIT License. You are free to use, modify, and
 
 ---
 <p align="center">
-  <b>OrgTask</b> — <i>Built with ❤️ for modern organizations.</i>
+  <b>OrgTask</b> — <i>Built with Prathamesh Giri for modern organizations.</i>
 </p>
