@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@layer base {
+  :root {
+    --background: 42 33% 97%;
+    --foreground: 230 27% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 230 27% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 230 27% 14%;
+    --primary: 230 27% 14%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 42 33% 94%;
+    --secondary-foreground: 230 27% 14%;
+    --muted: 42 33% 94%;
+    --muted-foreground: 230 10% 48%;
+    --accent: 8 82% 62%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 230 18% 90%;
+    --input: 230 18% 90%;
+    --ring: 8 82% 62%;
+    --radius: 0.75rem;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 230 27% 14%;
+    --sidebar-primary: 230 27% 14%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 42 33% 94%;
+    --sidebar-accent-foreground: 230 27% 14%;
+    --sidebar-border: 230 18% 90%;
+    --sidebar-ring: 8 82% 62%;
+  }
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
+  body { @apply bg-background text-foreground; font-family: "Inter", sans-serif; }
+  .font-display { font-family: "Outfit", sans-serif; }
+  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) { overflow-wrap: anywhere; }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  * {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
