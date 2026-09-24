@@ -15,7 +15,25 @@ const DashboardLayout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const processPendingInvite = async () => {
+      const pendingToken = localStorage.getItem("pending_invite_token");
+      if (pendingToken) {
+        try {
+          const { error } = await supabase.rpc('accept_invitation', { 
+            p_invite_token: pendingToken 
+          });
+          if (!error) {
+            localStorage.removeItem("pending_invite_token");
+          }
+        } catch (e) {
+          console.error("Failed to process invite", e);
+        }
+      }
+    };
+
     const fetchOrgs = async () => {
+      await processPendingInvite();
+      
       // Get the organization the user belongs to
       const { data, error } = await supabase
         .from("users")

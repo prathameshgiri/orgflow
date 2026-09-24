@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { createClient } from "@supabase/supabase-js";
 import { OrgRequest } from "../middleware/orgContext.ts";
+import { sendNotificationEmail } from "../utils/email.ts";
 
 const getAuthSupabase = (req: OrgRequest) => {
   const token = req.headers.authorization?.split(" ")[1] || "";
@@ -71,10 +72,6 @@ export const updateIncident = async (req: OrgRequest, res: Response) => {
     const { id } = req.params;
     const { priority, team_id, assignee_id, status, explanation } = req.body;
     
-    if (!explanation) {
-      return res.status(400).json({ error: "Explanation is required to update ticket" });
-    }
-
     const supabase = getAuthSupabase(req);
 
     // Get current state to log changes
@@ -118,7 +115,7 @@ export const updateIncident = async (req: OrgRequest, res: Response) => {
           action: "update_incident",
           resource: id, // Using incident ID as the resource
           details: {
-            explanation,
+            explanation: explanation || null,
             changes: {
               priority: { from: currentIncident.priority, to: priority || currentIncident.priority },
               team_id: { from: currentIncident.team_id, to: team_id || currentIncident.team_id },
@@ -130,6 +127,33 @@ export const updateIncident = async (req: OrgRequest, res: Response) => {
       ]);
 
     if (logError) throw logError;
+
+    // Send email notification if reassigned
+    if (assignee_id !== undefined && assignee_id !== currentIncident.assignee_id && assignee_id !== null) {
+      try {
+        const { data: assignee } = await supabase.from("users").select("email").eq("id", assignee_id).single();
+        if (assignee?.email) {
+          const subject = `Incident Assigned to You: ${currentIncident.title}`;
+          const htmlContent = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+              <div style="background-color: #ef4444; padding: 20px; text-align: center;">
+                <h2 style="color: white; margin: 0;">Incident Assignment</h2>
+              </div>
+              <div style="padding: 30px;">
+                <p>An incident has been assigned to you.</p>
+                <div style="background-color: #f8fafc; padding: 15px; border-left: 4px solid #ef4444; margin: 20px 0;">
+                  <h3 style="margin-top: 0;">${currentIncident.title}</h3>
+                  <p>${currentIncident.description || 'No description provided.'}</p>
+                </div>
+              </div>
+            </div>
+          `;
+          await sendNotificationEmail(assignee.email, subject, htmlContent);
+        }
+      } catch (err) {
+        console.error("Failed to send incident email notification:", err);
+      }
+    }
 
     res.json({ success: true });
   } catch (error: any) {

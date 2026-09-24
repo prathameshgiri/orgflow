@@ -10,6 +10,8 @@ import { getRoles, createRole, getPermissions, updateRolePermissions, getCurrent
 import { getOrgUsers, inviteUser, updateUserRole } from "./routes/users.ts";
 import { getTeams, createTeam, addTeamMember, removeTeamMember, getTeamMembers, getTeamHistory } from "./routes/teams.ts";
 import { getIncidents, updateIncident, getIncidentHistory, addIncidentProgress } from "./routes/incidents.ts";
+import { triggerWorkflow } from "./routes/workflows.ts";
+import notifyRoutes from "./routes/notify.ts";
 
 export function createServer() {
   const app = express();
@@ -67,6 +69,13 @@ export function createServer() {
   app.get("/api/incidents/:id/history", requireAuth, requireOrgAccess, getIncidentHistory);
   app.post("/api/incidents/:id/progress", requireAuth, requireOrgAccess, addIncidentProgress);
 
+  // Workflow & Automation Engine
+  // We use requireAuth to ensure only valid users can trigger it, but you could also secure this with a secret for internal system calls.
+  app.post("/api/workflows/trigger", requireAuth, triggerWorkflow);
+
+  // Email Notifications
+  app.use("/api/notify", requireAuth, requireOrgAccess, notifyRoutes);
+
   // ==========================================
   // ORGFLOW ITSM MODULES (Stubs for Phase 2+)
   // ==========================================
@@ -74,12 +83,8 @@ export function createServer() {
   // Incidents
   // app.use("/api/incidents", requireAuth, requireOrgAccess, incidentRoutes);
   
-  // Service Requests & Catalog
+  // Service Requests
   // app.use("/api/requests", requireAuth, requireOrgAccess, requestRoutes);
-  
-  // Problems & Changes
-  // app.use("/api/problems", requireAuth, requireOrgAccess, problemRoutes);
-  // app.use("/api/changes", requireAuth, requireOrgAccess, changeRoutes);
   
   // Projects & Tasks
   // app.use("/api/projects", requireAuth, requireOrgAccess, projectRoutes);

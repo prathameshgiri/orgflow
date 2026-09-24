@@ -48,7 +48,28 @@ export const inviteUser = async (req: OrgRequest, res: Response) => {
     }
 
     const { email, roleId } = req.body;
-    res.json({ success: true, message: `Invite sent to ${email}` });
+
+    const supabase = getAuthSupabase(req);
+    
+    // Set expiration to 7 days from now
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    const { data, error } = await supabase
+      .from("invitations")
+      .insert({
+        organization_id: req.orgId,
+        email,
+        role_id: roleId,
+        expires_at: expiresAt.toISOString(),
+        status: 'pending'
+      })
+      .select("token")
+      .single();
+
+    if (error) throw error;
+
+    res.json({ success: true, message: `Invite generated for ${email}`, token: data.token });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

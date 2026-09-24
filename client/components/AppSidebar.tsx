@@ -37,12 +37,9 @@ const menuSections = [
   {
     title: "Service Management",
     links: [
-      { label: "Service Desk", icon: LifeBuoy, path: "/dashboard/service-desk" },
+      { label: "SCTASK", icon: LifeBuoy, path: "/dashboard/service-desk" },
       { label: "Incidents", icon: AlertCircle, path: "/dashboard/incidents" },
       { label: "Requests", icon: FilePlus, path: "/dashboard/requests" },
-      { label: "Service Catalog", icon: BookOpen, path: "/dashboard/catalog" },
-      { label: "Problems", icon: Activity, path: "/dashboard/problems" },
-      { label: "Changes", icon: Server, path: "/dashboard/changes" },
       { label: "Approvals", icon: CheckSquare, path: "/dashboard/approvals" },
     ]
   },
@@ -50,13 +47,6 @@ const menuSections = [
     title: "Knowledge",
     links: [
       { label: "Knowledge Base", icon: Book, path: "/dashboard/knowledge" },
-    ]
-  },
-  {
-    title: "Assets",
-    links: [
-      { label: "Assets", icon: Database, path: "/dashboard/assets" },
-      { label: "Configuration Items", icon: Server, path: "/dashboard/ci" },
     ]
   },
   {
@@ -71,9 +61,7 @@ const menuSections = [
     links: [
       { label: "Users", icon: Users, path: "/dashboard/users" },
       { label: "Roles & Permissions", icon: ShieldCheck, path: "/dashboard/roles" },
-      { label: "Workflows", icon: Workflow, path: "/dashboard/workflows" },
-      { label: "Automation", icon: Bot, path: "/dashboard/automation" },
-      { label: "Business Rules", icon: Scale, path: "/dashboard/rules" },
+      { label: "Automations", icon: Workflow, path: "/dashboard/workflows" },
       { label: "Settings", icon: Settings, path: "/dashboard/settings" },
     ]
   }

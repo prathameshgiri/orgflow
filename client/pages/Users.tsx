@@ -35,7 +35,10 @@ const Users = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
-    if (!activeOrganizationId) return;
+    if (!activeOrganizationId) {
+      setLoading(false);
+      return;
+    }
     try {
       const headers = {
         Authorization: `Bearer ${session?.access_token}`,

@@ -96,6 +96,29 @@ export default function CreateTask() {
       console.error(error);
       toast({ title: "Failed to create task", description: error.message, variant: "destructive" });
     } else {
+      // If a task is assigned, send a notification email
+      if (assigneeId && assigneeId !== "none") {
+        try {
+          await fetch("/api/notify/assignment", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session?.access_token}`,
+              "x-org-id": orgId,
+            },
+            body: JSON.stringify({
+              assigneeId,
+              type: "Task",
+              itemTitle: title,
+              itemDescription: description,
+              linkUrl: `${window.location.origin}/dashboard/tasks`
+            })
+          });
+        } catch (notifyErr) {
+          console.error("Failed to send notification", notifyErr);
+        }
+      }
+
       toast({ title: "Task created successfully" });
       navigate("/dashboard/tasks");
     }

@@ -36,12 +36,24 @@ export default function Tasks() {
 
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
-      case 'todo': return 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-800';
+      case 'todo':
+      case 'new': 
+      case 'created':
+        return 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-800';
       case 'in_progress': return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800';
       case 'review': return 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800';
-      case 'done': return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800';
+      case 'done':
+      case 'closed': 
+        return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800';
       default: return 'bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700';
     }
+  };
+
+  const getDisplayStatus = (status: string) => {
+    const s = status?.toLowerCase();
+    if (s === 'todo' || s === 'new' || s === 'created') return 'CREATED';
+    if (s === 'done' || s === 'closed') return 'CLOSED';
+    return status?.replace('_', ' ').toUpperCase();
   };
 
   const fetchData = async () => {
@@ -137,7 +149,7 @@ export default function Tasks() {
                     <TableCell className="text-zinc-500 whitespace-nowrap">{task.projects?.name || '-'}</TableCell>
                     <TableCell className="whitespace-nowrap">
                       <span className={`text-xs px-2.5 py-1 rounded-full border font-semibold whitespace-nowrap ${getStatusColor(task.status)}`}>
-                        {task.status?.replace('_', ' ').toUpperCase()}
+                        {getDisplayStatus(task.status)}
                       </span>
                     </TableCell>
                     <TableCell className="whitespace-nowrap">

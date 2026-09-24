@@ -1,202 +1,174 @@
 import React, { useState, useEffect } from "react";
-import { GitMerge, Plus, Search, Play, Pause, MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import { Link } from "react-router-dom";
+import { Plus, Zap, AlertCircle, Settings2, Play, Pause, ExternalLink } from "lucide-react";
 import { useOrganization } from "../hooks/useOrganization";
 import { supabase } from "../../shared/supabase";
-import { useAuth } from "../context/AuthContext";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function Workflows() {
-  const [workflows, setWorkflows] = useState<any[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  
-  // Form State
-  const [name, setName] = useState("");
-  const [triggerEvent, setTriggerEvent] = useState("incident_created");
-
   const { orgId } = useOrganization();
   const { toast } = useToast();
+  const [workflows, setWorkflows] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchWorkflows = async () => {
     if (!orgId) return;
     setLoading(true);
-    const { data, error } = await supabase
-      .from("workflows")
-      .select("*")
-      .order("created_at", { ascending: false });
-      
-    if (error) {
-      console.error(error);
-      toast({ title: "Error loading workflows", variant: "destructive" });
-    } else {
+    try {
+      const { data, error } = await supabase
+        .from("workflows")
+        .select(`
+          id, name, description, trigger_event, is_active, created_at,
+          automation_rules (count)
+        `)
+        .eq("organization_id", orgId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
       setWorkflows(data || []);
+    } catch (err: any) {
+      console.error(err);
+      toast({ title: "Failed to load workflows", variant: "destructive" });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
     fetchWorkflows();
   }, [orgId]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!orgId) return;
-    
-    const { data, error } = await supabase.from("workflows").insert([
-      {
-        organization_id: orgId,
-        name,
-        trigger_event: triggerEvent,
-        is_active: true,
-      }
-    ]);
-
-    if (error) {
-      console.error(error);
-      toast({ title: "Failed to create workflow", variant: "destructive" });
-    } else {
-      toast({ title: "Workflow created successfully" });
-      setIsDialogOpen(false);
-      setName("");
-      setTriggerEvent("incident_created");
-      fetchWorkflows();
+  const toggleStatus = async (id: string, currentStatus: boolean) => {
+    try {
+      const { error } = await supabase
+        .from("workflows")
+        .update({ is_active: !currentStatus })
+        .eq("id", id);
+      
+      if (error) throw error;
+      setWorkflows(workflows.map(w => w.id === id ? { ...w, is_active: !currentStatus } : w));
+      toast({ title: `Workflow ${!currentStatus ? 'activated' : 'paused'}` });
+    } catch (err: any) {
+      toast({ title: "Failed to update status", variant: "destructive" });
     }
   };
 
-  const filteredWorkflows = workflows.filter(w => w.name.toLowerCase().includes(searchQuery.toLowerCase()));
-
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-20">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Workflows</h1>
-          <p className="text-zinc-500">Design approval chains and business processes.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
+            <Zap className="h-8 w-8 text-amber-500" fill="currentColor" opacity={0.2} />
+            Automations & Workflows
+          </h1>
+          <p className="text-zinc-500 mt-1">Build real-time rules that trigger actions automatically.</p>
         </div>
-        
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white transition-colors">
-              <Plus className="mr-2 h-4 w-4" /> Create Workflow
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Create New Workflow</DialogTitle>
-              <DialogDescription>
-                Define the trigger event and process for this workflow.
-              </DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleSubmit}>
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Workflow Name</Label>
-                  <Input id="name" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Hardware Request Approval" required />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="trigger">Trigger Event</Label>
-                  <select 
-                    id="trigger" 
-                    value={triggerEvent}
-                    onChange={e => setTriggerEvent(e.target.value)}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  >
-                    <option value="incident_created">Incident Created</option>
-                    <option value="request_created">Service Request Created</option>
-                    <option value="change_requested">Change Requested</option>
-                    <option value="user_joined">New User Joined</option>
-                  </select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white">Save Workflow</Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+        <Link 
+          to="/dashboard/workflows/new"
+          className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-950 disabled:pointer-events-none disabled:opacity-50 bg-zinc-900 text-zinc-50 shadow hover:bg-zinc-900/90 h-9 px-4 py-2 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-50/90"
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Create Automation
+        </Link>
       </div>
 
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
-        <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
-          <div className="relative max-w-sm w-full">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-zinc-500" />
-            <Input 
-              placeholder="Search workflows..." 
-              className="pl-9"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-        </div>
-        
-        {loading ? (
-          <div className="p-12 text-center text-zinc-500">Loading workflows...</div>
-        ) : filteredWorkflows.length === 0 ? (
-          <div className="p-12 flex flex-col items-center justify-center text-center">
-            <GitMerge className="h-10 w-10 text-zinc-300 mb-3" />
-            <p className="font-medium text-zinc-900 dark:text-zinc-100">No workflows found</p>
-            <p className="text-sm mt-1">Click 'Create Workflow' to get started.</p>
-          </div>
-        ) : (
-          <Table>
-            <TableHeader className="bg-zinc-50 dark:bg-zinc-900/50">
-              <TableRow>
-                <TableHead>Workflow Name</TableHead>
-                <TableHead>Trigger Event</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredWorkflows.map((workflow) => (
-                <TableRow key={workflow.id}>
-                  <TableCell className="font-medium">{workflow.name}</TableCell>
-                  <TableCell className="text-zinc-500">{workflow.trigger_event}</TableCell>
-                  <TableCell>
-                    {workflow.is_active ? (
-                      <span className="flex items-center text-xs font-medium text-green-700 bg-green-50 px-2 py-1 rounded-full w-fit">
-                        <Play className="h-3 w-3 mr-1" /> Active
-                      </span>
-                    ) : (
-                      <span className="flex items-center text-xs font-medium text-zinc-600 bg-zinc-100 px-2 py-1 rounded-full w-fit">
-                        <Pause className="h-3 w-3 mr-1" /> Paused
-                      </span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-sm text-zinc-500">{new Date(workflow.created_at).toLocaleDateString()}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card className="bg-gradient-to-br from-amber-500 to-orange-600 text-white border-none shadow-md">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-amber-100">Active Workflows</CardTitle>
+            <Play className="h-4 w-4 text-amber-100" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{workflows.filter(w => w.is_active).length}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Paused Workflows</CardTitle>
+            <Pause className="h-4 w-4 text-zinc-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{workflows.filter(w => !w.is_active).length}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Rules Configured</CardTitle>
+            <Settings2 className="h-4 w-4 text-zinc-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">
+              {workflows.reduce((acc, curr) => acc + (curr.automation_rules?.[0]?.count || 0), 0)}
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Configured Automations</CardTitle>
+          <CardDescription>Manage your organization's business rules and triggers.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="flex justify-center p-12"><div className="h-6 w-6 animate-spin rounded-full border-2 border-amber-500 border-t-transparent" /></div>
+          ) : workflows.length === 0 ? (
+            <div className="flex flex-col items-center justify-center p-12 text-center border-2 border-dashed rounded-lg border-zinc-200 dark:border-zinc-800">
+              <Zap className="h-12 w-12 text-zinc-300 mb-4" />
+              <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">No Automations Yet</h3>
+              <p className="text-sm text-zinc-500 max-w-sm mt-1 mb-4">Create your first workflow to automate repetitive tasks and notifications.</p>
+              <Link 
+                to="/dashboard/workflows/new"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-zinc-100 text-zinc-900 hover:bg-zinc-200 h-9 px-4 py-2 dark:bg-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-700"
+              >
+                <Plus className="mr-2 h-4 w-4" /> Get Started
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {workflows.map((wf) => (
+                <Link 
+                  to={`/dashboard/workflows/${wf.id}`} 
+                  key={wf.id} 
+                  className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer group"
+                >
+                  <div className="flex items-start gap-4 mb-4 sm:mb-0">
+                    <div className={`p-2 rounded-lg ${wf.is_active ? 'bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400' : 'bg-zinc-200 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'}`}>
+                      <Zap size={20} />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-zinc-900 dark:text-zinc-100 group-hover:text-amber-600 dark:group-hover:text-amber-500 transition-colors">{wf.name}</h4>
+                      <p className="text-sm text-zinc-500 mt-1 line-clamp-1">{wf.description || "No description provided."}</p>
+                      <div className="flex items-center gap-3 mt-2 text-xs">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded font-medium bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300">
+                          Trigger: {wf.trigger_event}
+                        </span>
+                        <span className="text-zinc-400">
+                          {wf.automation_rules?.[0]?.count || 0} Actions
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-0 pt-4 sm:pt-0 border-zinc-200 dark:border-zinc-800" onClick={(e) => e.preventDefault()}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-zinc-500">{wf.is_active ? 'Active' : 'Paused'}</span>
+                      <Switch 
+                        checked={wf.is_active} 
+                        onCheckedChange={() => toggleStatus(wf.id, wf.is_active)}
+                      />
+                    </div>
+                    <div className="text-zinc-400 group-hover:text-amber-500 transition-colors p-2">
+                      <ExternalLink size={18} />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

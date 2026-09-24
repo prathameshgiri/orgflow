@@ -48,7 +48,7 @@ export default function CreateTicket() {
     if (!orgId || !user) return;
     
     setIsSubmitting(true);
-    const { error } = await supabase.from("incidents").insert([
+    const { data, error } = await supabase.from("incidents").insert([
       {
         organization_id: orgId,
         title,
@@ -57,7 +57,7 @@ export default function CreateTicket() {
         reporter_id: user.id,
         team_id: teamId || null,
       }
-    ]);
+    ]).select();
     setIsSubmitting(false);
 
     if (error) {
@@ -65,6 +65,27 @@ export default function CreateTicket() {
       toast({ title: "Failed to create ticket", variant: "destructive" });
     } else {
       toast({ title: "Ticket created successfully" });
+      
+      // Trigger workflow engine
+      if (data && data.length > 0) {
+        try {
+          await fetch("/api/workflows/trigger", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${session?.access_token}`
+            },
+            body: JSON.stringify({
+              event: "incident_created",
+              organization_id: orgId,
+              payload: data[0]
+            })
+          });
+        } catch (e) {
+          console.error("Failed to trigger workflows:", e);
+        }
+      }
+
       navigate("/dashboard/service-desk");
     }
   };

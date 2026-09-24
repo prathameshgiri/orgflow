@@ -129,16 +129,20 @@ export default function UpdateIncident() {
                 status: updateStatus,
                 priority: updatePriority,
                 team_id: updateTeam && updateTeam !== "unassigned" ? updateTeam : null,
-                assignee_id: updateAssignee && updateAssignee !== "unassigned" ? updateAssignee : null
+                assignee_id: updateAssignee && updateAssignee !== "unassigned" ? updateAssignee : null,
+                explanation: "Updated incident details via dashboard"
             })
         });
         
-        if (!res.ok) throw new Error("Failed to update");
+        if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(data.error || "Failed to update");
+        }
         
         toast({ title: "Incident updated successfully" });
         navigate("/dashboard/incidents");
-    } catch(err) {
-        toast({ title: "Failed to update incident", variant: "destructive" });
+    } catch(err: any) {
+        toast({ title: "Failed to update incident", description: err.message, variant: "destructive" });
     }
   };
 

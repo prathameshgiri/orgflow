@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AlertCircle, Plus, MoreHorizontal, Filter, Search, Edit2, Users, User } from "lucide-react";
+import { AlertCircle, Plus, MoreHorizontal, Filter, Search, Edit2, Users, User, AlertTriangle, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -224,10 +224,10 @@ export default function Incidents() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
         <div className="bg-white dark:bg-zinc-950 p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
           <p className="text-sm font-medium text-zinc-500">Open Incidents</p>
-          <h3 className="text-2xl font-bold mt-1">{incidents.filter(i => i.status !== 'closed').length}</h3>
+          <h3 className="text-2xl font-bold mt-1">{incidents.filter(i => i.status !== 'Resolved').length}</h3>
         </div>
         <div className="bg-white dark:bg-zinc-950 p-5 rounded-xl border border-red-200 dark:border-red-900/50 shadow-sm">
           <p className="text-sm font-medium text-red-600 dark:text-red-400">Critical (P1)</p>
@@ -241,7 +241,8 @@ export default function Incidents() {
           <p className="text-sm font-medium text-zinc-500">Resolved Today</p>
           <h3 className="text-2xl font-bold mt-1">0</h3>
         </div>
-      </div>
+  </div>
+
 
       <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
         <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center gap-3">

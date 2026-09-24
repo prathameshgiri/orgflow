@@ -159,52 +159,72 @@ export default function Projects() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-        <div className="bg-white dark:bg-zinc-950 p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center justify-between col-span-2 lg:col-span-1">
-          <div>
-            <p className="text-sm font-medium text-zinc-500">Active Projects</p>
-            <h3 className="text-2xl font-bold mt-1">{projects.filter(p => p.status === 'In Progress').length}</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-5 mb-6">
+      <div className="rounded-[24px] border border-blue-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)] dark:border-zinc-800 dark:shadow-[0_8px_30px_rgb(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] bg-gradient-to-b from-white from-blue-50/40 dark:from-zinc-900 dark:to-zinc-950 overflow-hidden flex flex-col group transition-all duration-300 transform hover:-translate-y-1.5 hover:scale-[1.02] relative col-span-2 lg:col-span-1">
+        <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent pointer-events-none rounded-t-[24px]"></div>
+        <div className="p-5 flex items-center gap-4 bg-transparent relative z-10">
+          <div className="h-12 w-12 rounded-[16px] border border-blue-100 dark:border-zinc-800 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center shrink-0 shadow-[0_2px_10px_rgba(59,130,246,0.1),inset_0_1px_0_rgba(255,255,255,0.9)]">
+            <Activity className="h-5 w-5 text-blue-600 dark:text-zinc-400 drop-shadow-sm" strokeWidth={1.5} />
           </div>
-          <div className="h-10 w-10 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center text-blue-600">
-            <Activity className="h-5 w-5" />
-          </div>
-        </div>
-        <div className="bg-white dark:bg-zinc-950 p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center justify-between col-span-2 lg:col-span-1">
-          <div>
-            <p className="text-sm font-medium text-zinc-500">Completed</p>
-            <h3 className="text-2xl font-bold mt-1">{projects.filter(p => p.status === 'Completed').length}</h3>
-          </div>
-          <div className="h-10 w-10 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600">
-            <Target className="h-5 w-5" />
+          <div className="flex flex-col justify-center">
+            <p className="text-[14px] font-medium text-zinc-500 dark:text-zinc-400 drop-shadow-sm">Active Projects</p>
+            <h4 className="text-[28px] font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5 drop-shadow-sm">{projects.filter(p => p.status === 'In Progress').length}</h4>
           </div>
         </div>
-        <div className="bg-white dark:bg-zinc-950 p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center justify-between col-span-2 lg:col-span-1">
-          <div>
-            <p className="text-sm font-medium text-zinc-500">Maintenance</p>
-            <h3 className="text-2xl font-bold mt-1">{projects.filter(p => p.status === 'Maintenance').length}</h3>
+
+      </div>
+      <div className="rounded-[24px] border border-emerald-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)] dark:border-zinc-800 dark:shadow-[0_8px_30px_rgb(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] bg-gradient-to-b from-white from-emerald-50/40 dark:from-zinc-900 dark:to-zinc-950 overflow-hidden flex flex-col group transition-all duration-300 transform hover:-translate-y-1.5 hover:scale-[1.02] relative col-span-2 lg:col-span-1">
+        <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent pointer-events-none rounded-t-[24px]"></div>
+        <div className="p-5 flex items-center gap-4 bg-transparent relative z-10">
+          <div className="h-12 w-12 rounded-[16px] border border-emerald-100 dark:border-zinc-800 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center shrink-0 shadow-[0_2px_10px_rgba(16,185,129,0.1),inset_0_1px_0_rgba(255,255,255,0.9)]">
+            <Target className="h-5 w-5 text-emerald-600 dark:text-zinc-400 drop-shadow-sm" strokeWidth={1.5} />
           </div>
-          <div className="h-10 w-10 bg-purple-50 dark:bg-purple-900/20 rounded-full flex items-center justify-center text-purple-600">
-            <Settings className="h-5 w-5" />
-          </div>
-        </div>
-        <div className="bg-white dark:bg-zinc-950 p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center justify-between col-span-2 lg:col-span-1">
-          <div>
-            <p className="text-sm font-medium text-zinc-500">At Risk</p>
-            <h3 className="text-2xl font-bold mt-1">{projects.filter(p => p.status === 'At Risk').length}</h3>
-          </div>
-          <div className="h-10 w-10 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center text-red-600">
-            <AlertTriangle className="h-5 w-5" />
+          <div className="flex flex-col justify-center">
+            <p className="text-[14px] font-medium text-zinc-500 dark:text-zinc-400 drop-shadow-sm">Completed</p>
+            <h4 className="text-[28px] font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5 drop-shadow-sm">{projects.filter(p => p.status === 'Completed').length}</h4>
           </div>
         </div>
-        <div className="bg-white dark:bg-zinc-950 p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex items-center justify-between col-span-2 lg:col-span-1">
-          <div>
-            <p className="text-sm font-medium text-zinc-500">Total Projects</p>
-            <h3 className="text-2xl font-bold mt-1">{projects.length}</h3>
+
+      </div>
+      <div className="rounded-[24px] border border-purple-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)] dark:border-zinc-800 dark:shadow-[0_8px_30px_rgb(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] bg-gradient-to-b from-white from-purple-50/40 dark:from-zinc-900 dark:to-zinc-950 overflow-hidden flex flex-col group transition-all duration-300 transform hover:-translate-y-1.5 hover:scale-[1.02] relative col-span-2 lg:col-span-1">
+        <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent pointer-events-none rounded-t-[24px]"></div>
+        <div className="p-5 flex items-center gap-4 bg-transparent relative z-10">
+          <div className="h-12 w-12 rounded-[16px] border border-purple-100 dark:border-zinc-800 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center shrink-0 shadow-[0_2px_10px_rgba(168,85,247,0.1),inset_0_1px_0_rgba(255,255,255,0.9)]">
+            <Settings className="h-5 w-5 text-purple-600 dark:text-zinc-400 drop-shadow-sm" strokeWidth={1.5} />
           </div>
-          <div className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/20 rounded-full flex items-center justify-center text-indigo-600">
-            <Folder className="h-5 w-5" />
+          <div className="flex flex-col justify-center">
+            <p className="text-[14px] font-medium text-zinc-500 dark:text-zinc-400 drop-shadow-sm">Maintenance</p>
+            <h4 className="text-[28px] font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5 drop-shadow-sm">{projects.filter(p => p.status === 'Maintenance').length}</h4>
           </div>
         </div>
+
+      </div>
+      <div className="rounded-[24px] border border-red-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)] dark:border-zinc-800 dark:shadow-[0_8px_30px_rgb(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] bg-gradient-to-b from-white from-red-50/40 dark:from-zinc-900 dark:to-zinc-950 overflow-hidden flex flex-col group transition-all duration-300 transform hover:-translate-y-1.5 hover:scale-[1.02] relative col-span-2 lg:col-span-1">
+        <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent pointer-events-none rounded-t-[24px]"></div>
+        <div className="p-5 flex items-center gap-4 bg-transparent relative z-10">
+          <div className="h-12 w-12 rounded-[16px] border border-red-100 dark:border-zinc-800 bg-gradient-to-br from-red-50 to-red-100 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center shrink-0 shadow-[0_2px_10px_rgba(239,68,68,0.1),inset_0_1px_0_rgba(255,255,255,0.9)]">
+            <AlertTriangle className="h-5 w-5 text-red-600 dark:text-zinc-400 drop-shadow-sm" strokeWidth={1.5} />
+          </div>
+          <div className="flex flex-col justify-center">
+            <p className="text-[14px] font-medium text-zinc-500 dark:text-zinc-400 drop-shadow-sm">At Risk</p>
+            <h4 className="text-[28px] font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5 drop-shadow-sm">{projects.filter(p => p.status === 'At Risk').length}</h4>
+          </div>
+        </div>
+
+      </div>
+      <div className="rounded-[24px] border border-indigo-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)] dark:border-zinc-800 dark:shadow-[0_8px_30px_rgb(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] bg-gradient-to-b from-white from-indigo-50/40 dark:from-zinc-900 dark:to-zinc-950 overflow-hidden flex flex-col group transition-all duration-300 transform hover:-translate-y-1.5 hover:scale-[1.02] relative col-span-2 lg:col-span-1">
+        <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent pointer-events-none rounded-t-[24px]"></div>
+        <div className="p-5 flex items-center gap-4 bg-transparent relative z-10">
+          <div className="h-12 w-12 rounded-[16px] border border-indigo-100 dark:border-zinc-800 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center shrink-0 shadow-[0_2px_10px_rgba(99,102,241,0.1),inset_0_1px_0_rgba(255,255,255,0.9)]">
+            <Folder className="h-5 w-5 text-indigo-600 dark:text-zinc-400 drop-shadow-sm" strokeWidth={1.5} />
+          </div>
+          <div className="flex flex-col justify-center">
+            <p className="text-[14px] font-medium text-zinc-500 dark:text-zinc-400 drop-shadow-sm">Total Projects</p>
+            <h4 className="text-[28px] font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5 drop-shadow-sm">{projects.length}</h4>
+          </div>
+        </div>
+
+      </div>
       </div>
 
       <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">

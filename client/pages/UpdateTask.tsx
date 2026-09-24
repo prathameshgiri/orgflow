@@ -172,6 +172,30 @@ export default function UpdateTask() {
             details: { old: task.assignee_id, new: updateAssigneeId === "none" ? null : updateAssigneeId }
           }]).select());
         }
+
+        // Send Email Notification if Reassigned
+        const newAssigneeId = updateAssigneeId === "none" ? null : updateAssigneeId;
+        if (newAssigneeId && newAssigneeId !== task.assignee_id) {
+          try {
+            await fetch("/api/notify/assignment", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session?.access_token}`,
+                "x-org-id": orgId,
+              },
+              body: JSON.stringify({
+                assigneeId: newAssigneeId,
+                type: "Task",
+                itemTitle: task.title,
+                itemDescription: task.description,
+                linkUrl: `${window.location.origin}/dashboard/tasks/${task.id}`
+              })
+            });
+          } catch (notifyErr) {
+            console.error("Failed to send notification", notifyErr);
+          }
+        }
         
         const logResults = await Promise.all(logPromises);
         const logError = logResults.find(r => r.error);
@@ -265,13 +289,13 @@ export default function UpdateTask() {
               
               <div className="flex gap-2 justify-center mb-6">
                 <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border ${
-                  task?.status === 'todo' ? 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-800' :
+                  task?.status === 'todo' || task?.status === 'new' || task?.status === 'created' ? 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-900/30 dark:text-slate-400 dark:border-slate-800' :
                   task?.status === 'in_progress' ? 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800' :
                   task?.status === 'review' ? 'bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800' :
-                  task?.status === 'done' ? 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' :
+                  task?.status === 'done' || task?.status === 'closed' ? 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' :
                   'bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700'
                 }`}>
-                  {task?.status?.replace('_', ' ').toUpperCase()}
+                  {(task?.status === 'todo' || task?.status === 'new' || task?.status === 'created') ? 'CREATED' : (task?.status === 'done' || task?.status === 'closed') ? 'CLOSED' : task?.status?.replace('_', ' ').toUpperCase()}
                 </span>
                 <span className={`px-2.5 py-1 rounded-md text-[11px] font-bold ${task ? getPriorityColor(task.priority) : ''}`}>
                   {task?.priority?.toUpperCase()}
@@ -298,10 +322,10 @@ export default function UpdateTask() {
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="todo">Open</SelectItem>
+                      <SelectItem value="todo">Created</SelectItem>
                       <SelectItem value="in_progress">In Progress</SelectItem>
                       <SelectItem value="review">Needs Review</SelectItem>
-                      <SelectItem value="done">Completed</SelectItem>
+                      <SelectItem value="done">Closed</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

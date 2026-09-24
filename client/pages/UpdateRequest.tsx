@@ -148,6 +148,30 @@ export default function UpdateRequest() {
         }
         
         await Promise.all(logPromises);
+
+        // Send Email Notification if Reassigned
+        if (newAssigneeId && newAssigneeId !== request.assignee_id) {
+          try {
+            await fetch("/api/notify/assignment", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session?.access_token}`,
+                "x-org-id": orgId,
+              },
+              body: JSON.stringify({
+                assigneeId: newAssigneeId,
+                type: "Service Request",
+                itemTitle: request.title,
+                itemDescription: request.details,
+                linkUrl: `${window.location.origin}/dashboard/requests/${request.id}`
+              })
+            });
+          } catch (notifyErr) {
+            console.error("Failed to send notification", notifyErr);
+          }
+        }
+
         toast({ title: "Request updated successfully" });
       }
       

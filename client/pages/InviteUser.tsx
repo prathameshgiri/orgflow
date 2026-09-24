@@ -26,6 +26,7 @@ const InviteUser = () => {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [inviteLink, setInviteLink] = useState("");
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -71,8 +72,13 @@ const InviteUser = () => {
 
       const data = await response.json();
       if (response.ok) {
-        toast({ title: "Invite Sent", description: data.message });
-        navigate("/dashboard/users");
+        toast({ title: "Invite Generated", description: data.message });
+        if (data.token) {
+          const link = `${window.location.origin}/signup?invite=${data.token}`;
+          setInviteLink(link);
+        } else {
+          navigate("/dashboard/users");
+        }
       } else {
         toast({ title: "Error", description: data.error, variant: "destructive" });
       }
@@ -137,9 +143,9 @@ const InviteUser = () => {
             <Button 
               type="submit" 
               disabled={submitting}
-              className="bg-coral hover:bg-coral-light text-white"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
             >
-              {submitting ? "Sending..." : "Send Invitation"}
+              {submitting ? "Generating..." : "Generate Invite Link"}
             </Button>
             <Button 
               type="button" 
@@ -150,6 +156,27 @@ const InviteUser = () => {
             </Button>
           </div>
         </form>
+
+        {inviteLink && (
+          <div className="mt-8 p-6 bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-800/30 rounded-xl">
+            <h3 className="text-sm font-semibold text-emerald-900 dark:text-emerald-300 mb-2">Invitation Generated Successfully!</h3>
+            <p className="text-xs text-emerald-700 dark:text-emerald-400 mb-4">
+              Since email delivery is not configured in this environment, please copy the link below and send it to the user.
+            </p>
+            <div className="flex gap-2">
+              <Input value={inviteLink} readOnly className="bg-white dark:bg-zinc-900" />
+              <Button 
+                onClick={() => {
+                  navigator.clipboard.writeText(inviteLink);
+                  toast({ title: "Copied to clipboard" });
+                }}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                Copy Link
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

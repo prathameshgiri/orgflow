@@ -43,28 +43,19 @@ import Requests from "./pages/Requests";
 import CreateRequest from "./pages/CreateRequest";
 import UpdateRequest from "./pages/UpdateRequest";
 import RequestHistory from "./pages/RequestHistory";
-import Catalog from "./pages/Catalog";
-import CreateCatalog from "./pages/CreateCatalog";
-import UpdateCatalog from "./pages/UpdateCatalog";
-import Problems from "./pages/Problems";
-import CreateProblem from "./pages/CreateProblem";
-import UpdateProblem from "./pages/UpdateProblem";
-import Changes from "./pages/Changes";
-import CreateChange from "./pages/CreateChange";
-import UpdateChange from "./pages/UpdateChange";
 import Approvals from "./pages/Approvals";
+import CreateApproval from "./pages/CreateApproval";
+import ApprovalDetails from "./pages/ApprovalDetails";
 
 // Knowledge & Assets Phase 3
 import KnowledgeBase from "./pages/KnowledgeBase";
-import Assets from "./pages/Assets";
-import ConfigurationItems from "./pages/ConfigurationItems";
-
-// Analytics & Admin Phase 4
+import CreateArticle from "./pages/CreateArticle";
+import ArticleView from "./pages/ArticleView";
 import Reports from "./pages/Reports";
 import SLA from "./pages/SLA";
 import Workflows from "./pages/Workflows";
-import Automation from "./pages/Automation";
-import Rules from "./pages/Rules";
+import CreateWorkflow from "./pages/CreateWorkflow";
+import WorkflowDetails from "./pages/WorkflowDetails";
 import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
@@ -93,8 +84,8 @@ const App = () => (
                 <Route path="users/invite" element={<InviteUser />} />
                 <Route path="roles" element={<Roles />} />
                 <Route path="workflows" element={<Workflows />} />
-                <Route path="automation" element={<Automation />} />
-                <Route path="rules" element={<Rules />} />
+                <Route path="workflows/new" element={<CreateWorkflow />} />
+                <Route path="workflows/:id" element={<WorkflowDetails />} />
                 <Route path="settings" element={<Settings />} />
 
                 {/* Operations */}
@@ -120,23 +111,15 @@ const App = () => (
                 <Route path="requests/create" element={<CreateRequest />} />
                 <Route path="requests/:id/update" element={<UpdateRequest />} />
                 <Route path="requests/:id/history" element={<RequestHistory />} />
-                <Route path="catalog" element={<Catalog />} />
-                <Route path="catalog/create" element={<CreateCatalog />} />
-                <Route path="catalog/edit/:id" element={<UpdateCatalog />} />
-                <Route path="problems" element={<Problems />} />
-                <Route path="problems/create" element={<CreateProblem />} />
-                <Route path="problems/edit/:id" element={<UpdateProblem />} />
-                <Route path="changes" element={<Changes />} />
-                <Route path="changes/create" element={<CreateChange />} />
-                <Route path="changes/edit/:id" element={<UpdateChange />} />
+
                 <Route path="approvals" element={<Approvals />} />
+                <Route path="approvals/create" element={<CreateApproval />} />
+                <Route path="approvals/:id" element={<ApprovalDetails />} />
 
                 {/* Knowledge */}
                 <Route path="knowledge" element={<KnowledgeBase />} />
-
-                {/* Assets */}
-                <Route path="assets" element={<Assets />} />
-                <Route path="ci" element={<ConfigurationItems />} />
+                <Route path="knowledge/create" element={<CreateArticle />} />
+                <Route path="knowledge/:id" element={<ArticleView />} />
 
                 {/* Analytics */}
                 <Route path="reports" element={<Reports />} />
