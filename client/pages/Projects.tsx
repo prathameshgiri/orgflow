@@ -410,21 +410,21 @@ export default function Projects() {
                             <span className="text-xs text-zinc-500 font-bold">{project.progress}%</span>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-3 mt-0.5">
+                          <div className="flex flex-col gap-1.5 mt-0.5 w-32">
                             <input 
                               type="range" min="0" max="100" 
                               value={project.progress || 0}
                               onChange={(e) => setProjects(projects.map(p => p.id === project.id ? { ...p, progress: parseInt(e.target.value) } : p))}
                               onMouseUp={(e) => updateProjectProgress(project.id, parseInt((e.target as HTMLInputElement).value), project.progress || 0, project.status)}
                               onTouchEnd={(e) => updateProjectProgress(project.id, parseInt((e.target as HTMLInputElement).value), project.progress || 0, project.status)}
-                              className="w-32 h-2 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-blue-600 hover:h-2.5 transition-all shadow-inner text-blue-500"
+                              className="w-full h-2 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-blue-600 hover:h-2.5 transition-all shadow-inner text-blue-500"
                               style={{ backgroundImage: `linear-gradient(to right, currentColor ${project.progress || 0}%, transparent ${project.progress || 0}%)` }}
                             />
-                            <div className="flex items-center gap-2 whitespace-nowrap">
-                              <span className="text-xs font-bold text-blue-600 dark:text-blue-400 leading-none">{project.progress}%</span>
-                              <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider leading-none mt-[1px]">
+                            <div className="flex items-center justify-between w-full">
+                              <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider leading-none">
                                 {(project.progress || 0) < 50 ? 'Development' : ((project.progress || 0) < 90 ? 'Testing' : 'Finalizing')}
                               </span>
+                              <span className="text-xs font-bold text-blue-600 dark:text-blue-400 leading-none">{project.progress}%</span>
                             </div>
                           </div>
                         )}
