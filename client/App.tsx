@@ -29,6 +29,7 @@ import Tasks from "./pages/Tasks";
 import CreateTask from "./pages/CreateTask";
 import TaskHistory from "./pages/TaskHistory";
 import UpdateTask from "./pages/UpdateTask";
+import TaskDetails from "./pages/TaskDetails";
 import Teams from "./pages/Teams";
 import CreateTeam from "./pages/CreateTeam";
 import TeamHistory from "./pages/TeamHistory";
@@ -39,6 +40,8 @@ import CreateTicket from "./pages/CreateTicket";
 import Incidents from "./pages/Incidents";
 import IncidentHistory from "./pages/IncidentHistory";
 import UpdateIncident from "./pages/UpdateIncident";
+import IncidentDetails from "./pages/IncidentDetails";
+import CreateIncident from "./pages/CreateIncident";
 import Requests from "./pages/Requests";
 import CreateRequest from "./pages/CreateRequest";
 import UpdateRequest from "./pages/UpdateRequest";
@@ -96,6 +99,7 @@ const App = () => (
                 <Route path="tasks/create" element={<CreateTask />} />
                 <Route path="tasks/:id/update" element={<UpdateTask />} />
                 <Route path="tasks/:id/history" element={<TaskHistory />} />
+                <Route path="tasks/:id" element={<TaskDetails />} />
                 <Route path="teams" element={<Teams />} />
                 <Route path="teams/create" element={<CreateTeam />} />
                 <Route path="teams/:id/history" element={<TeamHistory />} />
@@ -105,6 +109,8 @@ const App = () => (
                 <Route path="service-desk" element={<ServiceDesk />} />
                 <Route path="service-desk/create" element={<CreateTicket />} />
                 <Route path="incidents" element={<Incidents />} />
+                <Route path="incidents/create" element={<CreateIncident />} />
+                <Route path="incidents/:id" element={<IncidentDetails />} />
                 <Route path="incidents/:id/update" element={<UpdateIncident />} />
                 <Route path="incidents/:id/history" element={<IncidentHistory />} />
                 <Route path="requests" element={<Requests />} />

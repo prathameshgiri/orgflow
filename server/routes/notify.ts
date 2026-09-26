@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { sendNotificationEmail } from "../utils/email";
-import { getAuthSupabase } from "../utils/supabaseAuth";
+import { AuthenticatedRequest } from "../middleware/auth";
 
 const router = Router();
 
@@ -12,7 +12,10 @@ router.post("/assignment", async (req, res) => {
       return res.status(400).json({ error: "Assignee ID is required" });
     }
 
-    const supabase = getAuthSupabase(req);
+    const supabase = (req as AuthenticatedRequest).supabase;
+    if (!supabase) {
+      return res.status(500).json({ error: "Supabase client not initialized" });
+    }
     
     // Fetch user email by assigneeId
     const { data: user, error } = await supabase

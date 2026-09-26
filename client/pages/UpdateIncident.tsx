@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, X } from "lucide-react";
+import { ArrowLeft, Edit3, Settings, ShieldAlert, CheckCircle2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,8 @@ import { useOrganization } from "../hooks/useOrganization";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "../../shared/supabase";
+import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
 
 export default function UpdateIncident() {
   const { id } = useParams();
@@ -24,20 +26,15 @@ export default function UpdateIncident() {
   const [users, setUsers] = useState<any[]>([]);
   const [assignableUsers, setAssignableUsers] = useState<any[]>([]);
 
-  // Progress State
-  const [progressText, setProgressText] = useState("");
-  const [pastedImages, setPastedImages] = useState<string[]>([]);
-  const [submitting, setSubmitting] = useState(false);
-
   const { orgId } = useOrganization();
   const { session } = useAuth();
   const { toast } = useToast();
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'new': return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800';
-      case 'in_progress': return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800';
-      case 'resolved': return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800';
+      case 'new': return 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800';
+      case 'in_progress': return 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800';
+      case 'resolved': return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800';
       case 'closed': return 'bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700';
       default: return 'bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700';
     }
@@ -45,7 +42,7 @@ export default function UpdateIncident() {
   
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'p1_critical': return 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800';
+      case 'p1_critical': return 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800';
       case 'p2_high': return 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800';
       case 'p3_medium': return 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800';
       case 'p4_low': return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800';
@@ -140,179 +137,153 @@ export default function UpdateIncident() {
         }
         
         toast({ title: "Incident updated successfully" });
-        navigate("/dashboard/incidents");
+        navigate(-1);
     } catch(err: any) {
         toast({ title: "Failed to update incident", description: err.message, variant: "destructive" });
     }
   };
 
-  const submitProgress = async () => {
-    if ((!progressText.trim() && pastedImages.length === 0) || !orgId || !session || !id) return;
-    setSubmitting(true);
-    try {
-      const res = await fetch(`/api/incidents/${id}/progress`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.access_token}`,
-          "x-org-id": orgId
-        },
-        body: JSON.stringify({ explanation: progressText, images: pastedImages })
-      });
-      if (res.ok) {
-        toast({ title: "Progress tracked successfully!" });
-        setProgressText("");
-        setPastedImages([]);
-      } else {
-        const data = await res.json();
-        toast({ title: "Failed to track progress", description: data.error, variant: "destructive" });
-      }
-    } catch (err: any) {
-      toast({ title: "Error", description: err.message, variant: "destructive" });
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-    const items = e.clipboardData.items;
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].type.indexOf("image") !== -1) {
-        const file = items[i].getAsFile();
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            if (event.target?.result) {
-              setPastedImages(prev => [...prev, event.target!.result as string]);
-            }
-          };
-          reader.readAsDataURL(file);
-        }
-      }
-    }
-  };
-
-  const removeImage = (index: number) => {
-    setPastedImages(prev => prev.filter((_, i) => i !== index));
-  };
-
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link to="/dashboard/incidents">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Update Incident</h1>
-          <p className="text-zinc-500">
-            {incident ? incident.title : `INC-${id?.substring(0, 8)}`}
-          </p>
+    <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen">
+      
+      {/* Header */}
+      <div className="flex flex-col gap-6 border-b border-zinc-200 dark:border-zinc-800 pb-8 pt-4">
+        <div className="flex items-center gap-2 text-sm font-medium text-zinc-500">
+          <button onClick={() => navigate(-1)} className="hover:text-indigo-600 transition-colors">Tickets</button>
+          <span>/</span>
+          <span className="text-zinc-900 dark:text-zinc-100">Update Incident</span>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <Button variant="outline" size="icon" onClick={() => navigate(-1)} className="rounded-full h-10 w-10 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 shadow-sm shrink-0">
+            <ArrowLeft className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
+          </Button>
+          <div className="flex items-center gap-4 flex-1">
+            <div className="h-14 w-14 rounded-2xl border-2 border-white dark:border-zinc-950 shadow-sm bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-400 flex items-center justify-center">
+              <Edit3 className="h-7 w-7" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+                Update Ticket
+              </h1>
+              <p className="text-zinc-500 text-sm mt-1">
+                {incident ? incident.title.replace('[SCTASK] ', '') : `INC-${id?.substring(0, 8)}`}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
         {loading ? (
-          <div className="py-12 text-center text-zinc-500">Loading details...</div>
-        ) : (
-          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-8 shadow-sm relative overflow-hidden">
-            <div className="flex flex-col items-center w-full">
-              <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 mb-3 text-center">
-                {incident?.title}
-              </h2>
-              
-              <div className="flex gap-2 justify-center mb-6">
-                <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border ${incident ? getStatusColor(incident.status) : ''}`}>
-                  {incident?.status?.replace('_', ' ').toUpperCase()}
-                </span>
-                <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold ${incident ? getPriorityColor(incident.priority) : ''}`}>
-                  {incident?.priority?.split('_')[1].toUpperCase()}
-                </span>
-              </div>
-
-              <div className="w-full bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-5 border border-zinc-100 dark:border-zinc-800 text-left mb-8">
-                <p className="text-zinc-600 dark:text-zinc-300 text-sm whitespace-pre-wrap break-words">
-                  {incident?.description}
-                </p>
-              </div>
-            </div>
-
-            {/* Update Form */}
-            <form onSubmit={handleUpdate} className="space-y-6 pt-2 border-t border-zinc-100 dark:border-zinc-800/50">
-              <h3 className="text-lg font-semibold tracking-tight">Update Incident Details</h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-1.5">
-                  <Label htmlFor="update-status" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">Status</Label>
-                  <Select value={updateStatus} onValueChange={setUpdateStatus}>
-                    <SelectTrigger id="update-status" className="h-10 w-full rounded-lg bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="new">New</SelectItem>
-                      <SelectItem value="in_progress">In Progress</SelectItem>
-                      <SelectItem value="resolved">Resolved</SelectItem>
-                      <SelectItem value="closed">Closed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="update-priority" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">Priority</Label>
-                  <Select value={updatePriority} onValueChange={setUpdatePriority}>
-                    <SelectTrigger id="update-priority" className="h-10 w-full rounded-lg bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
-                      <SelectValue placeholder="Select priority" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="p1_critical">P1 Critical</SelectItem>
-                      <SelectItem value="p2_high">P2 High</SelectItem>
-                      <SelectItem value="p3_medium">P3 Medium</SelectItem>
-                      <SelectItem value="p4_low">P4 Low</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-1.5">
-                  <Label htmlFor="update-team" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">Team</Label>
-                  <Select value={updateTeam} onValueChange={setUpdateTeam}>
-                    <SelectTrigger id="update-team" className="h-10 w-full rounded-lg bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
-                      <SelectValue placeholder="-- Unassigned --" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="unassigned">-- Unassigned --</SelectItem>
-                      {teams.map(t => (
-                        <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label htmlFor="update-assignee" className="text-xs font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">Assignee (Person)</Label>
-                  <Select value={updateAssignee} onValueChange={setUpdateAssignee}>
-                    <SelectTrigger id="update-assignee" className="h-10 w-full rounded-lg bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800 disabled:opacity-50" disabled={!updateTeam}>
-                      <SelectValue placeholder={updateTeam ? "-- Unassigned --" : "Select team first"} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="unassigned">-- Unassigned --</SelectItem>
-                      {assignableUsers.map(u => (
-                        <SelectItem key={u.id} value={u.id}>{u.users?.full_name || u.users?.email || u.id}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="flex justify-end pt-2">
-                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition-all">
-                  Confirm Update
-                </Button>
-              </div>
-            </form>
+          <div className="py-12 text-center text-zinc-500">
+             <div className="h-10 w-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+             Loading details...
           </div>
+        ) : (
+          <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden relative">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+            
+            <div className="p-8">
+              <div className="flex flex-col items-center w-full mb-10">
+                <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 mb-4 text-center">
+                  {incident?.title.replace('[SCTASK] ', '')}
+                </h2>
+                
+                <div className="flex gap-3 justify-center mb-8">
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold border uppercase tracking-wider shadow-sm ${incident ? getStatusColor(incident.status) : ''}`}>
+                    {incident?.status?.replace('_', ' ')}
+                  </span>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold border uppercase tracking-wider shadow-sm ${incident ? getPriorityColor(incident.priority) : ''}`}>
+                    {incident?.priority?.split('_')[1]}
+                  </span>
+                </div>
+
+                <div className="w-full bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800 text-left shadow-inner">
+                  <p className="text-zinc-600 dark:text-zinc-300 text-base leading-relaxed whitespace-pre-wrap break-words">
+                    {incident?.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Update Form */}
+              <form onSubmit={handleUpdate} className="space-y-8 pt-8 border-t border-zinc-100 dark:border-zinc-800/50">
+                <h3 className="text-xl font-bold tracking-tight flex items-center gap-2">
+                   <Settings className="h-5 w-5 text-indigo-500" /> Update Details
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-zinc-50/50 dark:bg-zinc-900/30 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800">
+                  <div className="space-y-3">
+                    <Label htmlFor="update-status" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Status</Label>
+                    <Select value={updateStatus} onValueChange={setUpdateStatus}>
+                      <SelectTrigger id="update-status" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl">
+                        <SelectItem value="new" className="py-2.5 font-medium text-rose-600">New</SelectItem>
+                        <SelectItem value="in_progress" className="py-2.5 font-medium text-amber-600">In Progress</SelectItem>
+                        <SelectItem value="resolved" className="py-2.5 font-medium text-emerald-600">Resolved</SelectItem>
+                        <SelectItem value="closed" className="py-2.5 font-medium text-zinc-600">Closed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label htmlFor="update-priority" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Priority</Label>
+                    <Select value={updatePriority} onValueChange={setUpdatePriority}>
+                      <SelectTrigger id="update-priority" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl">
+                        <SelectItem value="p1_critical" className="py-2.5 font-bold text-rose-600">P1 Critical</SelectItem>
+                        <SelectItem value="p2_high" className="py-2.5 font-bold text-orange-500">P2 High</SelectItem>
+                        <SelectItem value="p3_medium" className="py-2.5 font-bold text-amber-500">P3 Medium</SelectItem>
+                        <SelectItem value="p4_low" className="py-2.5 font-bold text-blue-500">P4 Low</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <Label htmlFor="update-team" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Team Assignment</Label>
+                    <Select value={updateTeam} onValueChange={setUpdateTeam}>
+                      <SelectTrigger id="update-team" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
+                        <SelectValue placeholder="-- Unassigned --" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl">
+                        <SelectItem value="unassigned" className="py-2.5 italic text-zinc-500">-- Unassigned --</SelectItem>
+                        {teams.map(t => (
+                          <SelectItem key={t.id} value={t.id} className="py-2.5 font-medium">{t.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label htmlFor="update-assignee" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Assignee (Person)</Label>
+                    <Select value={updateAssignee} onValueChange={setUpdateAssignee}>
+                      <SelectTrigger id="update-assignee" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800 disabled:opacity-50" disabled={!updateTeam}>
+                        <SelectValue placeholder={updateTeam ? "-- Unassigned --" : "Select team first"} />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl">
+                        <SelectItem value="unassigned" className="py-2.5 italic text-zinc-500">-- Unassigned --</SelectItem>
+                        {assignableUsers.map(u => (
+                          <SelectItem key={u.id} value={u.id} className="py-2.5 font-medium">{u.users?.full_name || u.users?.email || u.id}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="flex justify-end pt-4">
+                  <Button type="submit" className="h-12 px-8 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-500/20 transition-all active:scale-[0.98]">
+                    <Save className="h-4 w-4 mr-2" /> Confirm Update
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </Card>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

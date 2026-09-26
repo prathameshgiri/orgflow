@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Eye, ShieldCheck, CheckCircle2, ArrowLeft, Zap, Building2, ArrowRight } from "lucide-react";
 
-const staggerContainer = {
+const staggerContainer: any = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -16,7 +16,7 @@ const staggerContainer = {
   }
 };
 
-const staggerForm = {
+const staggerForm: any = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
@@ -24,12 +24,12 @@ const staggerForm = {
   }
 };
 
-const fadeInUp = {
+const fadeInUp: any = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
 };
 
-const scaleIn = {
+const scaleIn: any = {
   hidden: { opacity: 0, scale: 0.9 },
   show: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 300, damping: 24 } }
 };
@@ -88,7 +88,7 @@ const Login = () => {
         <motion.div 
           key={i}
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0, y: [0, -10, 0] }}
+          animate={{ opacity: 1, y: [0, -10, 0] }}
           transition={{ duration: 3, delay: dot.delay, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
           className={`absolute ${dot.size} rounded-full ${dot.color} blur-[1px]`}
           style={{ top: dot.top, left: dot.left, right: dot.right, bottom: dot.bottom }}

@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 
 // Generate SMTP service account from ethereal.email
-let transporter: nodemailer.Transporter | null = null;
+let transporter: any = null;
 
 async function createTestAccount() {
   if (transporter) return;

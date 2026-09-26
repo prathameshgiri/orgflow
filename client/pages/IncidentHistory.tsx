@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, History, Edit, UserPlus, Users, AlertTriangle, X, Image as ImageIcon } from "lucide-react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, History, Edit, UserPlus, Users, AlertTriangle, X, Image as ImageIcon, Send, Clock, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { useOrganization } from "../hooks/useOrganization";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "../../shared/supabase";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 
 export default function IncidentHistory() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [incident, setIncident] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,9 +27,9 @@ export default function IncidentHistory() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'new': return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800';
-      case 'in_progress': return 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800';
-      case 'resolved': return 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800';
+      case 'new': return 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800';
+      case 'in_progress': return 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800';
+      case 'resolved': return 'bg-emerald-100 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800';
       case 'closed': return 'bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700';
       default: return 'bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700';
     }
@@ -33,7 +37,7 @@ export default function IncidentHistory() {
   
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'p1_critical': return 'bg-red-100 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800';
+      case 'p1_critical': return 'bg-rose-100 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-400 dark:border-rose-800';
       case 'p2_high': return 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800';
       case 'p3_medium': return 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800';
       case 'p4_low': return 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800';
@@ -57,7 +61,6 @@ export default function IncidentHistory() {
     if (!orgId || !session || !id) return;
     
     try {
-      // Fetch incident summary
       const { data: incData, error: incError } = await supabase
           .from("incidents")
           .select("*")
@@ -80,7 +83,6 @@ export default function IncidentHistory() {
         setHistory(data.history || []);
       }
 
-      // Fetch users and teams for resolving UUIDs to names
       const { data: usersData } = await supabase.from('users').select('id, full_name').eq('organization_id', orgId);
       if (usersData) {
         const uMap: Record<string, string> = {};
@@ -165,164 +167,232 @@ export default function IncidentHistory() {
   const renderChanges = (changes: any) => {
       if (!changes) return null;
       return (
-          <div className="mt-2 space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+          <div className="mt-3 space-y-2 text-sm text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-100 dark:border-zinc-800 shadow-sm">
               {changes.status && changes.status.from !== changes.status.to && (
-                  <div>Status changed: <strong className="capitalize">{resolveName('status', changes.status.from)}</strong> ➔ <strong className="capitalize">{resolveName('status', changes.status.to)}</strong></div>
+                  <div className="flex items-center gap-2">
+                     <span className="text-zinc-400">&bull;</span>
+                     Status changed: <Badge variant="outline" className="capitalize border-zinc-200">{resolveName('status', changes.status.from)}</Badge> ➔ <Badge variant="secondary" className="capitalize bg-indigo-100 text-indigo-700">{resolveName('status', changes.status.to)}</Badge>
+                  </div>
               )}
               {changes.priority && changes.priority.from !== changes.priority.to && (
-                  <div>Priority changed: <strong className="capitalize">{resolveName('priority', changes.priority.from)}</strong> ➔ <strong className="capitalize">{resolveName('priority', changes.priority.to)}</strong></div>
+                  <div className="flex items-center gap-2">
+                     <span className="text-zinc-400">&bull;</span>
+                     Priority changed: <Badge variant="outline" className="capitalize border-zinc-200">{resolveName('priority', changes.priority.from)}</Badge> ➔ <Badge variant="secondary" className="capitalize bg-amber-100 text-amber-700">{resolveName('priority', changes.priority.to)}</Badge>
+                  </div>
               )}
               {changes.team_id && changes.team_id.from !== changes.team_id.to && (
-                  <div>Team changed: <strong>{resolveName('team_id', changes.team_id.from)}</strong> ➔ <strong>{resolveName('team_id', changes.team_id.to)}</strong></div>
+                  <div className="flex items-center gap-2">
+                     <span className="text-zinc-400">&bull;</span>
+                     Team changed: <strong>{resolveName('team_id', changes.team_id.from)}</strong> ➔ <strong>{resolveName('team_id', changes.team_id.to)}</strong>
+                  </div>
               )}
               {changes.assignee_id && changes.assignee_id.from !== changes.assignee_id.to && (
-                  <div>Assignee changed: <strong>{resolveName('assignee_id', changes.assignee_id.from)}</strong> ➔ <strong>{resolveName('assignee_id', changes.assignee_id.to)}</strong></div>
+                  <div className="flex items-center gap-2">
+                     <span className="text-zinc-400">&bull;</span>
+                     Assignee changed: <strong>{resolveName('assignee_id', changes.assignee_id.from)}</strong> ➔ <strong>{resolveName('assignee_id', changes.assignee_id.to)}</strong>
+                  </div>
               )}
           </div>
       );
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link to="/dashboard/incidents">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Ticket History</h1>
-          <p className="text-zinc-500">
-            {incident ? incident.title : `INC-${id?.substring(0, 8)}`}
-          </p>
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen">
+      {/* Header */}
+      <div className="flex flex-col gap-6 border-b border-zinc-200 dark:border-zinc-800 pb-8 pt-4">
+        <div className="flex items-center gap-2 text-sm font-medium text-zinc-500">
+          <button onClick={() => navigate(-1)} className="hover:text-indigo-600 transition-colors">Tickets</button>
+          <span>/</span>
+          <span className="text-zinc-900 dark:text-zinc-100">History</span>
         </div>
-      </div>
+        
+        <div className="flex items-center gap-4">
+          <Button variant="outline" size="icon" onClick={() => navigate(-1)} className="rounded-full h-10 w-10 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 shadow-sm shrink-0">
 
-      {/* Update Progress Box */}
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
-        <h3 className="text-lg font-semibold mb-3 tracking-tight">Update Progress</h3>
-        <div className="relative">
-          <textarea 
-            value={progressText}
-            onChange={e => setProgressText(e.target.value)}
-            onPaste={handlePaste}
-            placeholder="Enter your progress update, notes, or explanation here... (You can also paste images)"
-            className="w-full min-h-[100px] p-4 text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-y mb-4"
-          />
-        </div>
-        {pastedImages.length > 0 && (
-          <div className="flex flex-wrap gap-4 mb-4">
-            {pastedImages.map((img, idx) => (
-              <div key={idx} className="relative group rounded-md border border-zinc-200 overflow-hidden w-24 h-24">
-                <img src={img} alt="pasted" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <button onClick={() => setPastedImages(prev => prev.filter((_, i) => i !== idx))} className="text-white hover:text-red-400">
-                    <X className="w-6 h-6" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-        <div className="flex justify-end">
-          <Button onClick={submitProgress} disabled={submitting || (!progressText.trim() && pastedImages.length === 0)} className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 shadow-md shadow-blue-500/20 rounded-full transition-all">
-            {submitting ? "Updating..." : "Update Progress"}
+              <ArrowLeft className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
+
           </Button>
+          <div className="flex items-center gap-4 flex-1">
+            <div className="h-14 w-14 rounded-2xl border-2 border-white dark:border-zinc-950 shadow-sm bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-400 flex items-center justify-center">
+              <History className="h-7 w-7" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+                Ticket History
+              </h1>
+              <p className="text-zinc-500 text-sm mt-1 flex items-center gap-2">
+                <Ticket className="h-3.5 w-3.5" />
+                {incident ? incident.title.replace('[SCTASK] ', '') : `INC-${id?.substring(0, 8)}`}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
-        {loading ? (
-          <div className="py-12 text-center text-zinc-500">Loading history...</div>
-        ) : (
-          <div>
-            {history.length === 0 ? (
-              <div className="py-12 flex flex-col items-center justify-center text-zinc-500">
-                <History className="h-10 w-10 mb-3 text-zinc-300" />
-                <p>No activity logged yet.</p>
-              </div>
-            ) : (
-              <div className="relative border-l border-zinc-200 dark:border-zinc-800 ml-4 space-y-8 pb-4">
-                {history.map((log, index) => (
-                  <div key={log.id} className="relative pl-8">
-                    <div className="absolute -left-[17px] top-1 h-8 w-8 rounded-full bg-white dark:bg-zinc-950 border-2 border-zinc-200 dark:border-zinc-800 flex items-center justify-center shadow-sm">
-                      {log.action === 'update_incident' ? (
-                        <Edit className="h-3.5 w-3.5 text-blue-500" />
-                      ) : log.action === 'progress_update' ? (
-                        <AlertTriangle className="h-3.5 w-3.5 text-orange-500" />
-                      ) : (
-                        <History className="h-3.5 w-3.5 text-zinc-400" />
-                      )}
-                    </div>
+      <div className="grid grid-cols-1 gap-8">
+        {/* Progress Input Section */}
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
+          <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden relative">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+            
+            <div className="p-6">
+              <h3 className="text-lg font-bold tracking-tight mb-4 flex items-center gap-2">
+                <Edit className="h-5 w-5 text-indigo-500" /> Add Progress Update
+              </h3>
+              
+              <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-transparent transition-all shadow-inner">
+                <textarea
+                  value={progressText}
+                  onChange={(e) => setProgressText(e.target.value)}
+                  onPaste={handlePaste}
+                  placeholder="Enter your progress update, notes, or explanation here... (You can also paste images)"
+                  className="w-full min-h-[120px] p-4 bg-transparent outline-none resize-y text-sm dark:text-zinc-100 placeholder:text-zinc-400"
+                />
                 
-                    <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-lg p-4 border border-zinc-100 dark:border-zinc-800/50">
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage src={log.user?.avatar_url} />
-                            <AvatarFallback className="text-[10px]">{getInitials(log.user?.full_name)}</AvatarFallback>
-                          </Avatar>
-                          <span className="font-medium text-sm text-zinc-900 dark:text-zinc-100">
-                            {log.user?.full_name || 'System User'}
-                          </span>
-                        </div>
-                        <span className="text-xs text-zinc-500">
-                          {format(new Date(log.occurred_at), "MMM d, yyyy 'at' h:mm a")}
-                        </span>
+                {/* Pasted Images Preview */}
+                {pastedImages.length > 0 && (
+                  <div className="px-4 pb-4 flex flex-wrap gap-3 border-t border-zinc-100 dark:border-zinc-800 pt-4 bg-white dark:bg-zinc-950">
+                    {pastedImages.map((src, idx) => (
+                      <div key={idx} className="relative group rounded-xl border border-zinc-200 dark:border-zinc-800 p-1 shadow-sm overflow-hidden bg-zinc-50 dark:bg-zinc-900">
+                        <img src={src} alt="Pasted" className="h-16 w-16 object-cover rounded-lg" />
+                        <button
+                          onClick={() => removeImage(idx)}
+                          className="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
                       </div>
-                      
-                      <div className="mt-2 text-sm text-zinc-700 dark:text-zinc-300">
-                        {log.details?.explanation && (
-                          <div><span className="font-semibold text-zinc-900 dark:text-zinc-100">Explanation:</span> {log.details.explanation}</div>
-                        )}
-                        {log.details?.images && log.details.images.length > 0 && (
-                          <div className="mt-3 flex flex-wrap gap-4">
-                            {log.details.images.map((img: string, idx: number) => (
-                              <img 
-                                key={idx} 
-                                src={img} 
-                                alt="attachment" 
-                                className="max-w-xs rounded-md border border-zinc-200 dark:border-zinc-700 shadow-sm cursor-pointer hover:opacity-90 transition-opacity" 
-                                onClick={() => setViewingImage(img)}
-                              />
-                            ))}
-                          </div>
-                        )}
-                        {!log.details?.explanation && (!log.details?.images || log.details.images.length === 0) && (
-                          <div><span className="font-semibold text-zinc-900 dark:text-zinc-100">Explanation:</span> No explanation provided</div>
-                        )}
-                      </div>
-                      
-                      {renderChanges(log.details?.changes)}
-                    </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
-            )}
-          </div>
-        )}
+              
+              <div className="flex justify-end mt-4">
+                <Button 
+                  onClick={submitProgress} 
+                  disabled={submitting || (!progressText.trim() && pastedImages.length === 0)}
+                  className="h-11 px-6 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-500/20 transition-all active:scale-[0.98]"
+                >
+                  {submitting ? (
+                    <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  ) : (
+                    <>
+                      <Send className="mr-2 h-4 w-4" /> Update Progress
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+
+        {/* History Timeline */}
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
+          <h3 className="text-xl font-bold tracking-tight mb-6 flex items-center gap-2 text-zinc-900 dark:text-zinc-100">
+            <History className="h-5 w-5 text-indigo-500" /> Timeline
+          </h3>
+          
+          {loading ? (
+            <div className="py-20 text-center text-zinc-500 flex flex-col items-center">
+              <div className="h-10 w-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+              Loading activity history...
+            </div>
+          ) : history.length === 0 ? (
+            <Card className="py-20 text-center text-zinc-500 rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 flex flex-col items-center">
+              <div className="h-16 w-16 bg-zinc-100 dark:bg-zinc-900 rounded-full flex items-center justify-center mb-4">
+                <History className="h-8 w-8 text-zinc-300 dark:text-zinc-700" />
+              </div>
+              <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">No activity logged yet</h3>
+              <p className="text-sm mt-1 max-w-sm">Updates and changes will appear here chronologically.</p>
+            </Card>
+          ) : (
+            <div className="relative border-l-2 border-zinc-200 dark:border-zinc-800 ml-4 space-y-8 pb-8">
+              {history.map((log, index) => {
+                const actionIcons: any = {
+                  'status_changed': <AlertTriangle className="h-4 w-4 text-amber-500" />,
+                  'assigned': <UserPlus className="h-4 w-4 text-blue-500" />,
+                  'team_assigned': <Users className="h-4 w-4 text-purple-500" />,
+                  'progress_updated': <Edit className="h-4 w-4 text-indigo-500" />,
+                  'created': <Ticket className="h-4 w-4 text-emerald-500" />
+                };
+                
+                const actionIcon = actionIcons[log.action] || <History className="h-4 w-4 text-zinc-500" />;
+
+                return (
+                  <div key={log.id} className="relative pl-8 animate-in slide-in-from-left-4 fade-in duration-500" style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'both' }}>
+                    <div className="absolute -left-[17px] top-1 h-8 w-8 rounded-full bg-white dark:bg-zinc-950 border-4 border-zinc-50 dark:border-zinc-900 shadow-sm flex items-center justify-center ring-1 ring-zinc-200 dark:ring-zinc-800">
+                      {actionIcon}
+                    </div>
+                    
+                    <Card className="p-5 rounded-2xl border-zinc-200/80 dark:border-zinc-800/80 shadow-sm bg-white dark:bg-zinc-950 hover:shadow-md transition-shadow relative group">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="font-bold text-sm text-zinc-900 dark:text-zinc-100 capitalize">
+                              {(log?.action || 'Unknown').replace('_', ' ')}
+                            </span>
+                            <span className="text-zinc-300 dark:text-zinc-700">&bull;</span>
+                            <span className="text-xs font-semibold text-zinc-500 flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {log?.created_at ? formatDistanceToNow(new Date(log.created_at), { addSuffix: true }) : 'Unknown time'}
+                            </span>
+                          </div>
+                          
+                          {/* Log Explanation */}
+                          {log.details?.explanation && (
+                            <div className="mt-2 text-sm text-zinc-700 dark:text-zinc-300 bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-100 dark:border-zinc-800 whitespace-pre-wrap break-words shadow-inner">
+                              {log.details.explanation}
+                            </div>
+                          )}
+                          
+                          {/* Log Changes rendering */}
+                          {log.details?.changes && renderChanges(log.details.changes)}
+
+                          {/* Render Images if any */}
+                          {log.details?.images && log.details.images.length > 0 && (
+                            <div className="mt-4 flex flex-wrap gap-3">
+                              {log.details.images.map((img: string, i: number) => (
+                                <div key={i} className="relative group/img cursor-pointer" onClick={() => setViewingImage(img)}>
+                                  <img src={img} alt="Update" className="h-24 w-24 object-cover rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm group-hover/img:shadow-md transition-all group-hover/img:scale-105" />
+                                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity rounded-xl flex items-center justify-center">
+                                    <ImageIcon className="h-6 w-6 text-white" />
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="flex items-center gap-2 sm:flex-col sm:items-end shrink-0">
+                          <Avatar className="h-8 w-8 border-2 border-white dark:border-zinc-900 shadow-sm">
+                            <AvatarFallback className="text-[10px] bg-zinc-100 text-zinc-600 font-bold">{getInitials(usersMap[log?.actor_id] || '')}</AvatarFallback>
+                          </Avatar>
+                          <span className="text-xs font-medium text-zinc-500">{usersMap[log?.actor_id] || "System"}</span>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </motion.div>
       </div>
 
-
+      {/* Image Viewer Modal */}
       {viewingImage && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200"
           onClick={() => setViewingImage(null)}
         >
-          <div className="relative max-w-5xl max-h-[90vh] w-full h-full flex items-center justify-center">
+          <div className="relative max-w-5xl max-h-screen">
             <button 
-              className="absolute top-4 right-4 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
-              onClick={(e) => { e.stopPropagation(); setViewingImage(null); }}
+              className="absolute -top-12 right-0 text-white hover:text-zinc-300 transition-colors bg-black/50 hover:bg-black/80 p-2 rounded-full"
+              onClick={() => setViewingImage(null)}
             >
-              <X className="w-6 h-6" />
+              <X className="h-6 w-6" />
             </button>
-            <img 
-              src={viewingImage} 
-              alt="Fullscreen attachment" 
-              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl" 
-              onClick={(e) => e.stopPropagation()}
-            />
+            <img src={viewingImage} alt="Full view" className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl" onClick={e => e.stopPropagation()} />
           </div>
         </div>
       )}

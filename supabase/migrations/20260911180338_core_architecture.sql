@@ -383,6 +383,7 @@ CREATE TABLE IF NOT EXISTS public.incidents (
     description TEXT,
     priority incident_priority DEFAULT 'p3_medium',
     status ticket_status DEFAULT 'new',
+    ticket_type TEXT DEFAULT 'incident',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -935,3 +936,61 @@ ALTER TABLE public.catalog_items ADD COLUMN IF NOT EXISTS team_id UUID REFERENCE
 ALTER TABLE public.problems ADD COLUMN IF NOT EXISTS team_id UUID REFERENCES public.teams(id) ON DELETE SET NULL;
 -- Append team_id column to changes table for Team Assignments
 ALTER TABLE public.changes ADD COLUMN IF NOT EXISTS team_id UUID REFERENCES public.teams(id) ON DELETE SET NULL;
+
+-- ==========================================
+-- PROJECT TASKS (Kanban Board)
+-- ==========================================
+CREATE TABLE IF NOT EXISTS public.project_tasks (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    organization_id UUID NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE,
+    project_id UUID NOT NULL REFERENCES public.projects(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT NOT NULL DEFAULT 'todo', -- 'todo', 'in_progress', 'review', 'done'
+    assignee_id UUID REFERENCES public.users(id) ON DELETE SET NULL,
+    due_date TIMESTAMP WITH TIME ZONE,
+    tags TEXT[] DEFAULT '{}',
+    sub_tasks JSONB DEFAULT '[]'::jsonb,
+    comments JSONB DEFAULT '[]'::jsonb,
+    order_index INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Ensure columns exist in case the table was already created
+ALTER TABLE public.project_tasks ADD COLUMN IF NOT EXISTS due_date TIMESTAMP WITH TIME ZONE;
+ALTER TABLE public.project_tasks ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{}';
+ALTER TABLE public.project_tasks ADD COLUMN IF NOT EXISTS sub_tasks JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.project_tasks ADD COLUMN IF NOT EXISTS comments JSONB DEFAULT '[]'::jsonb;
+ALTER TABLE public.project_tasks ADD COLUMN IF NOT EXISTS team_id UUID REFERENCES public.teams(id) ON DELETE SET NULL;
+
+-- RLS for project_tasks
+ALTER TABLE public.project_tasks ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Users can view project tasks in their organization" ON public.project_tasks;
+CREATE POLICY "Users can view project tasks in their organization"
+    ON public.project_tasks FOR SELECT
+    USING (organization_id = (
+        SELECT organization_id FROM public.users WHERE id = auth.uid()
+    ));
+
+DROP POLICY IF EXISTS "Users can create project tasks in their organization" ON public.project_tasks;
+CREATE POLICY "Users can create project tasks in their organization"
+    ON public.project_tasks FOR INSERT
+    WITH CHECK (organization_id = (
+        SELECT organization_id FROM public.users WHERE id = auth.uid()
+    ));
+
+DROP POLICY IF EXISTS "Users can update project tasks in their organization" ON public.project_tasks;
+CREATE POLICY "Users can update project tasks in their organization"
+    ON public.project_tasks FOR UPDATE
+    USING (organization_id = (
+        SELECT organization_id FROM public.users WHERE id = auth.uid()
+    ));
+
+DROP POLICY IF EXISTS "Users can delete project tasks in their organization" ON public.project_tasks;
+CREATE POLICY "Users can delete project tasks in their organization"
+    ON public.project_tasks FOR DELETE
+    USING (organization_id = (
+        SELECT organization_id FROM public.users WHERE id = auth.uid()
+    ));

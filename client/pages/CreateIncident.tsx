@@ -12,7 +12,7 @@ import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export default function CreateTicket() {
+export default function CreateIncident() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("p3_medium");
@@ -54,7 +54,7 @@ export default function CreateTicket() {
     const { data, error } = await supabase.from("incidents").insert([
       {
         organization_id: orgId,
-        title: `[SCTASK] ${title}`,
+        title,
         description,
         priority,
         reporter_id: user.id,
@@ -89,7 +89,7 @@ export default function CreateTicket() {
           console.error("Failed to trigger workflows:", e);
         }
       }
-      navigate("/dashboard/service-desk");
+      navigate("/dashboard/incidents");
     }
   };
 
@@ -99,14 +99,14 @@ export default function CreateTicket() {
       {/* Header */}
       <div className="flex flex-col gap-6 border-b border-zinc-200 dark:border-zinc-800 pb-8 pt-4">
         <div className="flex items-center gap-2 text-sm font-medium text-zinc-500">
-          <Link to="/dashboard/service-desk" className="hover:text-blue-600 transition-colors">Service Desk (SCTASK)</Link>
+          <Link to="/dashboard/incidents" className="hover:text-blue-600 transition-colors">Incidents</Link>
           <span>/</span>
-          <span className="text-zinc-900 dark:text-zinc-100">Create Ticket</span>
+          <span className="text-zinc-900 dark:text-zinc-100">Create Incident</span>
         </div>
         
         <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" asChild className="rounded-full h-10 w-10 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 shadow-sm shrink-0">
-            <Link to="/dashboard/service-desk">
+            <Link to="/dashboard/incidents">
               <ArrowLeft className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
             </Link>
           </Button>
@@ -116,10 +116,10 @@ export default function CreateTicket() {
             </div>
             <div>
               <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
-                Create Service Desk Ticket (SCTASK)
+                Create New Incident
               </h1>
               <p className="text-zinc-500 text-sm mt-1">
-                Report a new IT issue, service request, or task.
+                Report a new incident, IT issue, or service request.
               </p>
             </div>
           </div>
