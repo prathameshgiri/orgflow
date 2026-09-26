@@ -52,7 +52,7 @@ const Signup = () => {
     if (msg.includes("already registered") || msg.includes("already been registered") || msg.includes("user already exists"))
       return "This email is already registered. Please sign in instead.";
     if (msg.includes("database error saving new user") || msg.includes("database error"))
-      return "This email may already be registered. Try signing in, or use a different email.";
+      return `Database Error: ${message}`;
     if (msg.includes("password") && msg.includes("characters"))
       return "Password must be at least 6 characters long.";
     if (msg.includes("invalid email") || msg.includes("unable to validate email"))
