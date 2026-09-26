@@ -256,7 +256,7 @@ CREATE POLICY "Users can view their own organization" ON public.organizations
     FOR SELECT TO authenticated
     USING (
       id = current_user_org_id() 
-      OR email = (SELECT email FROM auth.users WHERE id = auth.uid())
+      OR email = (auth.jwt() ->> 'email')
     );
 
 DROP POLICY IF EXISTS "Users can update their own organization" ON public.organizations;
@@ -264,7 +264,7 @@ CREATE POLICY "Users can update their own organization" ON public.organizations
     FOR UPDATE TO authenticated
     USING (
       id = current_user_org_id() 
-      OR email = (SELECT email FROM auth.users WHERE id = auth.uid())
+      OR email = (auth.jwt() ->> 'email')
     );
 
 DROP POLICY IF EXISTS "Authenticated users can create organizations" ON public.organizations;

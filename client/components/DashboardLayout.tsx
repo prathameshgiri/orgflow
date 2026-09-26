@@ -35,31 +35,41 @@ const DashboardLayout = () => {
       if (!user) return;
       await processPendingInvite();
       
+      console.log("[fetchOrgs] Starting fetch for user:", user.id);
+      
       // 1. Fetch user profile from public.users
-      const { data: userProfile } = await supabase
+      const { data: userProfile, error: profileError } = await supabase
         .from("users")
         .select("id, organization_id, full_name, email")
         .eq("id", user.id)
         .maybeSingle();
 
+      console.log("[fetchOrgs] User Profile:", userProfile, "Error:", profileError);
+      
       let currentOrgId = userProfile?.organization_id;
 
       // 2. Auto-heal: If user has no organization_id, check user_metadata.org_name
       if (!currentOrgId && user.user_metadata?.org_name) {
+        console.log("[fetchOrgs] Auto-heal triggered. Missing currentOrgId.");
         const metadataOrgName = user.user_metadata.org_name;
         const metadataFullName = user.user_metadata.full_name || "Admin";
 
         let orgToUse: any = null;
-        const { data: existingOrg } = await supabase
+        
+        console.log("[fetchOrgs] Checking for existing org by name:", metadataOrgName);
+        const { data: existingOrg, error: existingOrgErr } = await supabase
           .from("organizations")
           .select("id, name")
           .eq("name", metadataOrgName)
           .maybeSingle();
+          
+        console.log("[fetchOrgs] Existing Org:", existingOrg, "Error:", existingOrgErr);
 
         if (existingOrg) {
           orgToUse = existingOrg;
         } else {
-          const { data: newOrg } = await supabase
+          console.log("[fetchOrgs] Creating new org...");
+          const { data: newOrg, error: insertOrgErr } = await supabase
             .from("organizations")
             .insert({
               name: metadataOrgName,
@@ -68,14 +78,20 @@ const DashboardLayout = () => {
             })
             .select("id, name")
             .single();
+            
+          console.log("[fetchOrgs] New Org Created:", newOrg, "Error:", insertOrgErr);
+          
+          if (insertOrgErr) {
+            console.error("[fetchOrgs] CRITICAL: Failed to create org!", insertOrgErr);
+          }
           if (newOrg) {
             orgToUse = newOrg;
           }
         }
 
         if (orgToUse) {
-          currentOrgId = orgToUse.id;
-          await supabase
+          console.log("[fetchOrgs] Upserting user to link to org:", orgToUse.id);
+          const { error: upsertUserErr } = await supabase
             .from("users")
             .upsert({
               id: user.id,
@@ -83,26 +99,39 @@ const DashboardLayout = () => {
               full_name: metadataFullName,
               email: user.email || "",
             });
+            
+          console.log("[fetchOrgs] User Upsert Error:", upsertUserErr);
+          if (!upsertUserErr) {
+            currentOrgId = orgToUse.id;
+          } else {
+             console.error("[fetchOrgs] CRITICAL: Failed to upsert user!", upsertUserErr);
+          }
         }
       }
 
       // 3. Fetch organization: query by currentOrgId or fallback to all user accessible organizations
       let orgsList: any[] = [];
       if (currentOrgId) {
-        const { data: orgData } = await supabase
+        console.log("[fetchOrgs] Fetching org by currentOrgId:", currentOrgId);
+        const { data: orgData, error: orgDataErr } = await supabase
           .from("organizations")
           .select("id, name")
           .eq("id", currentOrgId)
           .maybeSingle();
+          
+        console.log("[fetchOrgs] Org Data:", orgData, "Error:", orgDataErr);
         if (orgData) {
           orgsList = [orgData];
         }
       }
 
       if (orgsList.length === 0) {
-        const { data: allOrgs } = await supabase
+        console.log("[fetchOrgs] No org found by ID, fetching all accessible orgs");
+        const { data: allOrgs, error: allOrgsErr } = await supabase
           .from("organizations")
           .select("id, name");
+          
+        console.log("[fetchOrgs] All Orgs:", allOrgs, "Error:", allOrgsErr);
         if (allOrgs && allOrgs.length > 0) {
           orgsList = allOrgs;
           if (!currentOrgId) {
@@ -111,6 +140,7 @@ const DashboardLayout = () => {
         }
       }
 
+      console.log("[fetchOrgs] Final Orgs List:", orgsList);
       if (orgsList.length > 0) {
         setOrganizations(orgsList);
         const targetId = currentOrgId || orgsList[0].id;
