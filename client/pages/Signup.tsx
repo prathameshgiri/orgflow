@@ -213,7 +213,7 @@ const Signup = () => {
                   <Input
                     id="fullName"
                     type="text"
-                    placeholder="e.g. Rahul Sharma"
+                    placeholder="Your Name"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     required
@@ -232,7 +232,7 @@ const Signup = () => {
                     <Input
                       id="orgName"
                       type="text"
-                      placeholder="e.g. Acme Corp"
+                      placeholder="Your ORG Name"
                       value={orgName}
                       onChange={(e) => setOrgName(e.target.value)}
                       required
@@ -251,7 +251,7 @@ const Signup = () => {
                   <Input
                     id="mobileNumber"
                     type="tel"
-                    placeholder="e.g. +91 9876543210"
+                    placeholder="8010901226"
                     value={mobileNumber}
                     onChange={(e) => setMobileNumber(e.target.value)}
                     required
