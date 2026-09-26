@@ -387,21 +387,21 @@ BEGIN
       v_org_name := v_full_name || '''s Organization';
     END IF;
 
-    v_org_id := gen_random_uuid();
-    v_role_id := gen_random_uuid();
+    v_org_id := uuid_generate_v4();
+    v_role_id := uuid_generate_v4();
 
     -- Create Organization
     INSERT INTO public.organizations (id, name, email, admin_name)
     VALUES (v_org_id, v_org_name, NEW.email, v_full_name);
 
-    -- Create 5 Default Roles directly
+    -- Create 5 Default Roles directly using uuid_generate_v4()
     INSERT INTO public.roles (id, organization_id, name, description, is_system_role)
     VALUES 
       (v_role_id, v_org_id, 'Superadmin', 'Full access to all settings and modules', true),
-      (gen_random_uuid(), v_org_id, 'Administrator', 'Manage users, roles, and settings', true),
-      (gen_random_uuid(), v_org_id, 'Manager', 'Manage projects, teams, and assignments', true),
-      (gen_random_uuid(), v_org_id, 'Member', 'Standard user access', true),
-      (gen_random_uuid(), v_org_id, 'Read Only', 'Can view all records but cannot make any changes', true);
+      (uuid_generate_v4(), v_org_id, 'Administrator', 'Manage users, roles, and settings', true),
+      (uuid_generate_v4(), v_org_id, 'Manager', 'Manage projects, teams, and assignments', true),
+      (uuid_generate_v4(), v_org_id, 'Member', 'Standard user access', true),
+      (uuid_generate_v4(), v_org_id, 'Read Only', 'Can view all records but cannot make any changes', true);
   END IF;
 
   -- 3. Upsert user in public.users linked to organization and role
@@ -415,10 +415,10 @@ BEGIN
     NULLIF(TRIM(NEW.raw_user_meta_data->>'mobile_number'), '')
   )
   ON CONFLICT (id) DO UPDATE SET
-    organization_id = COALESCE(EXCLUDED.organization_id, public.users.organization_id),
-    role_id = COALESCE(EXCLUDED.role_id, public.users.role_id),
+    organization_id = EXCLUDED.organization_id,
+    role_id = EXCLUDED.role_id,
     full_name = EXCLUDED.full_name,
-    mobile_number = COALESCE(EXCLUDED.mobile_number, public.users.mobile_number);
+    mobile_number = EXCLUDED.mobile_number;
 
   RETURN NEW;
 EXCEPTION WHEN others THEN
