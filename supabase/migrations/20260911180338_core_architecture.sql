@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS public.users (
     role_id UUID, -- Will define FK later after roles table
     full_name TEXT NOT NULL,
     email TEXT NOT NULL,
+    mobile_number TEXT,
     avatar_url TEXT,
     status entity_status DEFAULT 'active',
     last_active_at TIMESTAMP WITH TIME ZONE,
@@ -326,13 +327,30 @@ CREATE POLICY "Global Read: Permissions" ON public.permissions FOR SELECT USING 
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
+DECLARE
+  new_org_id UUID;
 BEGIN
-  INSERT INTO public.users (id, full_name, email)
+  -- If org_name is provided, create a new organization first
+  IF new.raw_user_meta_data->>'org_name' IS NOT NULL THEN
+    INSERT INTO public.organizations (name, email, admin_name)
+    VALUES (
+      new.raw_user_meta_data->>'org_name', 
+      new.email, 
+      COALESCE(new.raw_user_meta_data->>'full_name', 'Unknown User')
+    )
+    RETURNING id INTO new_org_id;
+  END IF;
+
+  -- Create the user profile
+  INSERT INTO public.users (id, organization_id, full_name, email, mobile_number)
   VALUES (
     new.id, 
+    new_org_id,
     COALESCE(new.raw_user_meta_data->>'full_name', 'Unknown User'),
-    new.email
+    new.email,
+    new.raw_user_meta_data->>'mobile_number'
   );
+  
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

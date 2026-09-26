@@ -45,7 +45,8 @@ All tables use `organization_id` for tenant isolation. RLS policies enforce that
 2. **Keep the UI Premium:** This is a high-end SaaS product. Always use rich Tailwind gradients, smooth transitions (`animate-in fade-in`), and proper padding/shadows. Never use basic/flat designs.
 3. **No Direct User Deletion:** Do not build UI buttons that attempt to run `.delete()` on the `users` table via the anonymous client. RLS blocks this. 
 4. **Update the Brain:** If you create a new table, new page, or new core feature, you MUST add it to this `brain.md` document.
-5. **Typescript Strictness:** The project uses `strict: false` to allow rapid prototyping. If third-party libraries (like `framer-motion` or `nodemailer`) throw namespace errors, casting to `any` is an acceptable temporary workaround to keep the build running.
+5. **Update SQL Schema:** "Supabase me jo bhi change karna ho, main wale sql file me dalein". ANY time you make a change to the database schema, functions, triggers, or RLS, you MUST update `supabase/migrations/20260911180338_core_architecture.sql` so that the project remains reproducible.
+6. **Typescript Strictness:** The project uses `strict: false` to allow rapid prototyping. If third-party libraries (like `framer-motion` or `nodemailer`) throw namespace errors, casting to `any` is an acceptable temporary workaround to keep the build running.
 
 ---
 

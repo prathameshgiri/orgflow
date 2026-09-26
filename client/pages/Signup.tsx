@@ -36,6 +36,8 @@ const scaleIn: any = {
 
 const Signup = () => {
   const [fullName, setFullName] = useState("");
+  const [orgName, setOrgName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -55,6 +57,8 @@ const Signup = () => {
       options: {
         data: {
           full_name: fullName,
+          org_name: orgName || undefined,
+          mobile_number: mobileNumber || undefined,
           invite_token: inviteToken || undefined
         },
       },
@@ -209,9 +213,47 @@ const Signup = () => {
                   <Input
                     id="fullName"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="e.g. Rahul Sharma"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
+                    required
+                    className="h-11 pl-10 rounded-xl bg-slate-50/50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:bg-white hover:border-violet-300 focus-visible:border-violet-500 focus-visible:ring-4 focus-visible:ring-violet-500/10 transition-all shadow-sm"
+                  />
+                </div>
+              </motion.div>
+
+              {!inviteToken && (
+                <motion.div variants={scaleIn} className="space-y-2">
+                  <Label htmlFor="orgName" className="text-xs font-bold uppercase tracking-wider text-slate-600">Organization Name</Label>
+                  <div className="relative group">
+                    <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-violet-500 transition-colors">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg>
+                    </div>
+                    <Input
+                      id="orgName"
+                      type="text"
+                      placeholder="e.g. Acme Corp"
+                      value={orgName}
+                      onChange={(e) => setOrgName(e.target.value)}
+                      required
+                      className="h-11 pl-10 rounded-xl bg-slate-50/50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:bg-white hover:border-violet-300 focus-visible:border-violet-500 focus-visible:ring-4 focus-visible:ring-violet-500/10 transition-all shadow-sm"
+                    />
+                  </div>
+                </motion.div>
+              )}
+
+              <motion.div variants={scaleIn} className="space-y-2">
+                <Label htmlFor="mobileNumber" className="text-xs font-bold uppercase tracking-wider text-slate-600">Mobile Number</Label>
+                <div className="relative group">
+                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-violet-500 transition-colors">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                  </div>
+                  <Input
+                    id="mobileNumber"
+                    type="tel"
+                    placeholder="e.g. +91 9876543210"
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value)}
                     required
                     className="h-11 pl-10 rounded-xl bg-slate-50/50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus-visible:bg-white hover:border-violet-300 focus-visible:border-violet-500 focus-visible:ring-4 focus-visible:ring-violet-500/10 transition-all shadow-sm"
                   />
