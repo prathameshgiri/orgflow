@@ -4,6 +4,8 @@ A production-ready full-stack React application template with integrated Express
 
 While the starter comes with a express server, only create endpoint when strictly neccesary, for example to encapsulate logic that must leave in the server, such as private keys handling, or certain DB operations, db...
 
+> **CRITICAL RULE**: Always read `brain.md` located in the root of the project to understand the core architecture, data schemas, and recent updates. Modify `brain.md` when you implement new features, change schemas, or make structural updates.
+
 ## Tech Stack
 
 - **PNPM**: Prefer pnpm
