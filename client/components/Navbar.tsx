@@ -5,7 +5,7 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 
 const navLinks = [
   { name: "Platform", href: "/#platform", type: "anchor" },
-  { name: "Why OrgTask", href: "/#why", type: "anchor" },
+  { name: "Why ORG MAN", href: "/#why", type: "anchor" },
   { name: "Pricing", href: "/pricing", type: "link" },
 ];
 

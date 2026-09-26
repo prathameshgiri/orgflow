@@ -76,7 +76,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="mt-24 flex flex-col items-center justify-between border-t border-white/10 py-8 sm:flex-row">
           <p className="text-xs font-semibold text-white/40">
-            © {new Date().getFullYear()} OrgTask Inc. All rights reserved.
+            © {new Date().getFullYear()} ORG MAN Inc. All rights reserved.
           </p>
           <div className="mt-4 flex gap-6 text-xs font-semibold text-white/40 sm:mt-0">
             <a href="#" className="transition hover:text-white">Privacy Policy</a>

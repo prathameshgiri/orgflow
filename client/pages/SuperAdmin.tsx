@@ -179,7 +179,7 @@ const SuperAdmin = () => {
                       <div className="grid gap-2">
                         <Label htmlFor="orgSlug">Unique URL Slug</Label>
                         <div className="flex items-center gap-2">
-                          <span className="text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-3 py-2 rounded-md border text-sm">app.orgtask.com/</span>
+                          <span className="text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-3 py-2 rounded-md border text-sm">app.orgman.com/</span>
                           <Input id="orgSlug" value={newOrgSlug} onChange={e => setNewOrgSlug(e.target.value)} placeholder="acme" required />
                         </div>
                       </div>

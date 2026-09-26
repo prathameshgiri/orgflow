@@ -149,8 +149,8 @@ const ForgotPassword = () => {
                 <Building2 size={16} className="text-violet-400" />
               </div>
               <div>
-                <p className="text-sm font-bold text-slate-900">Powered by <span className="text-violet-600">OrgTask</span></p>
-                <p className="text-xs text-slate-400">&copy; {new Date().getFullYear()} OrgTask Inc.</p>
+                <p className="text-sm font-bold text-slate-900">Powered by <span className="text-violet-600">ORG MAN</span></p>
+                <p className="text-xs text-slate-400">&copy; {new Date().getFullYear()} ORG MAN Inc.</p>
               </div>
             </div>
           </motion.div>

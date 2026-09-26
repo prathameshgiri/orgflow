@@ -55,7 +55,7 @@ export default function Pricing() {
                   <span className="font-display text-5xl font-bold">Custom</span>
                 </div>
                 <p className="mt-4 text-sm leading-relaxed text-white/55">Advanced security, custom integrations, and dedicated support.</p>
-                <a href="mailto:admin@orgtask.com" className="mt-8 block rounded-xl bg-white py-4 text-center text-sm font-bold text-ink transition hover:bg-coral-light">Contact Admin</a>
+                <a href="mailto:admin@orgman.com" className="mt-8 block rounded-xl bg-white py-4 text-center text-sm font-bold text-ink transition hover:bg-coral-light">Contact Admin</a>
               </div>
               <div className="md:border-l md:border-white/10 md:pl-10">
                 <p className="mb-5 text-xs font-bold uppercase tracking-wider text-white/70">Everything in Free, plus</p>

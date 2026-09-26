@@ -77,7 +77,7 @@ export function createServer() {
   app.use("/api/notify", requireAuth, requireOrgAccess, notifyRoutes);
 
   // ==========================================
-  // ORGFLOW ITSM MODULES (Stubs for Phase 2+)
+  // ORG MAN ITSM MODULES (Stubs for Phase 2+)
   // ==========================================
   
   // Incidents

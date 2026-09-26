@@ -136,7 +136,7 @@ const Signup = () => {
           </motion.h1>
 
           <motion.p variants={fadeInUp} className="mt-4 text-base text-slate-600 leading-relaxed max-w-lg">
-            Join thousands of organizations using OrgTask to streamline ITSM, project management, and daily operations securely.
+            Join thousands of organizations using ORG MAN to streamline ITSM, project management, and daily operations securely.
           </motion.p>
 
           <motion.div variants={staggerContainer} className="mt-6 space-y-3">
@@ -164,15 +164,15 @@ const Signup = () => {
               Your organizational data is encrypted at rest and in transit.
             </p>
             <p className="text-[11px] text-slate-400 mt-4 leading-relaxed">
-              By signing up, you agree to OrgTask's <a href="#" className="underline hover:text-slate-600">Terms of Service</a> and <a href="#" className="underline hover:text-slate-600">Privacy Policy</a>.
+              By signing up, you agree to ORG MAN's <a href="#" className="underline hover:text-slate-600">Terms of Service</a> and <a href="#" className="underline hover:text-slate-600">Privacy Policy</a>.
             </p>
             <div className="mt-4 flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900">
                 <Building2 size={16} className="text-violet-400" />
               </div>
               <div>
-                <p className="text-sm font-bold text-slate-900">Powered by <span className="text-violet-600">OrgTask</span></p>
-                <p className="text-xs text-slate-400">&copy; {new Date().getFullYear()} OrgTask Inc.</p>
+                <p className="text-sm font-bold text-slate-900">Powered by <span className="text-violet-600">ORG MAN</span></p>
+                <p className="text-xs text-slate-400">&copy; {new Date().getFullYear()} ORG MAN Inc.</p>
               </div>
             </div>
           </motion.div>

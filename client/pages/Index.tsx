@@ -61,7 +61,7 @@ const itsmModules = [
 ];
 
 const testimonials = [
-  { name: "Priya Sharma", role: "CTO, Finvesta", quote: "OrgTask transformed how we manage access across 12 subsidiaries. What used to take days now takes minutes.", avatar: "from-violet-400 to-indigo-500" },
+  { name: "Priya Sharma", role: "CTO, Finvesta", quote: "ORG MAN transformed how we manage access across 12 subsidiaries. What used to take days now takes minutes.", avatar: "from-violet-400 to-indigo-500" },
   { name: "James Chen", role: "VP Engineering, CloudScale", quote: "The permissions matrix alone saved our compliance team 20+ hours per week. Absolute game-changer.", avatar: "from-emerald-400 to-teal-500" },
   { name: "Maria Rodriguez", role: "IT Director, NovaTech", quote: "Finally, an ITSM tool that doesn't feel like it was built in 2005. Beautiful, fast, and incredibly intuitive.", avatar: "from-coral to-rose-500" },
 ];
@@ -78,12 +78,12 @@ const integrations = [
 ];
 
 const faqData = [
-  { q: "What is an organization in OrgTask?", a: "An organization is a top-level container that holds all your teams, members, roles, and configurations. You can manage multiple organizations from a single account." },
-  { q: "Can I manage multiple organizations?", a: "Absolutely! OrgTask is built for multi-org management. Switch between organizations seamlessly, each with their own settings, roles, and data isolation." },
+  { q: "What is an organization in ORG MAN?", a: "An organization is a top-level container that holds all your teams, members, roles, and configurations. You can manage multiple organizations from a single account." },
+  { q: "Can I manage multiple organizations?", a: "Absolutely! ORG MAN is built for multi-org management. Switch between organizations seamlessly, each with their own settings, roles, and data isolation." },
   { q: "How granular are permissions?", a: "Extremely granular. You can set permissions at the module level (incidents, changes, assets) down to individual actions (create, read, update, delete, approve, assign)." },
-  { q: "What ITSM modules are included?", a: "OrgTask includes Incident Management, Service Request Catalog, Change Management, Problem Management, Asset Management, Knowledge Base, SLA Tracking, and more." },
+  { q: "What ITSM modules are included?", a: "ORG MAN includes Incident Management, Service Request Catalog, Change Management, Problem Management, Asset Management, Knowledge Base, SLA Tracking, and more." },
   { q: "Is there a free plan?", a: "Yes! Our free tier includes up to 3 organizations, 10 team members each, and access to core ITSM modules. No credit card required to get started." },
-  { q: "How secure is OrgTask?", a: "Bank-grade security with SOC 2 Type II compliance, end-to-end encryption, SAML SSO, and row-level security powered by Supabase. Your data never leaves your control." },
+  { q: "How secure is ORG MAN?", a: "Bank-grade security with SOC 2 Type II compliance, end-to-end encryption, SAML SSO, and row-level security powered by Supabase. Your data never leaves your control." },
 ];
 
 /* ─── Page ─── */
@@ -111,7 +111,7 @@ export default function Index() {
                 One platform.<br /><span className="text-coral">Multiple organizations.</span><br />Complete control.
               </motion.h1>
               <motion.p variants={reveal} className="mt-7 max-w-xl text-lg leading-8 text-ink/60">
-                OrgTask brings your organizations, people, teams, and permissions into one beautifully simple workspace — with a built-in ITSM engine to run your entire service desk.
+                ORG MAN brings your organizations, people, teams, and permissions into one beautifully simple workspace — with a built-in ITSM engine to run your entire service desk.
               </motion.p>
               <motion.div variants={reveal} className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <Link to="/signup" className="rounded-full bg-ink px-6 py-3.5 text-center text-sm font-bold text-white shadow-xl shadow-ink/15 transition hover:-translate-y-1">Start for free <ArrowRight className="ml-2 inline" size={16} /></Link>
@@ -195,7 +195,7 @@ export default function Index() {
                   <span className="bg-gradient-to-r from-coral-light to-amber-200 bg-clip-text text-transparent">built right in.</span>
                 </h2>
                 <p className="mt-4 max-w-md text-[15px] leading-7 text-white/55">
-                  No more juggling separate tools. OrgTask includes a full ITSM suite — from incident response to change management — all connected to your org's permissions engine.
+                  No more juggling separate tools. ORG MAN includes a full ITSM suite — from incident response to change management — all connected to your org's permissions engine.
                 </p>
                 <ul className="mt-6 space-y-3">
                   {["Automated ticket routing & escalation", "Built-in SLA tracking with breach alerts", "Knowledge base for self-service resolution", "Real-time dashboards & analytics"].map((item) => (
@@ -298,7 +298,7 @@ export default function Index() {
                 <span className="bg-gradient-to-r from-coral-light to-amber-200 bg-clip-text text-transparent">More momentum.</span>
               </h2>
               <p className="mt-6 max-w-lg text-lg leading-7 text-white/65">
-                Eliminate the chaotic back-and-forth of managing permissions. OrgTask acts as a single, immutable source of truth for your entire company's hierarchy.
+                Eliminate the chaotic back-and-forth of managing permissions. ORG MAN acts as a single, immutable source of truth for your entire company's hierarchy.
               </p>
               <Link to="/dashboard" className="mt-8 inline-flex items-center rounded-full bg-white px-5 py-3 text-sm font-bold text-ink shadow-lg shadow-white/10 transition hover:-translate-y-1 hover:bg-coral-light hover:text-white hover:shadow-coral/20">
                 Explore the dashboard <ArrowRight className="ml-2" size={16} />
@@ -375,7 +375,7 @@ export default function Index() {
               Ready to bring clarity to your organization?
             </h2>
             <p className="mx-auto mt-4 max-w-lg text-[15px] text-white/60">
-              Join thousands of teams using OrgTask to simplify access control and power their service desk.
+              Join thousands of teams using ORG MAN to simplify access control and power their service desk.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link to="/signup" className="rounded-full bg-coral px-7 py-3.5 text-sm font-bold text-white shadow-xl shadow-coral/30 transition hover:-translate-y-1 hover:bg-coral-dark">
@@ -427,7 +427,7 @@ export default function Index() {
 ═══════════════════════════════════════════════════════ */
 
 function DashboardPreview() {
-  return <div className="relative mx-auto w-full max-w-[540px] lg:ml-auto"><div className="absolute -left-8 top-16 h-24 w-24 rounded-3xl bg-coral/20 blur-2xl" /><div className="relative overflow-hidden rounded-[1.6rem] border border-white/70 bg-white/90 p-2 shadow-2xl shadow-ink/15 backdrop-blur-xl"><div className="flex items-center gap-1.5 border-b border-ink/5 px-3 py-3"><span className="h-2 w-2 rounded-full bg-red-300" /><span className="h-2 w-2 rounded-full bg-amber-300" /><span className="h-2 w-2 rounded-full bg-emerald-300" /><div className="ml-4 h-5 w-36 rounded bg-ink/5" /></div><div className="grid grid-cols-[118px_1fr]"><div className="border-r border-ink/5 bg-cream/60 p-3"><div className="mb-7 flex items-center gap-1.5 text-[10px] font-bold"><span className="flex h-5 w-5 items-center justify-center rounded-md bg-ink text-white"><Command size={10} /></span> orgtask</div>{["Overview", "Organizations", "People", "Teams", "Permissions"].map((item, i) => <div key={item} className={`mb-2 rounded-lg px-2 py-2 text-[9px] font-semibold ${i === 0 ? "bg-ink text-white" : "text-ink/40"}`}>{item}</div>)}</div><div className="p-4 sm:p-6"><div className="flex items-start justify-between"><div><div className="text-[9px] font-bold uppercase tracking-widest text-coral">Monday, June 24</div><h3 className="mt-1 font-display text-xl font-bold tracking-tight">Good morning, Alex</h3></div><div className="h-7 w-7 rounded-full bg-gradient-to-br from-coral to-amber-300" /></div><div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-2 sm:grid-cols-4">{[["Organizations", "24"], ["Active users", "1,284"], ["Teams", "86"], ["Clients", "312"]].map(([label, value]) => <div key={label} className="rounded-xl border border-ink/5 bg-cream/50 p-2"><div className="text-[8px] text-ink/40">{label}</div><div className="mt-1 font-display text-lg font-bold">{value}</div></div>)}</div><div className="mt-4 rounded-xl border border-ink/5 p-3"><div className="flex justify-between text-[9px] font-bold"><span>Organization growth</span><span className="text-emerald-500">+18.4%</span></div><div className="mt-3 flex h-20 items-end gap-1.5">{[20, 34, 29, 45, 40, 56, 50, 67, 72, 64, 82, 92].map((h, i) => <div key={i} className={`flex-1 rounded-t-sm ${i === 11 ? "bg-coral" : "bg-coral/20"}`} style={{ height: `${h}%` }} />)}</div></div></div></div></div></div>;
+  return <div className="relative mx-auto w-full max-w-[540px] lg:ml-auto"><div className="absolute -left-8 top-16 h-24 w-24 rounded-3xl bg-coral/20 blur-2xl" /><div className="relative overflow-hidden rounded-[1.6rem] border border-white/70 bg-white/90 p-2 shadow-2xl shadow-ink/15 backdrop-blur-xl"><div className="flex items-center gap-1.5 border-b border-ink/5 px-3 py-3"><span className="h-2 w-2 rounded-full bg-red-300" /><span className="h-2 w-2 rounded-full bg-amber-300" /><span className="h-2 w-2 rounded-full bg-emerald-300" /><div className="ml-4 h-5 w-36 rounded bg-ink/5" /></div><div className="grid grid-cols-[118px_1fr]"><div className="border-r border-ink/5 bg-cream/60 p-3"><div className="mb-7 flex items-center gap-1.5 text-[10px] font-bold"><span className="flex h-5 w-5 items-center justify-center rounded-md bg-ink text-white"><Command size={10} /></span> ORG MAN</div>{["Overview", "Organizations", "People", "Teams", "Permissions"].map((item, i) => <div key={item} className={`mb-2 rounded-lg px-2 py-2 text-[9px] font-semibold ${i === 0 ? "bg-ink text-white" : "text-ink/40"}`}>{item}</div>)}</div><div className="p-4 sm:p-6"><div className="flex items-start justify-between"><div><div className="text-[9px] font-bold uppercase tracking-widest text-coral">Monday, June 24</div><h3 className="mt-1 font-display text-xl font-bold tracking-tight">Good morning, Alex</h3></div><div className="h-7 w-7 rounded-full bg-gradient-to-br from-coral to-amber-300" /></div><div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-2 sm:grid-cols-4">{[["Organizations", "24"], ["Active users", "1,284"], ["Teams", "86"], ["Clients", "312"]].map(([label, value]) => <div key={label} className="rounded-xl border border-ink/5 bg-cream/50 p-2"><div className="text-[8px] text-ink/40">{label}</div><div className="mt-1 font-display text-lg font-bold">{value}</div></div>)}</div><div className="mt-4 rounded-xl border border-ink/5 p-3"><div className="flex justify-between text-[9px] font-bold"><span>Organization growth</span><span className="text-emerald-500">+18.4%</span></div><div className="mt-3 flex h-20 items-end gap-1.5">{[20, 34, 29, 45, 40, 56, 50, 67, 72, 64, 82, 92].map((h, i) => <div key={i} className={`flex-1 rounded-t-sm ${i === 11 ? "bg-coral" : "bg-coral/20"}`} style={{ height: `${h}%` }} />)}</div></div></div></div></div></div>;
 }
 
 function RolesPreview() {

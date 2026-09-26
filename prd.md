@@ -4,7 +4,7 @@ Your task is to completely rebuild and improve my existing project into a produc
 
 PROJECT NAME
 
-OrgTask
+ORG MAN
 
 IMPORTANT
 
@@ -32,7 +32,7 @@ I want a clean, scalable, enterprise-ready architecture.
 
 PROJECT IDEA
 
-OrgTask is a Multi-Tenant Organization Management & Collaboration Platform.
+ORG MAN is a Multi-Tenant Organization Management & Collaboration Platform.
 
 Multiple organizations can register on the same platform.
 
@@ -723,18 +723,18 @@ Future scalability suggestions
 
 FINAL GOAL
 
-I want OrgTask to look and feel like a premium enterprise SaaS platform that can support thousands of organizations with secure multi-tenancy, role-based access control, collaboration, project management and organization administration.
+I want ORG MAN to look and feel like a premium enterprise SaaS platform that can support thousands of organizations with secure multi-tenancy, role-based access control, collaboration, project management and organization administration.
 
 
 
 
-# ORGFLOW — ENTERPRISE MULTI-TENANT WORKSPACE + ITSM PLATFORM
+# ORG MAN — ENTERPRISE MULTI-TENANT WORKSPACE + ITSM PLATFORM
 
 Transform the existing project into a production-ready enterprise SaaS platform called:
 
-# OrgTask
+# ORG MAN
 
-OrgTask should combine:
+ORG MAN should combine:
 
 1. Multi-tenant Organization Management
 2. User / Role / Permission Management
@@ -752,7 +752,7 @@ OrgTask should combine:
 
 IMPORTANT:
 
-OrgTask should NOT be a copy of ServiceNow's UI or proprietary implementation.
+ORG MAN should NOT be a copy of ServiceNow's UI or proprietary implementation.
 
 Use ServiceNow-style enterprise concepts as inspiration, but build an original product, architecture, naming system, UI and implementation.
 
@@ -760,7 +760,7 @@ Use ServiceNow-style enterprise concepts as inspiration, but build an original p
 
 # 1. CORE PRODUCT CONCEPT
 
-OrgTask is a centralized digital workspace where every organization can configure and manage its own operations.
+ORG MAN is a centralized digital workspace where every organization can configure and manage its own operations.
 
 Example organizations:
 
@@ -802,7 +802,7 @@ Every organization can independently configure:
 * reports
 * dashboards
 
-The platform Super Admin manages the entire OrgTask platform.
+The platform Super Admin manages the entire ORG MAN platform.
 
 ---
 
@@ -2288,7 +2288,7 @@ service_catalog_items
 custom_fields
 ```
 
-This makes OrgTask configurable for completely different organizations.
+This makes ORG MAN configurable for completely different organizations.
 
 ---
 
@@ -2436,7 +2436,7 @@ Project
 └── Settings
 ```
 
-This pattern should be used throughout OrgTask.
+This pattern should be used throughout ORG MAN.
 
 ---
 
@@ -2519,7 +2519,7 @@ Design the architecture so they can be added later.
 
 # 50. FINAL IMPLEMENTATION RULE
 
-Do not build OrgTask as a simple CRUD application.
+Do not build ORG MAN as a simple CRUD application.
 
 Build it as:
 
@@ -2567,7 +2567,7 @@ Organization B
     Approval = Department Head
 ```
 
-Both organizations run on the same OrgTask platform but have completely independent configurations and data.
+Both organizations run on the same ORG MAN platform but have completely independent configurations and data.
 
 ---
 
@@ -2669,7 +2669,7 @@ Do not stop after creating the plan.
 
 Actually implement the system phase-by-phase.
 
-At the end, OrgTask must function as a complete enterprise-grade:
+At the end, ORG MAN must function as a complete enterprise-grade:
 
 # ORGANIZATION MANAGEMENT + ITSM + WORKFLOW AUTOMATION PLATFORM
 

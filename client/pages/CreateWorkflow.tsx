@@ -225,7 +225,7 @@ export default function CreateWorkflow() {
                       type="email" 
                       value={emailTo}
                       onChange={(e) => setEmailTo(e.target.value)}
-                      placeholder="admin@orgtask.com" 
+                      placeholder="admin@orgman.com" 
                       className="flex h-10 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm dark:border-zinc-800 dark:bg-zinc-950"
                     />
                   </div>

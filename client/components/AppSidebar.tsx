@@ -82,7 +82,7 @@ export default function AppSidebar({ organizations, onSignOut, isMobile }: Sideb
             <Command size={14} />
         </div>
         <div className="font-display font-bold text-lg tracking-tight text-ink dark:text-white truncate">
-          {activeOrg ? activeOrg.name : "ORG FLOW"}
+          {activeOrg ? activeOrg.name : "ORG MAN"}
         </div>
       </div>
       
@@ -153,7 +153,7 @@ export default function AppSidebar({ organizations, onSignOut, isMobile }: Sideb
                   {user?.user_metadata?.full_name || user?.email}
                 </div>
                 <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider truncate leading-tight mt-0.5">
-                  {activeOrg ? activeOrg.name : "ORG FLOW"}
+                  {activeOrg ? activeOrg.name : "ORG MAN"}
                 </div>
               </div>
             </Button>

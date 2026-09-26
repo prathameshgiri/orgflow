@@ -60,7 +60,7 @@ const Login = () => {
         variant: "destructive",
       });
     } else {
-      toast({ title: "Login Successful", description: "Welcome back to OrgTask!" });
+      toast({ title: "Login Successful", description: "Welcome back to ORG MAN!" });
       navigate("/dashboard");
     }
   };
@@ -117,7 +117,7 @@ const Login = () => {
           </motion.h1>
 
           <motion.p variants={fadeInUp} className="mt-4 text-base text-slate-600 leading-relaxed max-w-lg">
-            Stop switching between disjointed tools. OrgTask provides a unified, secure platform for ITSM, project management, and access control.
+            Stop switching between disjointed tools. ORG MAN provides a unified, secure platform for ITSM, project management, and access control.
           </motion.p>
 
           <motion.div variants={staggerContainer} className="mt-6 space-y-3">
@@ -145,15 +145,15 @@ const Login = () => {
               Your organizational data is encrypted at rest and in transit. <a href="#" className="text-indigo-600 hover:underline font-semibold">View our security center &rarr;</a>
             </p>
             <p className="text-[11px] text-slate-400 mt-4 leading-relaxed">
-              By logging in, you agree to OrgTask's <a href="#" className="underline hover:text-slate-600">Terms of Service</a> and <a href="#" className="underline hover:text-slate-600">Privacy Policy</a>.
+              By logging in, you agree to ORG MAN's <a href="#" className="underline hover:text-slate-600">Terms of Service</a> and <a href="#" className="underline hover:text-slate-600">Privacy Policy</a>.
             </p>
             <div className="mt-4 flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900">
                 <Building2 size={16} className="text-violet-400" />
               </div>
               <div>
-                <p className="text-sm font-bold text-slate-900">Powered by <span className="text-violet-600">OrgTask</span></p>
-                <p className="text-xs text-slate-400">&copy; {new Date().getFullYear()} OrgTask Inc.</p>
+                <p className="text-sm font-bold text-slate-900">Powered by <span className="text-violet-600">ORG MAN</span></p>
+                <p className="text-xs text-slate-400">&copy; {new Date().getFullYear()} ORG MAN Inc.</p>
               </div>
             </div>
           </motion.div>

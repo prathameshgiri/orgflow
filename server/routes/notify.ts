@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { sendNotificationEmail, buildOrgFlowEmail } from "../utils/email";
+import { sendNotificationEmail, buildOrgManEmail } from "../utils/email";
 import { AuthenticatedRequest } from "../middleware/auth";
 
 const router = Router();
@@ -41,7 +41,7 @@ router.post("/assignment", async (req, res) => {
       </div>
     `;
 
-    const htmlContent = buildOrgFlowEmail(
+    const htmlContent = buildOrgManEmail(
       "New Assignment Notification",
       messageHtml,
       linkUrl || 'http://localhost:8080/dashboard',

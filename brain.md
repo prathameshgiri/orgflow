@@ -1,13 +1,13 @@
-# ORG FLOW - Project Brain 🧠
+# ORG MAN - Project Brain 🧠
 
-This file (`brain.md`) serves as the central nervous system for the ORG FLOW project. **Any AI assistant working on this project MUST read this file first** to understand the architecture, context, and current state of the application. 
+This file (`brain.md`) serves as the central nervous system for the ORG MAN project. **Any AI assistant working on this project MUST read this file first** to understand the architecture, context, and current state of the application. 
 
 Whenever new features are added, database schemas are modified, or major UI changes are made, this file **MUST** be updated to reflect those changes.
 
 ---
 
 ## 🏗️ 1. Architecture & Tech Stack
-- **Project Name:** ORG FLOW
+- **Project Name:** ORG MAN
 - **Frontend:** React 18, React Router 6 (SPA mode), Vite, TypeScript, TailwindCSS 3.
 - **Backend:** Express.js (integrated into Vite dev server, running on port 8080).
 - **Database:** Supabase (PostgreSQL) with strict Multi-Tenant Row Level Security (RLS).

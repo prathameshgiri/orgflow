@@ -1,5 +1,5 @@
 -- ==============================================================================
--- OrgTask Multi-Tenant SaaS Database Schema
+-- ORG MAN Multi-Tenant SaaS Database Schema
 -- Designed for PostgreSQL / Supabase
 -- ==============================================================================
 
@@ -363,7 +363,7 @@ CREATE OR REPLACE TRIGGER on_auth_user_created
 -- END OF SCHEMA
 -- ==========================================
 -- ==============================================================================
--- OrgTask Multi-Tenant SaaS Database Schema (EXPANSION PACK)
+-- ORG MAN Multi-Tenant SaaS Database Schema (EXPANSION PACK)
 -- Adds Service Management, Knowledge, Assets, and Automation modules
 -- ==============================================================================
 

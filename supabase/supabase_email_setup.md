@@ -1,9 +1,9 @@
 # Supabase Email Verification & Webhook Setup
 
-Follow these steps to configure your ORG FLOW emails in Supabase.
+Follow these steps to configure your ORG MAN emails in Supabase.
 
 ## 1. Authentication Email Templates
-Supabase handles user verification directly. You need to paste this custom HTML into your Supabase Dashboard to make the verification emails match the ORG FLOW branding.
+Supabase handles user verification directly. You need to paste this custom HTML into your Supabase Dashboard to make the verification emails match the ORG MAN branding.
 
 **Go to:** Supabase Dashboard -> Authentication -> Email Templates -> Confirm signup
 
@@ -31,20 +31,20 @@ Supabase handles user verification directly. You need to paste this custom HTML 
   <div class="wrapper">
     <table class="main" width="100%" cellpadding="0" cellspacing="0">
       <tr>
-        <td class="header"><h1>ORG FLOW</h1></td>
+        <td class="header"><h1>ORG MAN</h1></td>
       </tr>
       <tr>
         <td class="content">
           <h2 style="color: #18181b; margin-top:0;">Verify your email address</h2>
           <p>Hi there,</p>
-          <p>Welcome to ORG FLOW! Please click the button below to verify your email address and activate your account.</p>
+          <p>Welcome to ORG MAN! Please click the button below to verify your email address and activate your account.</p>
           
           <div class="button-container">
             <a href="{{ .ConfirmationURL }}" class="button">Verify Email Address</a>
           </div>
           
           <p style="margin-top: 30px;">If you didn't request this, you can safely ignore this email.</p>
-          <p style="margin-top: 20px; margin-bottom: 0;">Thanks,<br>The ORG FLOW Team</p>
+          <p style="margin-top: 20px; margin-bottom: 0;">Thanks,<br>The ORG MAN Team</p>
         </td>
       </tr>
       <tr>

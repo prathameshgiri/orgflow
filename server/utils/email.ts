@@ -29,8 +29,8 @@ function initializeTransporter() {
   }
 }
 
-// Generate the Beautiful ORG FLOW HTML Wrapper
-export function buildOrgFlowEmail(title: string, messageHtml: string, actionUrl?: string, actionText?: string) {
+// Generate the Beautiful ORG MAN HTML Wrapper
+export function buildOrgManEmail(title: string, messageHtml: string, actionUrl?: string, actionText?: string) {
   return `
 <!DOCTYPE html>
 <html>
@@ -62,7 +62,7 @@ export function buildOrgFlowEmail(title: string, messageHtml: string, actionUrl?
     <table class="main" width="100%" cellpadding="0" cellspacing="0" role="presentation">
       <tr>
         <td class="header">
-          <h1>ORG FLOW</h1>
+          <h1>ORG MAN</h1>
         </td>
       </tr>
       <tr>
@@ -74,12 +74,12 @@ export function buildOrgFlowEmail(title: string, messageHtml: string, actionUrl?
               <a href="${actionUrl}" class="button">${actionText}</a>
             </div>
           ` : ''}
-          <p style="margin-top: 30px; margin-bottom: 0;">Thanks,<br>The ORG FLOW Team</p>
+          <p style="margin-top: 30px; margin-bottom: 0;">Thanks,<br>The ORG MAN Team</p>
         </td>
       </tr>
       <tr>
         <td class="footer">
-          <p>&copy; ${new Date().getFullYear()} ORG FLOW. All rights reserved.</p>
+          <p>&copy; ${new Date().getFullYear()} ORG MAN. All rights reserved.</p>
           <p style="margin-top: 8px;">This is an automated notification, please do not reply.</p>
         </td>
       </tr>
@@ -98,7 +98,7 @@ export async function sendNotificationEmail(to: string, subject: string, htmlCon
 
   try {
     const info = await transporter.sendMail({
-      from: '"ORG FLOW Notifications" <' + (process.env.SMTP_USER || 'no-reply@orgflow.com') + '>',
+      from: '"ORG MAN Notifications" <' + (process.env.SMTP_USER || 'no-reply@orgman.com') + '>',
       to, 
       subject, 
       html: htmlContent, 

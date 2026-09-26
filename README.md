@@ -1,4 +1,4 @@
-# 🌟 ORGTASK (ORGFLOW) - ENTERPRISE MULTI-TENANT WORKSPACE & ITSM PLATFORM 🌟
+# 🌟 ORG MAN (ORG MAN) - ENTERPRISE MULTI-TENANT WORKSPACE & ITSM PLATFORM 🌟
 
 <p align="center">
   <em>A next-generation digital workspace and Service Management (ITSM) platform built for scale, security, and seamless collaboration.</em>
@@ -8,7 +8,7 @@
 
 # 🚀 INTRODUCTION: WHAT DOES THIS PLATFORM DO?
 
-**OrgTask** (also known as OrgFlow) is a centralized, comprehensive digital workspace designed to replace fragmented toolchains. Instead of using separate applications for project management, IT ticketing, internal communication, and document storage, OrgTask brings everything under one unified, secure umbrella.
+**ORG MAN** (also known as ORG MAN) is a centralized, comprehensive digital workspace designed to replace fragmented toolchains. Instead of using separate applications for project management, IT ticketing, internal communication, and document storage, ORG MAN brings everything under one unified, secure umbrella.
 
 It is built on a **Multi-Tenant Architecture**, meaning multiple organizations can register on the same platform while keeping their data completely isolated, secure, and independent. 
 
@@ -21,7 +21,7 @@ Within their secure workspace, each organization can independently manage:
 - **Knowledge Base, Assets, and Configuration Items (CMDB):** Centralizing information and IT infrastructure.
 - **Internal Chat, Announcements & Notifications:** Seamless, real-time communication.
 
-Think of OrgTask as a powerful combination of **Jira, ServiceNow, ClickUp, and Notion**—tailored for enterprise-level operations and collaboration, but with a beautiful, modern, and lightning-fast user interface.
+Think of ORG MAN as a powerful combination of **Jira, ServiceNow, ClickUp, and Notion**—tailored for enterprise-level operations and collaboration, but with a beautiful, modern, and lightning-fast user interface.
 
 ---
 
@@ -47,16 +47,16 @@ This platform is specifically engineered for **B2B (Business-to-Business)** envi
 
 # 🏁 THE ACTUAL GOAL OF THE PLATFORM
 
-The core philosophy and actual goal of OrgTask is **Consolidation and Automation**. 
+The core philosophy and actual goal of ORG MAN is **Consolidation and Automation**. 
 
 ### 1. Eliminating Tool Fatigue
-Modern workers suffer from "Context Switching"—moving between Slack for chat, Jira for tickets, Notion for docs, and Asana for tasks. OrgTask's goal is to provide a **Single Source of Truth**. By having tasks, docs, chat, and tickets in one place, productivity skyrockets.
+Modern workers suffer from "Context Switching"—moving between Slack for chat, Jira for tickets, Notion for docs, and Asana for tasks. ORG MAN's goal is to provide a **Single Source of Truth**. By having tasks, docs, chat, and tickets in one place, productivity skyrockets.
 
 ### 2. Uncompromising Security & Isolation
 With B2B SaaS, data leaks are catastrophic. The goal is to provide **Bank-Grade Security** via PostgreSQL Row Level Security (RLS). Even if a developer makes a mistake in the backend API, the database itself will mathematically refuse to serve Data from Organization A to a User in Organization B.
 
 ### 3. Enterprise Power with Startup UX
-Enterprise software (like ServiceNow or SAP) is famously difficult to use and visually outdated. OrgTask aims to deliver the extreme power and configurability of enterprise software, but packaged in a **premium, consumer-grade User Experience (UX)**.
+Enterprise software (like ServiceNow or SAP) is famously difficult to use and visually outdated. ORG MAN aims to deliver the extreme power and configurability of enterprise software, but packaged in a **premium, consumer-grade User Experience (UX)**.
 
 ---
 
@@ -84,7 +84,7 @@ The UI/UX is built to wow the user at first glance. It feels like a **modern, pr
 
 # ⚙️ TECHNICAL DECISIONS & ARCHITECTURE
 
-Building a multi-tenant SaaS requires strict data isolation, scalable architecture, and maintainable code. Here are the core decisions that define OrgTask:
+Building a multi-tenant SaaS requires strict data isolation, scalable architecture, and maintainable code. Here are the core decisions that define ORG MAN:
 
 ### 1. Multi-Tenancy Strategy (Row Level Security)
 Every table in the database contains an `organization_id` column. We use **Row Level Security (RLS)** in PostgreSQL. This means we write policies directly in the database that state: *"Only allow the `SELECT`, `INSERT`, `UPDATE`, or `DELETE` operation if the `organization_id` of the row matches the `organization_id` of the currently authenticated user's JWT."* This guarantees 100% data isolation.
@@ -128,9 +128,9 @@ We use TypeScript universally. Using **Zod**, we define schemas in a `shared/` d
 
 ---
 
-# 🤖 DEEP DIVE: WHAT IS AUTOMATION IN ORGTASK?
+# 🤖 DEEP DIVE: WHAT IS AUTOMATION IN ORG MAN?
 
-Enterprise software is only as good as the time it saves. **Automation** in OrgTask is a powerful rules engine designed to remove manual, repetitive tasks, enforce organizational standards, and ensure nothing falls through the cracks. 
+Enterprise software is only as good as the time it saves. **Automation** in ORG MAN is a powerful rules engine designed to remove manual, repetitive tasks, enforce organizational standards, and ensure nothing falls through the cracks. 
 
 Here is exactly what Automation means in this project:
 
@@ -141,7 +141,7 @@ SLAs are automated timers that guarantee a certain level of service.
 - **Automated Escalations:** If an SLA is breached, the automation engine can automatically reassign the ticket to a senior manager and send a high-priority email/SMS alert.
 
 ### 2. Workflow Automations (Triggers & Actions)
-OrgTask allows administrators to define "If This, Then That" (IFTTT) style rules.
+ORG MAN allows administrators to define "If This, Then That" (IFTTT) style rules.
 - **Triggers:** Events that occur in the system (e.g., "A new Employee is created", "A Task status changes to 'Done'", "A High Priority Incident is logged").
 - **Conditions:** Rules that must be met (e.g., "...AND the Department is 'Engineering'").
 - **Actions:** Automated system behaviors (e.g., "...THEN assign an onboarding task list, send a welcome email, and post a message in the internal chat").
@@ -160,9 +160,9 @@ The system intelligently knows when to notify people without spamming them. Push
 
 ---
 
-# 📖 DETAILED GUIDE: HOW TO USE ORGTASK
+# 📖 DETAILED GUIDE: HOW TO USE ORG MAN
 
-This section provides a comprehensive step-by-step walkthrough of how an organization uses OrgTask from Day 1 to daily operations.
+This section provides a comprehensive step-by-step walkthrough of how an organization uses ORG MAN from Day 1 to daily operations.
 
 ### Phase 1: Onboarding & Initialization
 1. **Registration:** You (the founder or IT head) visit the site and sign up. Since you are the first user, the system prompts you to create your "Organization Workspace". 
@@ -207,13 +207,13 @@ Before you begin, ensure you have the following installed on your system:
 Open your terminal or command prompt and run the following command using the real GitHub link:
 
 ```bash
-git clone https://github.com/prathameshgiri/orgflow.git
+git clone https://github.com/prathameshgiri/ORG MAN.git
 ```
 
 Navigate into the cloned directory:
 
 ```bash
-cd orgflow
+cd ORG MAN
 ```
 
 ### 📦 Step 2: Install Dependencies
@@ -277,7 +277,7 @@ When you are ready to deploy the application to a production environment (like N
 
 # 🤝 CONTRIBUTING
 
-We welcome contributions to OrgTask! If you want to help make this platform even better:
+We welcome contributions to ORG MAN! If you want to help make this platform even better:
 1. Fork the repository.
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`).
 3. Commit your changes using descriptive commit messages (`git commit -m 'Add some AmazingFeature'`).
@@ -294,5 +294,5 @@ This project is licensed under the MIT License. You are free to use, modify, and
 
 ---
 <p align="center">
-  <b>OrgTask</b> — <i>Built with Prathamesh Giri for modern organizations.</i>
+  <b>ORG MAN</b> — <i>Built with Prathamesh Giri for modern organizations.</i>
 </p>

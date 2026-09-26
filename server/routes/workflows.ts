@@ -70,8 +70,8 @@ export const triggerWorkflow = async (req: Request, res: Response) => {
           console.log(`[Global Notifications] Sending P1/P2 Alert for incident ${payload.id}`);
           if (transporter) {
             const info = await transporter.sendMail({
-              from: '"OrgTask System" <no-reply@orgtask.com>',
-              to: "admins@orgtask.com", // In a real app, you would fetch the org's admin emails
+              from: '"ORG MAN System" <no-reply@orgman.com>',
+              to: "admins@orgman.com", // In a real app, you would fetch the org's admin emails
               subject: `URGENT: New ${payload.priority} Incident - ${payload.title || 'Untitled'}`,
               text: `A new critical/high incident has been reported.\n\nPlease check the dashboard immediately.`,
               html: `<p>A new critical/high incident has been reported.</p><p>Please check the dashboard immediately.</p>`
@@ -126,7 +126,7 @@ export const triggerWorkflow = async (req: Request, res: Response) => {
               });
 
               const info = await transporter.sendMail({
-                from: '"OrgTask Automations" <no-reply@orgtask.com>',
+                from: '"ORG MAN Automations" <no-reply@orgman.com>',
                 to: emailPayload.to || "test@example.com",
                 subject: parsedSubject,
                 text: parsedBody,
