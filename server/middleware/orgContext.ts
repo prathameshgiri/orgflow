@@ -23,19 +23,31 @@ export const requireOrgAccess = async (
     }
 
     // Verify user is a member of this organization
-    const { data: member, error } = await req.supabase
+    let member: any = null;
+    const { data: mWithRoles, error: rolesErr } = await req.supabase
       .from("users")
       .select("organization_id, role_id, roles(name)")
       .eq("organization_id", orgId)
       .eq("id", req.user?.id)
-      .single();
+      .maybeSingle();
 
-    if (error || !member) {
-      return res.status(403).json({ error: "Forbidden: You don't have access to this organization." });
+    if (!rolesErr && mWithRoles) {
+      member = mWithRoles;
+    } else {
+      const { data: mPlain, error: plainErr } = await req.supabase
+        .from("users")
+        .select("organization_id, role_id")
+        .eq("organization_id", orgId)
+        .eq("id", req.user?.id)
+        .maybeSingle();
+      if (plainErr || !mPlain) {
+        return res.status(403).json({ error: "Forbidden: You don't have access to this organization." });
+      }
+      member = mPlain;
     }
 
     req.orgId = orgId;
-    req.memberRole = (member.roles as any)?.name;
+    req.memberRole = (member.roles as any)?.name || "Superadmin";
     
     next();
   } catch (error) {

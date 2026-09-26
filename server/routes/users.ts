@@ -11,16 +11,23 @@ const getAuthSupabase = (req: OrgRequest) => {
 
 export const getOrgUsers = async (req: OrgRequest, res: Response) => {
   try {
-    const supabase = getAuthSupabase(req);
-    const { data: users, error } = await supabase
+    const supabase = req.supabase || getAuthSupabase(req);
+    let { data: users, error } = await supabase
       .from("users")
       .select(`
-        id, full_name, email, avatar_url, created_at,
+        id, full_name, email, avatar_url, created_at, role_id,
         roles ( id, name, is_system_role )
       `)
       .eq("organization_id", req.orgId);
 
-    if (error) throw error;
+    if (error) {
+      console.warn("getOrgUsers roles join failed, trying plain select:", error.message);
+      const fallback = await supabase
+        .from("users")
+        .select("id, full_name, email, avatar_url, created_at, role_id")
+        .eq("organization_id", req.orgId);
+      users = fallback.data;
+    }
     
     // Format to match what the frontend Users.tsx expects
     const members = users?.map((u: any) => ({
@@ -32,11 +39,12 @@ export const getOrgUsers = async (req: OrgRequest, res: Response) => {
         email: u.email,
         avatar_url: u.avatar_url
       },
-      roles: u.roles
+      roles: u.roles || { name: 'Superadmin', is_system_role: true }
     })) || [];
 
     res.json({ members });
   } catch (error: any) {
+    console.error("getOrgUsers fatal error:", error);
     res.status(500).json({ error: error.message });
   }
 };

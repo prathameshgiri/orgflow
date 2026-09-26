@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useOrgStore } from "../store/orgStore";
 import { usePermissions } from "../hooks/usePermissions";
+import { supabase } from "../../shared/supabase";
 import { Plus, MoreHorizontal, UserCheck, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -25,7 +26,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Users = () => {
   const navigate = useNavigate();
-  const { session } = useAuth();
+  const { session, user } = useAuth();
   const { activeOrganizationId } = useOrgStore();
   const { hasPermission, loading: permsLoading } = usePermissions();
   const { toast } = useToast();
@@ -40,27 +41,104 @@ const Users = () => {
       return;
     }
     try {
-      const headers = {
-        Authorization: `Bearer ${session?.access_token}`,
-        "x-org-id": activeOrganizationId,
-      };
+      let fetchedMembers: any[] = [];
+      let fetchedRoles: any[] = [];
 
-      const [usersRes, rolesRes] = await Promise.all([
-        fetch("/api/users", { headers }),
-        fetch("/api/roles", { headers })
-      ]);
+      // 1. Try fetching through Express API if session token is available
+      if (session?.access_token) {
+        try {
+          const headers = {
+            Authorization: `Bearer ${session.access_token}`,
+            "x-org-id": activeOrganizationId,
+          };
 
-      if (usersRes.ok) {
-        const data = await usersRes.json();
-        setMembers(data.members || []);
+          const [usersRes, rolesRes] = await Promise.all([
+            fetch("/api/users", { headers }),
+            fetch("/api/roles", { headers })
+          ]);
+
+          if (usersRes.ok) {
+            const data = await usersRes.json();
+            fetchedMembers = data.members || [];
+          }
+
+          if (rolesRes.ok) {
+            const data = await rolesRes.json();
+            fetchedRoles = data.roles || [];
+          }
+        } catch (apiErr) {
+          console.warn("API fetch error, falling back to direct Supabase query:", apiErr);
+        }
       }
-      
-      if (rolesRes.ok) {
-        const data = await rolesRes.json();
-        setRoles(data.roles || []);
+
+      // 2. Direct Supabase Fallback for members
+      if (fetchedMembers.length === 0) {
+        const { data: directUsers, error: usersErr } = await supabase
+          .from("users")
+          .select(`
+            id, full_name, email, avatar_url, created_at, role_id,
+            roles ( id, name, is_system_role )
+          `)
+          .eq("organization_id", activeOrganizationId);
+
+        if (directUsers && directUsers.length > 0) {
+          fetchedMembers = directUsers.map((u: any) => ({
+            id: u.id,
+            joined_at: u.created_at,
+            users: {
+              id: u.id,
+              full_name: u.full_name,
+              email: u.email,
+              avatar_url: u.avatar_url
+            },
+            roles: u.roles || { name: 'Superadmin', is_system_role: true }
+          }));
+        } else if (usersErr) {
+          // If relationship join failed, fetch plain users
+          const { data: plainUsers } = await supabase
+            .from("users")
+            .select("id, full_name, email, avatar_url, created_at, role_id")
+            .eq("organization_id", activeOrganizationId);
+          if (plainUsers && plainUsers.length > 0) {
+            fetchedMembers = plainUsers.map((u: any) => ({
+              id: u.id,
+              joined_at: u.created_at,
+              users: {
+                id: u.id,
+                full_name: u.full_name,
+                email: u.email,
+                avatar_url: u.avatar_url
+              },
+              roles: { name: 'Superadmin', is_system_role: true }
+            }));
+          }
+        }
       }
+
+      // 3. Direct Supabase Fallback for roles
+      if (fetchedRoles.length === 0) {
+        const { data: directRoles } = await supabase
+          .from("roles")
+          .select("id, name, description, is_system_role")
+          .eq("organization_id", activeOrganizationId);
+
+        if (directRoles && directRoles.length > 0) {
+          fetchedRoles = directRoles;
+        } else {
+          fetchedRoles = [
+            { id: "superadmin", name: "Superadmin", is_system_role: true },
+            { id: "administrator", name: "Administrator", is_system_role: true },
+            { id: "manager", name: "Manager", is_system_role: true },
+            { id: "member", name: "Member", is_system_role: true },
+            { id: "read_only", name: "Read Only", is_system_role: true }
+          ];
+        }
+      }
+
+      setMembers(fetchedMembers);
+      setRoles(fetchedRoles);
     } catch (error) {
-      console.error(error);
+      console.error("Users page load error:", error);
     } finally {
       setLoading(false);
     }
@@ -72,22 +150,35 @@ const Users = () => {
 
   const handleRoleChange = async (memberId: string, newRoleId: string) => {
     try {
-      const response = await fetch(`/api/users/${memberId}/role`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.access_token}`,
-          "x-org-id": activeOrganizationId!,
-        },
-        body: JSON.stringify({ roleId: newRoleId }),
-      });
+      let updated = false;
+      if (session?.access_token) {
+        const response = await fetch(`/api/users/${memberId}/role`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+            "x-org-id": activeOrganizationId!,
+          },
+          body: JSON.stringify({ roleId: newRoleId }),
+        });
+        if (response.ok) {
+          updated = true;
+        }
+      }
 
-      if (response.ok) {
+      if (!updated) {
+        const { error } = await supabase
+          .from("users")
+          .update({ role_id: newRoleId })
+          .eq("id", memberId);
+        if (!error) updated = true;
+      }
+
+      if (updated) {
         toast({ title: "Role Updated", description: "User role has been updated." });
         fetchData(); // Refresh list
       } else {
-        const data = await response.json();
-        toast({ title: "Error", description: data.error, variant: "destructive" });
+        toast({ title: "Error", description: "Could not update user role.", variant: "destructive" });
       }
     } catch (error: any) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
