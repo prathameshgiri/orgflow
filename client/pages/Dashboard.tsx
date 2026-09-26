@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { 
   CheckSquare, AlertCircle, Clock, CheckCircle2, 
   ArrowRight, Search, Menu, Bell, LayoutDashboard,
-  MessageSquare, Settings, Activity, Briefcase, Folder
+  MessageSquare, Settings, Activity, Briefcase, Folder, Calendar
 } from "lucide-react";
 import { supabase } from "../../shared/supabase";
 import { useNavigate } from "react-router-dom";
@@ -146,9 +146,9 @@ export default function Dashboard() {
     </div>
   );
 
-  // Determine greeting based on hour
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
+  // Determine greeting based on IST (Indian Standard Time) hour
+  const hour = parseInt(new Intl.DateTimeFormat('en-US', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Asia/Kolkata' }).format(new Date()), 10);
+  const greeting = (hour >= 5 && hour < 12) ? 'Good Morning' : (hour >= 12 && hour < 17) ? 'Good Afternoon' : 'Good Evening';
 
   return (
     <div className="bg-zinc-50/50 dark:bg-zinc-950 min-h-screen p-4 md:p-8 animate-in fade-in duration-500">
@@ -460,62 +460,67 @@ export default function Dashboard() {
           <table className="w-full text-left border-collapse text-sm">
             <thead>
               <tr className="border-b border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-950">
-                <th className="py-4 px-6 font-semibold text-zinc-600 dark:text-zinc-400 font-sans text-xs">Type</th>
-                <th className="py-4 px-6 font-semibold text-zinc-600 dark:text-zinc-400 font-sans text-xs">Status</th>
-                <th className="py-4 px-6 font-semibold text-zinc-600 dark:text-zinc-400 font-sans text-xs">Task Title</th>
-                <th className="py-4 px-6 font-semibold text-zinc-600 dark:text-zinc-400 font-sans text-xs">Project</th>
-                <th className="py-4 px-6 font-semibold text-zinc-600 dark:text-zinc-400 font-sans text-xs">Date</th>
-                <th className="py-4 px-6 font-semibold text-zinc-600 dark:text-zinc-400 font-sans text-xs">Priority</th>
-                <th className="py-4 px-6 font-semibold text-zinc-600 dark:text-zinc-400 font-sans text-xs">Actions</th>
+                <th className="py-4 px-6 font-semibold text-zinc-600 dark:text-zinc-400 font-sans text-xs w-[40%]">Task Details</th>
+                <th className="py-4 px-6 font-semibold text-zinc-600 dark:text-zinc-400 font-sans text-xs w-[25%]">Status & Type</th>
+                <th className="py-4 px-6 font-semibold text-zinc-600 dark:text-zinc-400 font-sans text-xs w-[25%]">Timeline & Priority</th>
+                <th className="py-4 px-6 font-semibold text-zinc-600 dark:text-zinc-400 font-sans text-xs text-right w-[10%]">Action</th>
               </tr>
             </thead>
             <tbody>
               {pendingTasks.map((task) => (
                 <tr 
                   key={task.id} 
-                  className="border-b border-zinc-50 dark:border-zinc-800/50 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors cursor-pointer"
+                  className="border-b border-zinc-50 dark:border-zinc-800/50 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors cursor-pointer group"
                   onClick={() => {
-                    if (task._type === 'PTASK') navigate(`/dashboard/projects/${task.project_id}/history`);
+                    if (task._type === 'PTASK') navigate(`/dashboard/tasks/${task.id}`);
                     else if (task._type === 'INCIDENT' || task._type === 'SCTASK') navigate(`/dashboard/incidents/${task.id}`);
                     else navigate(`/dashboard/tasks/${task.id}/update`);
                   }}
                 >
                   <td className="py-4 px-6">
-                    <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-wider rounded-md text-zinc-500 border-zinc-200 dark:border-zinc-700">
-                      {task._type}
-                    </Badge>
+                    <div className="flex flex-col gap-1">
+                      <span className="font-bold text-zinc-900 dark:text-zinc-100 text-[14px] leading-tight">{task.title}</span>
+                      <span className="text-[12px] font-medium text-zinc-500 truncate max-w-[300px]">{task.projects?.name || 'Service Desk'}</span>
+                    </div>
                   </td>
                   <td className="py-4 px-6">
-                    <span className={`text-xs font-semibold ${
-                      task.status === 'in_progress' ? 'text-orange-500' :
-                      task.status === 'done' || task.status === 'Resolved' ? 'text-emerald-500' :
-                      task.status === 'blocked' ? 'text-red-500' : 'text-zinc-500'
-                    }`}>
-                      {task.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                    </span>
-                  </td>
-                  <td className="py-4 px-6 font-medium text-zinc-800 dark:text-zinc-200">{task.title}</td>
-                  <td className="py-4 px-6 text-zinc-500">{task.projects?.name || 'Service Desk'}</td>
-                  <td className="py-4 px-6 text-zinc-500">{format(new Date(task.created_at || new Date()), 'MMM dd, yyyy')}</td>
-                  <td className="py-4 px-6">
-                    <span className={`text-[13px] font-semibold ${
-                      task.priority?.includes('urgent') || task.priority?.includes('p1') ? 'text-red-600' :
-                      task.priority?.includes('high') || task.priority?.includes('p2') ? 'text-orange-500' :
-                      task.priority?.includes('medium') || task.priority?.includes('p3') ? 'text-blue-500' : 'text-zinc-500'
-                    }`}>
-                      {task.priority?.split('_').pop()?.toUpperCase() || 'NORMAL'}
-                    </span>
+                    <div className="flex flex-col items-start gap-1.5">
+                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                        task.status === 'in_progress' ? 'bg-orange-100 text-orange-600 dark:bg-orange-900/30' :
+                        task.status === 'done' || task.status === 'Resolved' ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30' :
+                        task.status === 'blocked' ? 'bg-red-100 text-red-600 dark:bg-red-900/30' : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 text-zinc-300'
+                      }`}>
+                        {task.status === 'todo' ? 'New' : task.status.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                      </span>
+                      <Badge variant="outline" className="text-[9px] uppercase font-bold tracking-wider rounded-sm text-zinc-400 border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-1.5 py-0">
+                        {task._type}
+                      </Badge>
+                    </div>
                   </td>
                   <td className="py-4 px-6">
-                    <span className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-semibold underline underline-offset-2">
-                      View
-                    </span>
+                    <div className="flex flex-col gap-1.5">
+                      <span className={`text-[11px] font-bold ${
+                        task.priority?.includes('urgent') || task.priority?.includes('p1') ? 'text-red-600' :
+                        task.priority?.includes('high') || task.priority?.includes('p2') ? 'text-orange-500' :
+                        task.priority?.includes('medium') || task.priority?.includes('p3') ? 'text-blue-500' : 'text-zinc-500'
+                      }`}>
+                        {task.priority?.split('_').pop()?.toUpperCase() || 'NORMAL'} PRIORITY
+                      </span>
+                      <span className="text-[11px] font-medium text-zinc-400 flex items-center gap-1.5">
+                        <Calendar className="h-3 w-3" /> {format(new Date(task.created_at || new Date()), 'MMM dd, yyyy')}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="py-4 px-6 text-right">
+                    <div className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-400 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/30 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                      <ArrowRight className="h-4 w-4" />
+                    </div>
                   </td>
                 </tr>
               ))}
               {pendingTasks.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-zinc-500">
+                  <td colSpan={4} className="py-12 text-center text-zinc-500">
                     No active tasks assigned to you right now. You're all caught up!
                   </td>
                 </tr>
@@ -541,48 +546,59 @@ export default function Dashboard() {
           <table className="w-full text-left border-collapse text-sm">
             <thead>
               <tr className="border-b border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-950">
-                <th className="py-3 px-6 font-semibold text-zinc-400 dark:text-zinc-500 font-sans text-xs">Type</th>
-                <th className="py-3 px-6 font-semibold text-zinc-400 dark:text-zinc-500 font-sans text-xs">Status</th>
-                <th className="py-3 px-6 font-semibold text-zinc-400 dark:text-zinc-500 font-sans text-xs">Task Title</th>
-                <th className="py-3 px-6 font-semibold text-zinc-400 dark:text-zinc-500 font-sans text-xs">Project</th>
-                <th className="py-3 px-6 font-semibold text-zinc-400 dark:text-zinc-500 font-sans text-xs">Completed On</th>
-                <th className="py-3 px-6 font-semibold text-zinc-400 dark:text-zinc-500 font-sans text-xs">Actions</th>
+                <th className="py-3 px-6 font-semibold text-zinc-400 dark:text-zinc-500 font-sans text-xs w-[40%]">Task Details</th>
+                <th className="py-3 px-6 font-semibold text-zinc-400 dark:text-zinc-500 font-sans text-xs w-[25%]">Status & Type</th>
+                <th className="py-3 px-6 font-semibold text-zinc-400 dark:text-zinc-500 font-sans text-xs w-[25%]">Timeline & Priority</th>
+                <th className="py-3 px-6 font-semibold text-zinc-400 dark:text-zinc-500 font-sans text-xs text-right w-[10%]">Action</th>
               </tr>
             </thead>
             <tbody>
               {completedTasks.slice(0, 10).map((task) => (
                 <tr 
                   key={task.id} 
-                  className="border-b border-zinc-50 dark:border-zinc-800/30 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors cursor-pointer"
+                  className="border-b border-zinc-50 dark:border-zinc-800/30 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors cursor-pointer group"
                   onClick={() => {
-                    if (task._type === 'PTASK') navigate(`/dashboard/projects/${task.project_id}/history`);
+                    if (task._type === 'PTASK') navigate(`/dashboard/tasks/${task.id}`);
                     else if (task._type === 'INCIDENT' || task._type === 'SCTASK') navigate(`/dashboard/incidents/${task.id}`);
                     else navigate(`/dashboard/tasks/${task.id}/update`);
                   }}
                 >
                   <td className="py-3 px-6">
-                    <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-wider rounded-md text-zinc-400 border-zinc-200 dark:border-zinc-800">
-                      {task._type}
-                    </Badge>
+                    <div className="flex flex-col gap-1 opacity-70">
+                      <span className="font-bold text-zinc-500 dark:text-zinc-400 text-[14px] leading-tight line-through">{task.title}</span>
+                      <span className="text-[12px] font-medium text-zinc-400 dark:text-zinc-600 truncate max-w-[300px]">{task.projects?.name || 'Service Desk'}</span>
+                    </div>
                   </td>
                   <td className="py-3 px-6">
-                    <span className="text-xs font-semibold text-emerald-500">
-                      {task.status.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
-                    </span>
+                    <div className="flex flex-col items-start gap-1.5 opacity-80">
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-500">
+                        {task.status === 'todo' ? 'New' : task.status.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+                      </span>
+                      <Badge variant="outline" className="text-[9px] uppercase font-bold tracking-wider rounded-sm text-zinc-400 border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-1.5 py-0">
+                        {task._type}
+                      </Badge>
+                    </div>
                   </td>
-                  <td className="py-3 px-6 font-medium text-zinc-500 line-through decoration-zinc-300 dark:decoration-zinc-700">{task.title}</td>
-                  <td className="py-3 px-6 text-zinc-400">{task.projects?.name || 'Service Desk'}</td>
-                  <td className="py-3 px-6 text-zinc-400">{format(new Date(task.updated_at || task.created_at || new Date()), 'MMM dd, yyyy')}</td>
                   <td className="py-3 px-6">
-                    <span className="text-blue-500 hover:text-blue-700 text-sm font-semibold underline underline-offset-2">
-                      View
-                    </span>
+                    <div className="flex flex-col gap-1.5 opacity-80">
+                      <span className="text-[11px] font-bold text-zinc-400 dark:text-zinc-600">
+                        {task.priority?.split('_').pop()?.toUpperCase() || 'NORMAL'} PRIORITY
+                      </span>
+                      <span className="text-[11px] font-medium text-zinc-400 flex items-center gap-1.5">
+                        <Calendar className="h-3 w-3" /> {format(new Date(task.updated_at || task.created_at || new Date()), 'MMM dd, yyyy')}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="py-3 px-6 text-right">
+                    <div className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-zinc-50 dark:bg-zinc-800/50 text-zinc-400 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/30 group-hover:text-indigo-500 transition-colors">
+                      <ArrowRight className="h-4 w-4" />
+                    </div>
                   </td>
                 </tr>
               ))}
               {completedTasks.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-zinc-400 text-xs">
+                  <td colSpan={4} className="py-8 text-center text-zinc-400 text-xs">
                     No completed tasks found in your history.
                   </td>
                 </tr>
