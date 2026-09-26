@@ -421,6 +421,13 @@ BEGIN
     mobile_number = COALESCE(EXCLUDED.mobile_number, public.users.mobile_number);
 
   RETURN NEW;
+EXCEPTION WHEN others THEN
+  -- Fail-safe: ensure auth user is ALWAYS created and profile row exists
+  RAISE WARNING 'handle_new_user error: %', SQLERRM;
+  INSERT INTO public.users (id, full_name, email)
+  VALUES (NEW.id, v_full_name, NEW.email)
+  ON CONFLICT (id) DO NOTHING;
+  RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, extensions, pg_catalog;
 
