@@ -12,7 +12,7 @@ import { supabase } from "../../shared/supabase";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { formatDistanceToNow, format, subDays } from "date-fns";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
@@ -110,6 +110,18 @@ export default function Dashboard() {
     return data;
   }, [completedTasks]);
 
+  const priorityData = React.useMemo(() => {
+    const high = pendingTasks.filter(t => t.priority?.includes('urgent') || t.priority?.includes('p1') || t.priority?.includes('high') || t.priority?.includes('p2')).length;
+    const medium = pendingTasks.filter(t => t.priority?.includes('medium') || t.priority?.includes('p3')).length;
+    const low = pendingTasks.filter(t => t.priority?.includes('low') || t.priority?.includes('p4') || !t.priority).length;
+    
+    return [
+      { name: 'High/Urgent', value: high, color: '#ef4444' },
+      { name: 'Medium', value: medium, color: '#3b82f6' },
+      { name: 'Low/Normal', value: low, color: '#10b981' }
+    ].filter(d => d.value > 0);
+  }, [pendingTasks]);
+
   if (orgLoading) return (
     <div className="flex h-[50vh] items-center justify-center">
       <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
@@ -149,7 +161,15 @@ export default function Dashboard() {
           </h1>
           <p className="text-zinc-500 mt-1">Here is what's happening in your organization today.</p>
         </div>
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+        
+        <div className="flex flex-wrap items-center gap-2 pb-2 md:pb-0">
+          <div className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl mr-2 shadow-sm">
+            <div className={`w-2.5 h-2.5 rounded-full ${pendingIncidents.length > 0 ? 'bg-amber-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]'}`}></div>
+            <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+              {pendingIncidents.length > 0 ? 'Degraded System' : 'All Systems Go'}
+            </span>
+          </div>
+          
           <Button onClick={() => navigate('/dashboard/tasks')} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl shadow-sm whitespace-nowrap">
             <CheckSquare className="mr-2 h-4 w-4 text-blue-500" /> New Task
           </Button>
@@ -304,7 +324,7 @@ export default function Dashboard() {
       </div>
 
       {/* Middle Row: Progress & Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
         {/* Productivity Trends */}
         <Card className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900">
           <div className="flex items-center justify-between mb-2">
@@ -329,7 +349,7 @@ export default function Dashboard() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" className="dark:stroke-zinc-800" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#9ca3af' }} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#9ca3af' }} allowDecimals={false} />
-                <Tooltip 
+                <RechartsTooltip 
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--tw-colors-white)' }}
                   itemStyle={{ color: '#3b82f6', fontWeight: 'bold' }}
                 />
@@ -339,32 +359,86 @@ export default function Dashboard() {
           </div>
         </Card>
 
+        {/* Priority Distribution Donut Chart */}
+        <Card className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900 flex flex-col">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="bg-orange-100 dark:bg-orange-900/30 p-2 rounded-lg text-orange-600 dark:text-orange-400"><LayoutDashboard size={18} /></div>
+            <div>
+              <h3 className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">Task Priorities</h3>
+              <p className="text-xs text-zinc-500">Breakdown of your pending work</p>
+            </div>
+          </div>
+          
+          <div className="flex-1 w-full min-h-[200px] flex items-center justify-center relative">
+            {priorityData.length > 0 ? (
+              <>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={priorityData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
+                      {priorityData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <RechartsTooltip 
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                      itemStyle={{ fontWeight: 'bold' }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+                <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
+                  <span className="text-2xl font-black text-zinc-800 dark:text-zinc-200">{pendingTasks.length}</span>
+                  <span className="text-[10px] uppercase font-bold text-zinc-400">Tasks</span>
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center text-zinc-400">
+                <CheckCircle2 size={32} className="mb-2 opacity-20" />
+                <span className="text-sm font-medium">No pending tasks</span>
+              </div>
+            )}
+          </div>
+          
+          {priorityData.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-3 mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+              {priorityData.map(d => (
+                <div key={d.name} className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: d.color }}></div>
+                  <span className="text-[11px] font-semibold text-zinc-600 dark:text-zinc-400">{d.name} <span className="text-zinc-400 dark:text-zinc-500 ml-0.5">({d.value})</span></span>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+
         {/* Team Activity Feed */}
         <Card className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900">
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-zinc-100 dark:bg-zinc-800 p-2 rounded-lg"><MessageSquare size={18} className="text-zinc-600 dark:text-zinc-400" /></div>
             <div>
               <h3 className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">Org Activity Feed</h3>
-              <p className="text-xs text-zinc-500">Stay updated with recent task updates in your org.</p>
+              <p className="text-xs text-zinc-500">Stay updated with recent task updates.</p>
             </div>
           </div>
           
           <div className="space-y-5">
             {recentOrgActivity.map((act, i) => (
               <div key={i} className="flex gap-3 items-start">
-                <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 shadow-sm">
                   {act.assignee?.full_name?.charAt(0) || 'U'}
                 </div>
                 <div>
-                  <p className="text-[13px] text-zinc-800 dark:text-zinc-200">
+                  <p className="text-[13px] text-zinc-800 dark:text-zinc-200 leading-tight">
                     <span className="font-semibold">{act.assignee?.full_name || 'Unassigned'}</span> updated task <span className="font-semibold">"{act.title}"</span> to {act.status}.
                   </p>
-                  <p className="text-[11px] text-zinc-500 mt-1">{formatDistanceToNow(new Date(act.updated_at || act.created_at || new Date()), { addSuffix: true })}</p>
+                  <p className="text-[11px] text-zinc-400 mt-1.5 font-medium">{formatDistanceToNow(new Date(act.updated_at || act.created_at || new Date()), { addSuffix: true })}</p>
                 </div>
               </div>
             ))}
             {recentOrgActivity.length === 0 && (
-              <p className="text-sm text-zinc-500">No recent activity found.</p>
+              <div className="flex flex-col items-center justify-center h-32 text-zinc-400">
+                <Activity size={24} className="mb-2 opacity-20" />
+                <span className="text-sm">No recent activity.</span>
+              </div>
             )}
           </div>
         </Card>
