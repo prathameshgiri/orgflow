@@ -24,6 +24,20 @@ dist-ssr
 *.sw?
 
 .config/
-!.env
 
+# Environment files
 .env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# Internal agent and brain documentation
+brain.md
+AGENTS.md
+agents.md
+.agents/
+skills-lock.json
+

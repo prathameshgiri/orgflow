@@ -329,28 +329,47 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 DECLARE
   new_org_id UUID;
+  superadmin_role_id UUID;
 BEGIN
   -- If org_name is provided, create a new organization first
   IF new.raw_user_meta_data->>'org_name' IS NOT NULL THEN
-    INSERT INTO public.organizations (name, email, admin_name)
-    VALUES (
-      new.raw_user_meta_data->>'org_name', 
-      new.email, 
-      COALESCE(new.raw_user_meta_data->>'full_name', 'Unknown User')
-    )
-    RETURNING id INTO new_org_id;
+    BEGIN
+      INSERT INTO public.organizations (name, email, admin_name)
+      VALUES (
+        new.raw_user_meta_data->>'org_name', 
+        new.email, 
+        COALESCE(new.raw_user_meta_data->>'full_name', 'Unknown User')
+      )
+      RETURNING id INTO new_org_id;
+
+      -- Grab the Superadmin role automatically created for this new organization
+      SELECT id INTO superadmin_role_id
+      FROM public.roles
+      WHERE organization_id = new_org_id AND name = 'Superadmin'
+      LIMIT 1;
+    EXCEPTION WHEN others THEN
+      -- Organization creation failed (e.g., constraint), continue without org
+      new_org_id := NULL;
+    END;
   END IF;
 
-  -- Create the user profile
-  INSERT INTO public.users (id, organization_id, full_name, email, mobile_number)
+  -- Create the user profile, ignore if already exists
+  INSERT INTO public.users (id, organization_id, role_id, full_name, email, mobile_number)
   VALUES (
     new.id, 
     new_org_id,
+    superadmin_role_id,
     COALESCE(new.raw_user_meta_data->>'full_name', 'Unknown User'),
     new.email,
     new.raw_user_meta_data->>'mobile_number'
-  );
+  )
+  ON CONFLICT (id) DO UPDATE SET
+    organization_id = COALESCE(public.users.organization_id, EXCLUDED.organization_id),
+    role_id = COALESCE(public.users.role_id, EXCLUDED.role_id);
   
+  RETURN new;
+EXCEPTION WHEN others THEN
+  -- Never block signup due to profile creation failure
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -358,6 +377,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
+
 
 -- ==========================================
 -- END OF SCHEMA

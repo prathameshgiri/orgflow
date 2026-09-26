@@ -24,7 +24,10 @@ export default function Dashboard() {
   const [activeProjects, setActiveProjects] = useState(0);
 
   const fetchDashboardData = async () => {
-    if (!orgId || !user) return;
+    if (!orgId || !user) {
+      setLoading(false); // Don't spin forever if no org
+      return;
+    }
     
     setLoading(true);
     try {
@@ -80,7 +83,25 @@ export default function Dashboard() {
     }
   }, [orgId, orgLoading, user]);
 
-  if (orgLoading || loading) return (
+  if (orgLoading) return (
+    <div className="flex h-[50vh] items-center justify-center">
+      <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
+    </div>
+  );
+
+  if (!orgId) return (
+    <div className="flex h-[50vh] flex-col items-center justify-center gap-4 text-center">
+      <div className="h-16 w-16 rounded-2xl bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center">
+        <Briefcase className="h-8 w-8 text-indigo-400" />
+      </div>
+      <div>
+        <h2 className="text-xl font-semibold text-zinc-800 dark:text-zinc-100">No Organization Found</h2>
+        <p className="text-sm text-zinc-500 mt-1">Your account isn't linked to an organization yet.<br/>Please contact your admin or sign up again.</p>
+      </div>
+    </div>
+  );
+
+  if (loading) return (
     <div className="flex h-[50vh] items-center justify-center">
       <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
     </div>
