@@ -29,6 +29,7 @@ export default function ProjectHistory() {
   const [newTaskDesc, setNewTaskDesc] = useState("");
   const [newTaskDeadline, setNewTaskDeadline] = useState("");
   const [newTaskStatus, setNewTaskStatus] = useState("todo");
+  const [newTaskPriority, setNewTaskPriority] = useState("medium");
   const [newSubtasks, setNewSubtasks] = useState<any[]>([]);
   const [commentText, setCommentText] = useState("");
   const [comments, setComments] = useState<Record<string, any[]>>({});
@@ -90,6 +91,7 @@ export default function ProjectHistory() {
       title: newTaskTitle,
       description: newTaskDesc || null,
       status: newTaskStatus,
+      priority: newTaskPriority,
       due_date: newTaskDeadline || null,
       sub_tasks: newSubtasks,
       project_id: id,
@@ -102,12 +104,12 @@ export default function ProjectHistory() {
     setNewTaskDesc("");
     setNewTaskDeadline("");
     setNewTaskStatus("todo");
-    setNewTaskStatus("todo");
+    setNewTaskPriority("medium");
     setNewSubtasks([]);
     setIsCreatingTask(false);
     
     const { data, error } = await supabase.from('project_tasks').insert([
-      { organization_id: orgId, project_id: id, title: newTask.title, description: newTask.description, status: newTask.status, due_date: newTask.due_date, sub_tasks: newTask.sub_tasks }
+      { organization_id: orgId, project_id: id, title: newTask.title, description: newTask.description, status: newTask.status, priority: newTask.priority, due_date: newTask.due_date, sub_tasks: newTask.sub_tasks }
     ]).select('*, assignee:users!project_tasks_assignee_id_fkey(full_name)').single();
 
     if (!error && data) {
@@ -603,18 +605,33 @@ export default function ProjectHistory() {
                     className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-zinc-900 dark:text-zinc-100"
                   />
                 </div>
-                <div>
-                  <label className="text-[12px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5 block flex items-center gap-1"><Columns className="h-3 w-3" /> Status</label>
-                  <select 
-                    value={newTaskStatus}
-                    onChange={(e) => setNewTaskStatus(e.target.value)}
-                    className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-zinc-900 dark:text-zinc-100"
-                  >
-                    <option value="todo">New</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="review">Review</option>
-                    <option value="done">Done</option>
-                  </select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-[12px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5 block flex items-center gap-1"><Columns className="h-3 w-3" /> Status</label>
+                    <select 
+                      value={newTaskStatus}
+                      onChange={(e) => setNewTaskStatus(e.target.value)}
+                      className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-zinc-900 dark:text-zinc-100"
+                    >
+                      <option value="todo">New</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="review">Review</option>
+                      <option value="done">Done</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[12px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5 block flex items-center gap-1"><Tag className="h-3 w-3" /> Priority</label>
+                    <select 
+                      value={newTaskPriority}
+                      onChange={(e) => setNewTaskPriority(e.target.value)}
+                      className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-zinc-900 dark:text-zinc-100"
+                    >
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                      <option value="urgent">Urgent</option>
+                    </select>
+                  </div>
                 </div>
                 
                 <div className="md:col-span-2 mt-2">
@@ -712,9 +729,9 @@ export default function ProjectHistory() {
               <div className="divide-y divide-zinc-100 dark:divide-zinc-800/80">
                 {tasks.slice().reverse().map((task, idx) => {
                   
-                  // Mock priority since it's not in schema (can derive from ID or tags in future)
-                  const pBadge = idx % 3 === 0 ? { label: 'URGENT PRIORITY', classes: 'bg-rose-50 text-rose-500 border-rose-100 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/50' }
-                    : idx % 3 === 1 ? { label: 'LOW PRIORITY', classes: 'bg-zinc-50 text-zinc-500 border-zinc-200 dark:bg-zinc-800/50 dark:text-zinc-400 dark:border-zinc-700/50' }
+                  const pBadge = task.priority === 'urgent' ? { label: 'URGENT PRIORITY', classes: 'bg-rose-50 text-rose-500 border-rose-100 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/50' }
+                    : task.priority === 'high' ? { label: 'HIGH PRIORITY', classes: 'bg-orange-50 text-orange-500 border-orange-100 dark:bg-orange-900/20 dark:text-orange-400 dark:border-orange-800/50' }
+                    : task.priority === 'low' ? { label: 'LOW PRIORITY', classes: 'bg-zinc-50 text-zinc-500 border-zinc-200 dark:bg-zinc-800/50 dark:text-zinc-400 dark:border-zinc-700/50' }
                     : { label: 'MEDIUM PRIORITY', classes: 'bg-blue-50 text-blue-500 border-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800/50' };
 
                   return (

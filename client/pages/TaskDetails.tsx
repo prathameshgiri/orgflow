@@ -97,6 +97,16 @@ export default function TaskDetails() {
     setUpdating(false);
   };
 
+  const updatePriority = async (priority: string) => {
+    setUpdating(true);
+    const { error } = await supabase.from('project_tasks').update({ priority }).eq('id', id);
+    if (!error) {
+      setTask({ ...task, priority });
+      toast({ title: "Priority updated successfully" });
+    }
+    setUpdating(false);
+  };
+
   const updateAssignee = async (assignee_id: string) => {
     const newAssigneeId = assignee_id === 'unassigned' ? null : assignee_id;
     setUpdating(true);
@@ -396,6 +406,27 @@ export default function TaskDetails() {
                       <option value="in_progress">In Progress</option>
                       <option value="review">In Review</option>
                       <option value="done">Completed</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Priority */}
+                <div>
+                  <label className="text-[12px] font-bold text-zinc-400 dark:text-zinc-500 mb-1.5 block uppercase tracking-wider">Priority</label>
+                  <div className="relative">
+                    <select
+                      value={task.priority || 'medium'}
+                      onChange={(e) => updatePriority(e.target.value)}
+                      disabled={updating}
+                      className={`w-full appearance-none px-4 py-2.5 rounded-xl text-[14px] font-bold outline-none border cursor-pointer bg-no-repeat bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M4%206L8%2010L12%206%22%20stroke%3D%22%2371717A%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[position:calc(100%-12px)_center] transition-all shadow-sm
+                        ${task.priority === 'low' ? 'bg-zinc-100 text-zinc-700 border-zinc-200 dark:bg-zinc-900 dark:text-zinc-300 dark:border-zinc-800'
+                          : task.priority === 'high' || task.priority === 'urgent' ? 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800'
+                          : 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800'}`}
+                    >
+                      <option value="low">Low Priority</option>
+                      <option value="medium">Medium Priority</option>
+                      <option value="high">High Priority</option>
+                      <option value="urgent">Urgent</option>
                     </select>
                   </div>
                 </div>

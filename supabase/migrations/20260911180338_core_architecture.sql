@@ -1097,6 +1097,7 @@ ALTER TABLE public.project_tasks ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{
 ALTER TABLE public.project_tasks ADD COLUMN IF NOT EXISTS sub_tasks JSONB DEFAULT '[]'::jsonb;
 ALTER TABLE public.project_tasks ADD COLUMN IF NOT EXISTS comments JSONB DEFAULT '[]'::jsonb;
 ALTER TABLE public.project_tasks ADD COLUMN IF NOT EXISTS team_id UUID REFERENCES public.teams(id) ON DELETE SET NULL;
+ALTER TABLE public.project_tasks ADD COLUMN IF NOT EXISTS priority TEXT DEFAULT 'medium';
 
 -- RLS for project_tasks
 ALTER TABLE public.project_tasks ENABLE ROW LEVEL SECURITY;
