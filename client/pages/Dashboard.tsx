@@ -11,7 +11,8 @@ import {
 import { supabase } from "../../shared/supabase";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { formatDistanceToNow, format } from "date-fns";
+import { formatDistanceToNow, format, subDays } from "date-fns";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
@@ -85,6 +86,30 @@ export default function Dashboard() {
     }
   }, [orgId, orgLoading, user]);
 
+  const pendingTasks = tasks.filter(t => !['done', 'Resolved', 'Closed'].includes(t.status));
+  const completedTasks = tasks.filter(t => ['done', 'Resolved', 'Closed'].includes(t.status));
+  
+  const pendingPTasks = pendingTasks.filter(t => t._type === 'PTASK');
+  const pendingSCTasks = pendingTasks.filter(t => t._type === 'SCTASK');
+  const pendingIncidents = pendingTasks.filter(t => t._type === 'INCIDENT');
+
+  const activeProjectsCount = allProjects.filter(p => p.status === 'In Progress').length;
+  const completedProjectsCount = allProjects.filter(p => p.status === 'Completed').length;
+  const maintenanceProjectsCount = allProjects.filter(p => p.status === 'Maintenance').length;
+
+  const chartData = React.useMemo(() => {
+    const data = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = subDays(new Date(), i);
+      const dateStr = format(date, 'MMM dd');
+      const resolvedCount = completedTasks.filter(t => 
+        format(new Date(t.updated_at || t.created_at || new Date()), 'MMM dd') === dateStr
+      ).length;
+      data.push({ name: dateStr, resolved: resolvedCount });
+    }
+    return data;
+  }, [completedTasks]);
+
   if (orgLoading) return (
     <div className="flex h-[50vh] items-center justify-center">
       <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
@@ -109,21 +134,33 @@ export default function Dashboard() {
     </div>
   );
 
-  const pendingTasks = tasks.filter(t => !['done', 'Resolved', 'Closed'].includes(t.status));
-  const completedTasks = tasks.filter(t => ['done', 'Resolved', 'Closed'].includes(t.status));
-  
-  const pendingPTasks = pendingTasks.filter(t => t._type === 'PTASK');
-  const pendingSCTasks = pendingTasks.filter(t => t._type === 'SCTASK');
-  const pendingIncidents = pendingTasks.filter(t => t._type === 'INCIDENT');
-
-  const activeProjectsCount = allProjects.filter(p => p.status === 'In Progress').length;
-  const completedProjectsCount = allProjects.filter(p => p.status === 'Completed').length;
-  const maintenanceProjectsCount = allProjects.filter(p => p.status === 'Maintenance').length;
-
-
+  // Determine greeting based on hour
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
 
   return (
     <div className="bg-zinc-50/50 dark:bg-zinc-950 min-h-screen p-4 md:p-8 animate-in fade-in duration-500">
+      
+      {/* Greeting & Quick Actions */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">
+            {greeting}, {user?.user_metadata?.full_name?.split(' ')[0] || 'User'}! 👋
+          </h1>
+          <p className="text-zinc-500 mt-1">Here is what's happening in your organization today.</p>
+        </div>
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+          <Button onClick={() => navigate('/dashboard/tasks')} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl shadow-sm whitespace-nowrap">
+            <CheckSquare className="mr-2 h-4 w-4 text-blue-500" /> New Task
+          </Button>
+          <Button onClick={() => navigate('/dashboard/incidents')} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl shadow-sm whitespace-nowrap">
+            <AlertCircle className="mr-2 h-4 w-4 text-red-500" /> Report Incident
+          </Button>
+          <Button onClick={() => navigate('/dashboard/projects/create')} className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md whitespace-nowrap">
+            <Folder className="mr-2 h-4 w-4" /> New Project
+          </Button>
+        </div>
+      </div>
       
 
       
@@ -268,51 +305,37 @@ export default function Dashboard() {
 
       {/* Middle Row: Progress & Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-        {/* Project Progress Widget */}
+        {/* Productivity Trends */}
         <Card className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-zinc-100 dark:bg-zinc-800 p-2 rounded-lg"><Activity size={18} className="text-zinc-600 dark:text-zinc-400" /></div>
-            <div>
-              <h3 className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">Workload Progress</h3>
-              <p className="text-xs text-zinc-500">An overview of your task completion status.</p>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg text-blue-600 dark:text-blue-400"><Activity size={18} /></div>
+              <div>
+                <h3 className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">Productivity Trend</h3>
+                <p className="text-xs text-zinc-500">Tasks resolved over the last 7 days</p>
+              </div>
             </div>
           </div>
           
-          <div className="flex items-center gap-2 mb-6">
-            <div className="flex-1 h-3 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden flex">
-              {tasks.length > 0 ? (
-                <div 
-                  className="h-full bg-orange-500" 
-                  style={{ width: `${(completedTasks.length / tasks.length) * 100}%` }}
+          <div className="h-56 w-full mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData} margin={{ top: 5, right: 0, left: -25, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorResolved" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" className="dark:stroke-zinc-800" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#9ca3af' }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#9ca3af' }} allowDecimals={false} />
+                <Tooltip 
+                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', backgroundColor: 'var(--tw-colors-white)' }}
+                  itemStyle={{ color: '#3b82f6', fontWeight: 'bold' }}
                 />
-              ) : (
-                <div className="h-full w-full bg-zinc-200 dark:bg-zinc-700" />
-              )}
-            </div>
-            <span className="text-xs font-bold text-orange-600 ml-2">
-              {tasks.length > 0 ? Math.round((completedTasks.length / tasks.length) * 100) : 0}% Completed
-            </span>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex justify-between items-center text-sm border-b border-zinc-100 dark:border-zinc-800 pb-3">
-              <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                <CheckCircle2 size={16} className="text-emerald-500" /> Resolved Tasks
-              </div>
-              <span className="font-semibold text-emerald-600">{completedTasks.length}</span>
-            </div>
-            <div className="flex justify-between items-center text-sm border-b border-zinc-100 dark:border-zinc-800 pb-3">
-              <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                <Clock size={16} className="text-blue-500" /> Pending Work
-              </div>
-              <span className="font-semibold text-blue-600">{pendingTasks.length}</span>
-            </div>
-            <div className="flex justify-between items-center text-sm pb-1">
-              <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                <AlertCircle size={16} className="text-red-500" /> Pending Incidents
-              </div>
-              <span className="font-semibold text-zinc-500">{pendingIncidents.length}</span>
-            </div>
+                <Area type="monotone" dataKey="resolved" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorResolved)" />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </Card>
 
@@ -336,7 +359,7 @@ export default function Dashboard() {
                   <p className="text-[13px] text-zinc-800 dark:text-zinc-200">
                     <span className="font-semibold">{act.assignee?.full_name || 'Unassigned'}</span> updated task <span className="font-semibold">"{act.title}"</span> to {act.status}.
                   </p>
-                  <p className="text-[11px] text-zinc-500 mt-1">{formatDistanceToNow(new Date(act.updated_at), { addSuffix: true })}</p>
+                  <p className="text-[11px] text-zinc-500 mt-1">{formatDistanceToNow(new Date(act.updated_at || act.created_at || new Date()), { addSuffix: true })}</p>
                 </div>
               </div>
             ))}
