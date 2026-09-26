@@ -41,8 +41,21 @@ const InviteUser = () => {
         if (response.ok) {
           const data = await response.json();
           setRoles(data.roles || []);
+        } else {
+          const errData = await response.json().catch(() => ({}));
+          toast({ 
+            title: "Error fetching roles", 
+            description: errData.error || `Server returned ${response.status}`, 
+            variant: "destructive" 
+          });
+          console.error("Failed to fetch roles:", response.status, errData);
         }
-      } catch (error) {
+      } catch (error: any) {
+        toast({ 
+          title: "Network Error", 
+          description: error.message || "Failed to reach server", 
+          variant: "destructive" 
+        });
         console.error("Failed to fetch roles:", error);
       } finally {
         setLoadingRoles(false);
