@@ -267,15 +267,18 @@ export default function Teams() {
                         <TableCell className="py-4">
                           <div className="flex items-center gap-3">
                             <div className="flex -space-x-3">
-                              {/* Create dummy avatars for visual effect if members exist */}
+                              {/* Show actual member avatars */}
                               {membersCount > 0 ? (
-                                Array.from({ length: Math.min(3, membersCount) }).map((_, i) => (
-                                  <Avatar key={i} className="h-10 w-10 border-2 border-white dark:border-zinc-950 shadow-sm ring-2 ring-transparent group-hover:ring-indigo-100 dark:group-hover:ring-indigo-900 transition-all">
-                                    <AvatarFallback className={`text-xs font-semibold ${avatarColors[(i + 2) % avatarColors.length]}`}>
-                                      U{i+1}
-                                    </AvatarFallback>
-                                  </Avatar>
-                                ))
+                                team.team_members.slice(0, 3).map((member: any, i: number) => {
+                                  const name = member?.users?.full_name || `User ${i+1}`;
+                                  return (
+                                    <Avatar key={i} className="h-10 w-10 border-2 border-white dark:border-zinc-950 shadow-sm ring-2 ring-transparent group-hover:ring-indigo-100 dark:group-hover:ring-indigo-900 transition-all">
+                                      <AvatarFallback className={`text-xs font-semibold ${avatarColors[(i + 2) % avatarColors.length]}`}>
+                                        {getInitials(name)}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                  );
+                                })
                               ) : (
                                 <div className="h-10 w-10 rounded-full border-2 border-dashed border-zinc-200 dark:border-zinc-800 flex items-center justify-center bg-zinc-50 dark:bg-zinc-900/50">
                                   <Users className="h-4 w-4 text-zinc-400" />
