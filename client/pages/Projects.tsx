@@ -420,9 +420,9 @@ export default function Projects() {
                               className="w-32 h-2 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-blue-600 hover:h-2.5 transition-all shadow-inner text-blue-500"
                               style={{ backgroundImage: `linear-gradient(to right, currentColor ${project.progress || 0}%, transparent ${project.progress || 0}%)` }}
                             />
-                            <div className="flex flex-col">
+                            <div className="flex items-center gap-2 whitespace-nowrap">
                               <span className="text-xs font-bold text-blue-600 dark:text-blue-400 leading-none">{project.progress}%</span>
-                              <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-wider mt-0.5">
+                              <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider leading-none mt-[1px]">
                                 {(project.progress || 0) < 50 ? 'Development' : ((project.progress || 0) < 90 ? 'Testing' : 'Finalizing')}
                               </span>
                             </div>
