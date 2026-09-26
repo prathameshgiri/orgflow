@@ -378,7 +378,7 @@ BEGIN
       END IF;
     EXCEPTION WHEN others THEN
       v_inv := NULL;
-    END IF;
+    END;
   END IF;
 
   -- 2. If not an invited user, create organization
