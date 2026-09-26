@@ -60,7 +60,7 @@ const Login = () => {
         variant: "destructive",
       });
     } else {
-      toast({ title: "Login Successful", description: "Welcome back to ORG MAN!" });
+      toast({ title: "Welcome back! 👋", description: "You're logged in to ORG MAN.", variant: "success" as any });
       navigate("/dashboard");
     }
   };

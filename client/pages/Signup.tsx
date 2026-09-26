@@ -49,6 +49,17 @@ const Signup = () => {
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Client-side validation
+    if (mobileNumber && !/^[0-9]{10}$/.test(mobileNumber)) {
+      toast({
+        title: "Invalid Mobile Number",
+        description: "Please enter a valid 10-digit mobile number.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     const { error } = await supabase.auth.signUp({
@@ -77,8 +88,9 @@ const Signup = () => {
         localStorage.setItem("pending_invite_token", inviteToken);
       }
       toast({
-        title: "Signup Successful",
-        description: "Please log in to continue.",
+        title: "Account Created! 🎉",
+        description: "Check your email to confirm, then log in.",
+        variant: "success" as any,
       });
       navigate("/login");
     }
