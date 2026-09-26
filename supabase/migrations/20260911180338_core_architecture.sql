@@ -328,51 +328,61 @@ CREATE POLICY "Global Read: Permissions" ON public.permissions FOR SELECT USING 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 DECLARE
-  new_org_id UUID;
-  superadmin_role_id UUID;
+  v_org_id UUID;
+  v_role_id UUID;
+  v_org_name TEXT;
+  v_full_name TEXT;
 BEGIN
-  -- If org_name is provided, create a new organization first
-  IF new.raw_user_meta_data->>'org_name' IS NOT NULL THEN
-    BEGIN
-      INSERT INTO public.organizations (name, email, admin_name)
-      VALUES (
-        new.raw_user_meta_data->>'org_name', 
-        new.email, 
-        COALESCE(new.raw_user_meta_data->>'full_name', 'Unknown User')
-      )
-      RETURNING id INTO new_org_id;
+  v_org_name := NULLIF(TRIM(new.raw_user_meta_data->>'org_name'), '');
+  v_full_name := COALESCE(NULLIF(TRIM(new.raw_user_meta_data->>'full_name'), ''), 'New User');
 
-      -- Grab the Superadmin role automatically created for this new organization
-      SELECT id INTO superadmin_role_id
-      FROM public.roles
-      WHERE organization_id = new_org_id AND name = 'Superadmin'
-      LIMIT 1;
-    EXCEPTION WHEN others THEN
-      -- Organization creation failed (e.g., constraint), continue without org
-      new_org_id := NULL;
-    END;
+  -- If org_name is provided, create the organization
+  IF v_org_name IS NOT NULL THEN
+    v_org_id := gen_random_uuid();
+    
+    INSERT INTO public.organizations (id, name, email, admin_name)
+    VALUES (v_org_id, v_org_name, new.email, v_full_name);
+
+    -- Create default roles directly for this organization
+    INSERT INTO public.roles (id, organization_id, name, description, is_system_role)
+    VALUES 
+      (gen_random_uuid(), v_org_id, 'Superadmin', 'Full access to all settings and modules', true),
+      (gen_random_uuid(), v_org_id, 'Administrator', 'Manage users, roles, and settings', true),
+      (gen_random_uuid(), v_org_id, 'Manager', 'Manage projects, teams, and assignments', true),
+      (gen_random_uuid(), v_org_id, 'Member', 'Standard user access', true),
+      (gen_random_uuid(), v_org_id, 'Read Only', 'Can view all records but cannot make any changes', true);
+
+    -- Get the Superadmin role ID
+    SELECT id INTO v_role_id 
+    FROM public.roles 
+    WHERE organization_id = v_org_id AND name = 'Superadmin' 
+    LIMIT 1;
   END IF;
 
-  -- Create the user profile, ignore if already exists
+  -- Create or update the public.users record
   INSERT INTO public.users (id, organization_id, role_id, full_name, email, mobile_number)
   VALUES (
     new.id, 
-    new_org_id,
-    superadmin_role_id,
-    COALESCE(new.raw_user_meta_data->>'full_name', 'Unknown User'),
-    new.email,
+    v_org_id, 
+    v_role_id, 
+    v_full_name, 
+    new.email, 
     new.raw_user_meta_data->>'mobile_number'
   )
   ON CONFLICT (id) DO UPDATE SET
-    organization_id = COALESCE(public.users.organization_id, EXCLUDED.organization_id),
-    role_id = COALESCE(public.users.role_id, EXCLUDED.role_id);
-  
+    organization_id = COALESCE(EXCLUDED.organization_id, public.users.organization_id),
+    role_id = COALESCE(EXCLUDED.role_id, public.users.role_id),
+    full_name = EXCLUDED.full_name;
+
   RETURN new;
 EXCEPTION WHEN others THEN
-  -- Never block signup due to profile creation failure
+  -- Fallback: ensure user is created even if something went wrong
+  INSERT INTO public.users (id, full_name, email)
+  VALUES (new.id, v_full_name, new.email)
+  ON CONFLICT (id) DO NOTHING;
   RETURN new;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_catalog;
 
 CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users

@@ -45,7 +45,7 @@ export default function Settings() {
         .from("organizations")
         .select("name, domain, settings")
         .eq("id", orgId)
-        .single();
+        .maybeSingle();
         
       if (data) {
         setOrgName(data.name || "");

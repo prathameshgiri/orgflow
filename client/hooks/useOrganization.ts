@@ -1,11 +1,20 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useOrgStore } from "../store/orgStore";
 import { supabase } from "../../shared/supabase";
 
 export function useOrganization() {
   const { user } = useAuth();
-  const [orgId, setOrgId] = useState<string | null>(null);
+  const { activeOrganizationId, setActiveOrganizationId } = useOrgStore();
+  const [orgId, setOrgId] = useState<string | null>(activeOrganizationId);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (activeOrganizationId) {
+      setOrgId(activeOrganizationId);
+      setLoading(false);
+    }
+  }, [activeOrganizationId]);
 
   useEffect(() => {
     async function fetchOrg() {
@@ -18,16 +27,19 @@ export function useOrganization() {
         .from("users")
         .select("organization_id")
         .eq("id", user.id)
-        .single();
+        .maybeSingle();
         
-      if (data) {
+      if (data?.organization_id) {
         setOrgId(data.organization_id);
+        if (!activeOrganizationId) {
+          setActiveOrganizationId(data.organization_id);
+        }
       }
       setLoading(false);
     }
     
     fetchOrg();
-  }, [user]);
+  }, [user, activeOrganizationId, setActiveOrganizationId]);
 
-  return { orgId, loading };
+  return { orgId: activeOrganizationId || orgId, loading };
 }

@@ -32,23 +32,72 @@ const DashboardLayout = () => {
     };
 
     const fetchOrgs = async () => {
+      if (!user) return;
       await processPendingInvite();
       
-      // Get the organization the user belongs to
-      const { data, error } = await supabase
+      // 1. Fetch user profile from public.users
+      const { data: userProfile } = await supabase
         .from("users")
-        .select("organization_id, organizations(id, name)")
-        .eq("id", user?.id)
-        .single();
+        .select("id, organization_id, full_name, email")
+        .eq("id", user.id)
+        .maybeSingle();
 
-      if (data && data.organizations) {
-        // Supabase might type data.organizations as an array or object depending on schema inference
-        const org = Array.isArray(data.organizations) ? data.organizations[0] : data.organizations;
-        if (org) {
-          setOrganizations([org]);
-          
+      let currentOrgId = userProfile?.organization_id;
+
+      // 2. Auto-heal: If user has no organization_id, check user_metadata.org_name
+      if (!currentOrgId && user.user_metadata?.org_name) {
+        const metadataOrgName = user.user_metadata.org_name;
+        const metadataFullName = user.user_metadata.full_name || "Admin";
+
+        let orgToUse: any = null;
+        const { data: existingOrg } = await supabase
+          .from("organizations")
+          .select("id, name")
+          .eq("name", metadataOrgName)
+          .maybeSingle();
+
+        if (existingOrg) {
+          orgToUse = existingOrg;
+        } else {
+          const { data: newOrg } = await supabase
+            .from("organizations")
+            .insert({
+              name: metadataOrgName,
+              email: user.email,
+              admin_name: metadataFullName,
+            })
+            .select("id, name")
+            .single();
+          if (newOrg) {
+            orgToUse = newOrg;
+          }
+        }
+
+        if (orgToUse) {
+          currentOrgId = orgToUse.id;
+          await supabase
+            .from("users")
+            .upsert({
+              id: user.id,
+              organization_id: orgToUse.id,
+              full_name: metadataFullName,
+              email: user.email || "",
+            });
+        }
+      }
+
+      // 3. Fetch organization directly from organizations table
+      if (currentOrgId) {
+        const { data: orgData } = await supabase
+          .from("organizations")
+          .select("id, name")
+          .eq("id", currentOrgId)
+          .maybeSingle();
+
+        if (orgData) {
+          setOrganizations([orgData]);
           if (!activeOrganizationId) {
-            setActiveOrganizationId(org.id);
+            setActiveOrganizationId(orgData.id);
           }
         }
       }
