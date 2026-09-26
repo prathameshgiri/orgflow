@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useOrganization } from "../hooks/useOrganization";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { 
   CheckSquare, AlertCircle, Clock, CheckCircle2, 
   ArrowRight, Search, Menu, Bell, LayoutDashboard,
-  MessageSquare, Settings, Activity, Briefcase
+  MessageSquare, Settings, Activity, Briefcase, Folder
 } from "lucide-react";
 import { supabase } from "../../shared/supabase";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +22,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [tasks, setTasks] = useState<any[]>([]);
   const [recentOrgActivity, setRecentOrgActivity] = useState<any[]>([]);
-  const [activeProjects, setActiveProjects] = useState(0);
+  const [allProjects, setAllProjects] = useState<any[]>([]);
 
   const fetchDashboardData = async () => {
     if (!orgId || !user) {
@@ -42,7 +43,7 @@ export default function Dashboard() {
         supabase.from("tasks").select("*, projects(name)").eq('assignee_id', user.id).order('updated_at', { ascending: false }),
         supabase.from("project_tasks").select("*, projects(name)").eq('assignee_id', user.id).order('updated_at', { ascending: false }),
         supabase.from("incidents").select("*").eq('assignee_id', user.id).order('updated_at', { ascending: false }),
-        supabase.from("project_members").select("project_id").eq('user_id', user.id),
+        supabase.from("projects").select("*").eq('organization_id', orgId),
         supabase.from("tasks").select("id, title, updated_at, status, assignee:users(full_name)").eq('organization_id', orgId).order('updated_at', { ascending: false }).limit(5)
       ]);
 
@@ -59,7 +60,7 @@ export default function Dashboard() {
       );
 
       setTasks(allMyTasks);
-      setActiveProjects(projectsRes.data?.length || 0);
+      setAllProjects(projectsRes.data || []);
       setRecentOrgActivity(orgTasksRes.data || []);
       
     } catch (err) {
@@ -76,6 +77,7 @@ export default function Dashboard() {
       const channel = supabase.channel('dashboard-realtime-strict')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks', filter: `organization_id=eq.${orgId}` }, () => fetchDashboardData())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'project_tasks', filter: `organization_id=eq.${orgId}` }, () => fetchDashboardData())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'projects', filter: `organization_id=eq.${orgId}` }, () => fetchDashboardData())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'incidents', filter: `organization_id=eq.${orgId}` }, () => fetchDashboardData())
         .subscribe();
         
@@ -113,6 +115,10 @@ export default function Dashboard() {
   const pendingPTasks = pendingTasks.filter(t => t._type === 'PTASK');
   const pendingSCTasks = pendingTasks.filter(t => t._type === 'SCTASK');
   const pendingIncidents = pendingTasks.filter(t => t._type === 'INCIDENT');
+
+  const activeProjectsCount = allProjects.filter(p => p.status === 'In Progress').length;
+  const completedProjectsCount = allProjects.filter(p => p.status === 'Completed').length;
+  const maintenanceProjectsCount = allProjects.filter(p => p.status === 'Maintenance').length;
 
 
 
@@ -202,6 +208,62 @@ export default function Dashboard() {
           </div>
         </Card>
 
+      </div>
+
+      {/* Projects Overview Row */}
+      <div className="mb-6">
+        <Card className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900 overflow-hidden relative">
+          <div className="absolute top-0 right-0 p-32 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none"></div>
+          
+          <div className="flex items-center justify-between mb-6 relative z-10">
+            <div className="flex items-center gap-3">
+              <div className="bg-indigo-50 dark:bg-indigo-900/50 p-2 rounded-lg border border-indigo-100 dark:border-indigo-800">
+                <Folder size={20} className="text-indigo-600 dark:text-indigo-400" />
+              </div>
+              <div>
+                <h3 className="font-bold text-zinc-900 dark:text-zinc-100 text-lg">Organization Projects</h3>
+                <p className="text-xs text-zinc-500">Real-time overview of all initiatives.</p>
+              </div>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/projects')} className="rounded-xl h-9 text-xs font-semibold">
+              View All Projects
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-100 dark:border-zinc-800 flex flex-col justify-center">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></div>
+                <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Active</span>
+              </div>
+              <span className="text-3xl font-extrabold text-zinc-900 dark:text-zinc-100">{activeProjectsCount}</span>
+            </div>
+            
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-100 dark:border-zinc-800 flex flex-col justify-center">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
+                <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Completed</span>
+              </div>
+              <span className="text-3xl font-extrabold text-zinc-900 dark:text-zinc-100">{completedProjectsCount}</span>
+            </div>
+
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-100 dark:border-zinc-800 flex flex-col justify-center">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+                <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Maintenance</span>
+              </div>
+              <span className="text-3xl font-extrabold text-zinc-900 dark:text-zinc-100">{maintenanceProjectsCount}</span>
+            </div>
+
+            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-100 dark:border-zinc-800 flex flex-col justify-center">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="h-2 w-2 rounded-full bg-indigo-500"></div>
+                <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Total Projects</span>
+              </div>
+              <span className="text-3xl font-extrabold text-zinc-900 dark:text-zinc-100">{allProjects.length}</span>
+            </div>
+          </div>
+        </Card>
       </div>
 
       {/* Middle Row: Progress & Activity */}
