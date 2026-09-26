@@ -433,6 +433,8 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
 
 -- RPC function to process invitations safely
+DROP FUNCTION IF EXISTS public.accept_invitation(UUID) CASCADE;
+DROP FUNCTION IF EXISTS public.accept_invitation(TEXT) CASCADE;
 CREATE OR REPLACE FUNCTION public.accept_invitation(p_invite_token UUID)
 RETURNS JSONB AS $$
 DECLARE
