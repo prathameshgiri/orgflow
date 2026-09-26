@@ -17,7 +17,7 @@ export default function Footer() {
                 <Command size={20} strokeWidth={2.5} />
               </div>
               <span className="font-display text-2xl font-bold tracking-tight text-white">
-                org<span className="text-coral-light">connect</span>
+                ORG <span className="text-coral-light">MAN</span>
               </span>
             </Link>
             <p className="mt-6 max-w-xs text-sm leading-relaxed text-white/55">

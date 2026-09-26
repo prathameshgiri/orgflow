@@ -26,7 +26,7 @@ export default function Navbar() {
             <Command size={18} strokeWidth={2.5} />
           </div>
           <span className="font-display text-[21px] font-bold tracking-[-0.04em]">
-            org<span className="text-coral">task</span>
+            ORG <span className="text-coral">MAN</span>
           </span>
         </Link>
         <nav className="hidden items-center gap-8 text-sm font-semibold text-ink/60 md:flex">
