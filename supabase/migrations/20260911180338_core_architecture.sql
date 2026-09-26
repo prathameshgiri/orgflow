@@ -250,14 +250,22 @@ ALTER TABLE public.invitations ENABLE ROW LEVEL SECURITY;
 
 -- ---------------------------------------------------------
 -- Organizations RLS
--- Users can only see their own organization.
+-- Users can see their own organization (or any organization they created)
 DROP POLICY IF EXISTS "Users can view their own organization" ON public.organizations;
 CREATE POLICY "Users can view their own organization" ON public.organizations
-    FOR SELECT USING (id = current_user_org_id());
+    FOR SELECT TO authenticated
+    USING (
+      id = current_user_org_id() 
+      OR email = (SELECT email FROM auth.users WHERE id = auth.uid())
+    );
 
 DROP POLICY IF EXISTS "Users can update their own organization" ON public.organizations;
 CREATE POLICY "Users can update their own organization" ON public.organizations
-    FOR UPDATE USING (id = current_user_org_id());
+    FOR UPDATE TO authenticated
+    USING (
+      id = current_user_org_id() 
+      OR email = (SELECT email FROM auth.users WHERE id = auth.uid())
+    );
 
 DROP POLICY IF EXISTS "Authenticated users can create organizations" ON public.organizations;
 CREATE POLICY "Authenticated users can create organizations" ON public.organizations
@@ -268,17 +276,27 @@ CREATE POLICY "Authenticated users can create organizations" ON public.organizat
 -- Users can see their own profile
 DROP POLICY IF EXISTS "Users can view their own profile" ON public.users;
 CREATE POLICY "Users can view their own profile" ON public.users
-    FOR SELECT USING (id = auth.uid());
+    FOR SELECT TO authenticated
+    USING (id = auth.uid());
 
 -- Users can see all other users in their organization
 DROP POLICY IF EXISTS "Users can view members of their organization" ON public.users;
 CREATE POLICY "Users can view members of their organization" ON public.users
-    FOR SELECT USING (organization_id = current_user_org_id());
+    FOR SELECT TO authenticated
+    USING (organization_id = current_user_org_id());
 
--- Only users can update their own profile initially. (Admin edits managed via security definer functions later if needed)
+-- Users can insert their own profile
+DROP POLICY IF EXISTS "Users can insert their own profile" ON public.users;
+CREATE POLICY "Users can insert their own profile" ON public.users
+    FOR INSERT TO authenticated
+    WITH CHECK (id = auth.uid());
+
+-- Only users can update their own profile initially
 DROP POLICY IF EXISTS "Users can update their own profile" ON public.users;
 CREATE POLICY "Users can update their own profile" ON public.users
-    FOR UPDATE USING (id = auth.uid());
+    FOR UPDATE TO authenticated
+    USING (id = auth.uid())
+    WITH CHECK (id = auth.uid());
 
 -- ---------------------------------------------------------
 -- Standard Tenant Isolation (Teams, Roles, Clients, Projects, Tasks, Logs)
@@ -332,61 +350,121 @@ DECLARE
   v_role_id UUID;
   v_org_name TEXT;
   v_full_name TEXT;
+  v_invite_token TEXT;
+  v_inv RECORD;
 BEGIN
-  v_org_name := NULLIF(TRIM(new.raw_user_meta_data->>'org_name'), '');
-  v_full_name := COALESCE(NULLIF(TRIM(new.raw_user_meta_data->>'full_name'), ''), 'New User');
+  -- Extract metadata safely
+  v_full_name := COALESCE(NULLIF(TRIM(NEW.raw_user_meta_data->>'full_name'), ''), 'New User');
+  v_org_name := NULLIF(TRIM(NEW.raw_user_meta_data->>'org_name'), '');
+  v_invite_token := NULLIF(TRIM(NEW.raw_user_meta_data->>'invite_token'), '');
 
-  -- If org_name is provided, create the organization
-  IF v_org_name IS NOT NULL THEN
+  -- 1. Check if user is signing up via an invite token
+  IF v_invite_token IS NOT NULL THEN
+    BEGIN
+      SELECT * INTO v_inv 
+      FROM public.invitations 
+      WHERE token = v_invite_token::uuid 
+        AND status = 'pending' 
+        AND expires_at > NOW()
+      LIMIT 1;
+
+      IF v_inv.id IS NOT NULL THEN
+        v_org_id := v_inv.organization_id;
+        v_role_id := v_inv.role_id;
+        
+        UPDATE public.invitations 
+        SET status = 'accepted' 
+        WHERE id = v_inv.id;
+      END IF;
+    EXCEPTION WHEN others THEN
+      v_inv := NULL;
+    END IF;
+  END IF;
+
+  -- 2. If not an invited user, create organization
+  IF v_org_id IS NULL THEN
+    IF v_org_name IS NULL THEN
+      v_org_name := v_full_name || '''s Organization';
+    END IF;
+
     v_org_id := gen_random_uuid();
-    
+
+    -- Inserting into organizations triggers on_org_created to create the 5 default roles
     INSERT INTO public.organizations (id, name, email, admin_name)
-    VALUES (v_org_id, v_org_name, new.email, v_full_name);
+    VALUES (v_org_id, v_org_name, NEW.email, v_full_name);
 
-    -- Create default roles directly for this organization
-    INSERT INTO public.roles (id, organization_id, name, description, is_system_role)
-    VALUES 
-      (gen_random_uuid(), v_org_id, 'Superadmin', 'Full access to all settings and modules', true),
-      (gen_random_uuid(), v_org_id, 'Administrator', 'Manage users, roles, and settings', true),
-      (gen_random_uuid(), v_org_id, 'Manager', 'Manage projects, teams, and assignments', true),
-      (gen_random_uuid(), v_org_id, 'Member', 'Standard user access', true),
-      (gen_random_uuid(), v_org_id, 'Read Only', 'Can view all records but cannot make any changes', true);
-
-    -- Get the Superadmin role ID
+    -- Retrieve the Superadmin role ID created for this new organization
     SELECT id INTO v_role_id 
     FROM public.roles 
     WHERE organization_id = v_org_id AND name = 'Superadmin' 
     LIMIT 1;
+
+    -- Safety check: If for any reason role doesn't exist, create it explicitly
+    IF v_role_id IS NULL THEN
+      v_role_id := gen_random_uuid();
+      INSERT INTO public.roles (id, organization_id, name, description, is_system_role)
+      VALUES (v_role_id, v_org_id, 'Superadmin', 'Full access to all settings and modules', true);
+    END IF;
   END IF;
 
-  -- Create or update the public.users record
+  -- 3. Upsert user in public.users linked to organization and role
   INSERT INTO public.users (id, organization_id, role_id, full_name, email, mobile_number)
   VALUES (
-    new.id, 
+    NEW.id, 
     v_org_id, 
     v_role_id, 
     v_full_name, 
-    new.email, 
-    new.raw_user_meta_data->>'mobile_number'
+    NEW.email, 
+    NULLIF(TRIM(NEW.raw_user_meta_data->>'mobile_number'), '')
   )
   ON CONFLICT (id) DO UPDATE SET
     organization_id = COALESCE(EXCLUDED.organization_id, public.users.organization_id),
     role_id = COALESCE(EXCLUDED.role_id, public.users.role_id),
-    full_name = EXCLUDED.full_name;
+    full_name = EXCLUDED.full_name,
+    mobile_number = COALESCE(EXCLUDED.mobile_number, public.users.mobile_number);
 
-  RETURN new;
-EXCEPTION WHEN others THEN
-  -- Fallback: ensure user is created even if something went wrong
-  INSERT INTO public.users (id, full_name, email)
-  VALUES (new.id, v_full_name, new.email)
-  ON CONFLICT (id) DO NOTHING;
-  RETURN new;
+  RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_catalog;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, extensions, pg_catalog;
 
-CREATE OR REPLACE TRIGGER on_auth_user_created
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
+-- RPC function to process invitations safely
+CREATE OR REPLACE FUNCTION public.accept_invitation(p_invite_token UUID)
+RETURNS JSONB AS $$
+DECLARE
+  v_inv RECORD;
+  v_user_id UUID;
+BEGIN
+  v_user_id := auth.uid();
+  IF v_user_id IS NULL THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Not authenticated');
+  END IF;
+
+  SELECT * INTO v_inv
+  FROM public.invitations
+  WHERE token = p_invite_token AND status = 'pending' AND expires_at > NOW()
+  LIMIT 1;
+
+  IF v_inv.id IS NULL THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Invalid or expired invitation token');
+  END IF;
+
+  UPDATE public.users
+  SET organization_id = v_inv.organization_id,
+      role_id = v_inv.role_id
+  WHERE id = v_user_id;
+
+  UPDATE public.invitations
+  SET status = 'accepted'
+  WHERE id = v_inv.id;
+
+  RETURN jsonb_build_object('success', true, 'organization_id', v_inv.organization_id);
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, extensions, pg_catalog;
 
 
 
@@ -927,15 +1005,16 @@ WHERE id NOT IN (SELECT id FROM public.users);
 CREATE OR REPLACE FUNCTION public.create_default_roles_for_org()
 RETURNS trigger AS $$
 BEGIN
-  INSERT INTO public.roles (organization_id, name, description, is_system_role) VALUES
-  (new.id, 'Superadmin', 'Full access to all settings and modules', true),
-  (new.id, 'Administrator', 'Manage users, roles, and settings', true),
-  (new.id, 'Manager', 'Manage projects, teams, and assignments', true),
-  (new.id, 'Member', 'Standard user access', true),
-  (new.id, 'Read Only', 'Can view all records but cannot make any changes', true);
-  RETURN new;
+  INSERT INTO public.roles (id, organization_id, name, description, is_system_role) VALUES
+  (gen_random_uuid(), NEW.id, 'Superadmin', 'Full access to all settings and modules', true),
+  (gen_random_uuid(), NEW.id, 'Administrator', 'Manage users, roles, and settings', true),
+  (gen_random_uuid(), NEW.id, 'Manager', 'Manage projects, teams, and assignments', true),
+  (gen_random_uuid(), NEW.id, 'Member', 'Standard user access', true),
+  (gen_random_uuid(), NEW.id, 'Read Only', 'Can view all records but cannot make any changes', true)
+  ON CONFLICT DO NOTHING;
+  RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, extensions, pg_catalog;
 
 DROP TRIGGER IF EXISTS on_org_created ON public.organizations;
 CREATE TRIGGER on_org_created

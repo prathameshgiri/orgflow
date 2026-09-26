@@ -86,24 +86,39 @@ const DashboardLayout = () => {
         }
       }
 
-      // 3. Fetch organization directly from organizations table
+      // 3. Fetch organization: query by currentOrgId or fallback to all user accessible organizations
+      let orgsList: any[] = [];
       if (currentOrgId) {
         const { data: orgData } = await supabase
           .from("organizations")
           .select("id, name")
           .eq("id", currentOrgId)
           .maybeSingle();
-
         if (orgData) {
-          setOrganizations([orgData]);
-          if (!activeOrganizationId) {
-            setActiveOrganizationId(orgData.id);
+          orgsList = [orgData];
+        }
+      }
+
+      if (orgsList.length === 0) {
+        const { data: allOrgs } = await supabase
+          .from("organizations")
+          .select("id, name");
+        if (allOrgs && allOrgs.length > 0) {
+          orgsList = allOrgs;
+          if (!currentOrgId) {
+            currentOrgId = allOrgs[0].id;
           }
         }
       }
+
+      if (orgsList.length > 0) {
+        setOrganizations(orgsList);
+        const targetId = currentOrgId || orgsList[0].id;
+        setActiveOrganizationId(targetId);
+      }
     };
     if (user) fetchOrgs();
-  }, [user, activeOrganizationId, setActiveOrganizationId]);
+  }, [user?.id]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();

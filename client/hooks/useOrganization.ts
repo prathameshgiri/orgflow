@@ -23,7 +23,12 @@ export function useOrganization() {
         setLoading(false);
         return;
       }
-      const { data, error } = await supabase
+      if (activeOrganizationId) {
+        setOrgId(activeOrganizationId);
+        setLoading(false);
+        return;
+      }
+      const { data } = await supabase
         .from("users")
         .select("organization_id")
         .eq("id", user.id)
@@ -31,15 +36,13 @@ export function useOrganization() {
         
       if (data?.organization_id) {
         setOrgId(data.organization_id);
-        if (!activeOrganizationId) {
-          setActiveOrganizationId(data.organization_id);
-        }
+        setActiveOrganizationId(data.organization_id);
       }
       setLoading(false);
     }
     
     fetchOrg();
-  }, [user, activeOrganizationId, setActiveOrganizationId]);
+  }, [user?.id, activeOrganizationId]);
 
   return { orgId: activeOrganizationId || orgId, loading };
 }
