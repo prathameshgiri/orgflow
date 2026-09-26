@@ -1,37 +1,3 @@
-import nodemailer from 'nodemailer';
-
-let transporter: any = null;
-
-function initializeTransporter() {
-  if (transporter) return;
-
-  const host = process.env.SMTP_HOST;
-  const port = parseInt(process.env.SMTP_PORT || '465');
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-
-  if (host && user && pass) {
-    transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure: port === 465, 
-      auth: { user, pass },
-    });
-    console.log("✅ Real SMTP Email Transporter Initialized!");
-  } else {
-    console.warn("⚠️ Warning: SMTP credentials missing in .env! Falling back to console logging.");
-    transporter = {
-      sendMail: async (mailOptions: any) => {
-        console.log("Mock Email Sent:", mailOptions.subject, "to", mailOptions.to);
-        return { messageId: 'mock-id' };
-      }
-    };
-  }
-}
-
-// Generate the Beautiful ORG FLOW HTML Wrapper
-export function buildOrgFlowEmail(title: string, messageHtml: string, actionUrl?: string, actionText?: string) {
-  return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -61,53 +27,28 @@ export function buildOrgFlowEmail(title: string, messageHtml: string, actionUrl?
   <div class="wrapper">
     <table class="main" width="100%" cellpadding="0" cellspacing="0" role="presentation">
       <tr>
-        <td class="header">
-          <h1>ORG FLOW</h1>
-        </td>
+        <td class="header"><h1>ORG FLOW</h1></td>
       </tr>
       <tr>
         <td class="content">
-          <h2>${title}</h2>
-          ${messageHtml}
-          ${actionUrl && actionText ? `
-            <div class="button-container">
-              <a href="${actionUrl}" class="button">${actionText}</a>
-            </div>
-          ` : ''}
-          <p style="margin-top: 30px; margin-bottom: 0;">Thanks,<br>The ORG FLOW Team</p>
+          <h2>Confirm your new email address</h2>
+          <div class="greeting">Hi {{ if .Data.full_name }}<strong>{{ .Data.full_name }}</strong>{{ else }}there{{ end }},</div>
+          <p>We received a request to change your account email. Follow the link below to confirm <strong>{{ .NewEmail }}</strong> as your new email address.</p>
+          
+          <div class="button-container">
+            <a href="{{ .ConfirmationURL }}" class="button">Confirm New Email</a>
+          </div>
+          
+          <p style="margin-top: 30px;">If you didn't request this change, you can safely ignore this email.</p>
+          <p style="margin-top: 20px; margin-bottom: 0;">Thanks,<br><strong>The ORG FLOW Team</strong></p>
         </td>
       </tr>
       <tr>
         <td class="footer">
-          <p>&copy; ${new Date().getFullYear()} ORG FLOW. All rights reserved.</p>
-          <p style="margin-top: 8px;">This is an automated notification, please do not reply.</p>
+          <p>This is an automated message, please do not reply.</p>
         </td>
       </tr>
     </table>
   </div>
 </body>
 </html>
-  `;
-}
-
-// Initialize on load
-initializeTransporter();
-
-export async function sendNotificationEmail(to: string, subject: string, htmlContent: string) {
-  if (!transporter) initializeTransporter();
-
-  try {
-    const info = await transporter.sendMail({
-      from: '"ORG FLOW Notifications" <' + (process.env.SMTP_USER || 'no-reply@orgflow.com') + '>',
-      to, 
-      subject, 
-      html: htmlContent, 
-    });
-
-    console.log("📨 NEW EMAIL NOTIFICATION SENT to", to);
-    return { success: true, messageId: info.messageId };
-  } catch (error) {
-    console.error("Error sending email:", error);
-    throw error;
-  }
-}
