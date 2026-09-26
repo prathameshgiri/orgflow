@@ -381,30 +381,27 @@ BEGIN
     END;
   END IF;
 
-  -- 2. If not an invited user, create organization
+  -- 2. If not an invited user, create organization and roles
   IF v_org_id IS NULL THEN
     IF v_org_name IS NULL THEN
       v_org_name := v_full_name || '''s Organization';
     END IF;
 
     v_org_id := gen_random_uuid();
+    v_role_id := gen_random_uuid();
 
-    -- Inserting into organizations triggers on_org_created to create the 5 default roles
+    -- Create Organization
     INSERT INTO public.organizations (id, name, email, admin_name)
     VALUES (v_org_id, v_org_name, NEW.email, v_full_name);
 
-    -- Retrieve the Superadmin role ID created for this new organization
-    SELECT id INTO v_role_id 
-    FROM public.roles 
-    WHERE organization_id = v_org_id AND name = 'Superadmin' 
-    LIMIT 1;
-
-    -- Safety check: If for any reason role doesn't exist, create it explicitly
-    IF v_role_id IS NULL THEN
-      v_role_id := gen_random_uuid();
-      INSERT INTO public.roles (id, organization_id, name, description, is_system_role)
-      VALUES (v_role_id, v_org_id, 'Superadmin', 'Full access to all settings and modules', true);
-    END IF;
+    -- Create 5 Default Roles directly
+    INSERT INTO public.roles (id, organization_id, name, description, is_system_role)
+    VALUES 
+      (v_role_id, v_org_id, 'Superadmin', 'Full access to all settings and modules', true),
+      (gen_random_uuid(), v_org_id, 'Administrator', 'Manage users, roles, and settings', true),
+      (gen_random_uuid(), v_org_id, 'Manager', 'Manage projects, teams, and assignments', true),
+      (gen_random_uuid(), v_org_id, 'Member', 'Standard user access', true),
+      (gen_random_uuid(), v_org_id, 'Read Only', 'Can view all records but cannot make any changes', true);
   END IF;
 
   -- 3. Upsert user in public.users linked to organization and role
