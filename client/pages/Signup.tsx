@@ -47,6 +47,23 @@ const Signup = () => {
   const [searchParams] = useSearchParams();
   const inviteToken = searchParams.get("invite");
 
+  const getFriendlyError = (message: string): string => {
+    const msg = message.toLowerCase();
+    if (msg.includes("already registered") || msg.includes("already been registered") || msg.includes("user already exists"))
+      return "This email is already registered. Please sign in instead.";
+    if (msg.includes("database error saving new user") || msg.includes("database error"))
+      return "This email may already be registered. Try signing in, or use a different email.";
+    if (msg.includes("password") && msg.includes("characters"))
+      return "Password must be at least 6 characters long.";
+    if (msg.includes("invalid email") || msg.includes("unable to validate email"))
+      return "Please enter a valid email address.";
+    if (msg.includes("email rate limit") || msg.includes("rate limit"))
+      return "Too many attempts. Please wait a moment and try again.";
+    if (msg.includes("network") || msg.includes("fetch"))
+      return "Network error. Please check your connection and try again.";
+    return message;
+  };
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -80,7 +97,7 @@ const Signup = () => {
     if (error) {
       toast({
         title: "Signup Failed",
-        description: error.message,
+        description: getFriendlyError(error.message),
         variant: "destructive",
       });
     } else {
@@ -95,6 +112,7 @@ const Signup = () => {
       navigate("/login");
     }
   };
+
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50">
