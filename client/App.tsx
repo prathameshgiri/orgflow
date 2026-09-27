@@ -21,6 +21,10 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Pricing from "./pages/Pricing";
 import SuperAdmin from "./pages/SuperAdmin";
 import DashboardLayout from "./components/DashboardLayout";
+import ScrollToTop from "./components/ScrollToTop";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Cookies from "./pages/Cookies";
 
 import Projects from "./pages/Projects";
 import CreateProject from "./pages/CreateProject";
@@ -73,6 +77,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
@@ -80,6 +85,9 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/invite" element={<Placeholder />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/cookies" element={<Cookies />} />
             
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<DashboardLayout />}>
