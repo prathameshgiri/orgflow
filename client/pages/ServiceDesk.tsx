@@ -124,7 +124,7 @@ export default function ServiceDesk() {
             <ShieldAlert className="h-7 w-7" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Service Desk</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">SCTASK</h1>
             <p className="text-zinc-500 text-sm mt-1">Overview of your IT service operations and SLAs.</p>
           </div>
         </div>
