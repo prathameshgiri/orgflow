@@ -64,6 +64,16 @@ export default function ServiceActivity() {
       }
     };
     fetchIncidents();
+
+    if (orgId && session?.user) {
+      const channel = supabase.channel('service-activity-realtime')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'incidents', filter: `organization_id=eq.${orgId}` }, () => {
+           fetchIncidents();
+        })
+        .subscribe();
+        
+      return () => { supabase.removeChannel(channel); };
+    }
   }, [orgId, session]);
 
   const activeActivity = incidents.filter(i => ['new', 'in_progress', 'resolved'].includes(i.status));

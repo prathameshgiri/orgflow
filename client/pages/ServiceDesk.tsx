@@ -10,6 +10,7 @@ import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "../../shared/supabase";
 
 const formatCompactTime = (dateStr: string) => {
   if (!dateStr) return '';
@@ -58,6 +59,16 @@ export default function ServiceDesk() {
       }
     };
     fetchIncidents();
+
+    if (orgId && session?.user) {
+      const channel = supabase.channel('service-desk-realtime')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'incidents', filter: `organization_id=eq.${orgId}` }, () => {
+           fetchIncidents();
+        })
+        .subscribe();
+        
+      return () => { supabase.removeChannel(channel); };
+    }
   }, [orgId, session]);
 
   const getStatusColor = (status: string) => {

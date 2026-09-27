@@ -86,8 +86,8 @@ export default function Dashboard() {
     }
   }, [orgId, orgLoading, user]);
 
-  const pendingTasks = tasks.filter(t => !['done', 'Resolved', 'Closed'].includes(t.status));
-  const completedTasks = tasks.filter(t => ['done', 'Resolved', 'Closed'].includes(t.status));
+  const pendingTasks = tasks.filter(t => !['done', 'Resolved', 'Closed', 'resolved', 'closed'].includes(t.status));
+  const completedTasks = tasks.filter(t => ['done', 'Resolved', 'Closed', 'resolved', 'closed'].includes(t.status));
   
   const pendingPTasks = pendingTasks.filter(t => t._type === 'PTASK');
   const pendingSCTasks = pendingTasks.filter(t => t._type === 'SCTASK');
