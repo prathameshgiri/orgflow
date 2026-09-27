@@ -139,55 +139,70 @@ export default function Tasks() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.5 }}
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
+        className="grid grid-cols-1 md:grid-cols-4 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-sm overflow-hidden divide-y md:divide-y-0 md:divide-x divide-zinc-200/80 dark:divide-zinc-800/80"
       >
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col transition-all duration-300">
-          <div className="p-6 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 flex items-center justify-center shrink-0 shadow-sm">
-              <Layers className="h-6 w-6 text-zinc-600 dark:text-zinc-400" />
+        <div className="p-6 relative group hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">Total Tasks</p>
+              <h3 className="text-3xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{totalTasks}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[15px] font-medium text-zinc-500 dark:text-zinc-400">Total Tasks</p>
-              <h4 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5">{totalTasks}</h4>
+            <div className="h-12 w-12 bg-zinc-100 dark:bg-zinc-900 rounded-xl flex items-center justify-center text-zinc-500 group-hover:scale-110 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-all duration-300">
+              <Layers className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-zinc-500 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-zinc-400" /> All recorded
+          </div>
+        </div>
 
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col transition-all duration-300">
-          <div className="p-6 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl border border-blue-100 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <Clock className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+        <div className="p-6 relative group hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-1">In Progress</p>
+              <h3 className="text-3xl font-black text-blue-600 dark:text-blue-400 tracking-tight">{inProgress}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[15px] font-medium text-zinc-500 dark:text-zinc-400">In Progress</p>
-              <h4 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5">{inProgress}</h4>
+            <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 group-hover:scale-110 transition-all duration-300">
+              <Clock className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse" /> Active work
+          </div>
+        </div>
 
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col transition-all duration-300">
-          <div className="p-6 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl border border-purple-100 dark:border-purple-900/30 bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <AlertCircle className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+        <div className="p-6 relative group hover:bg-purple-50/50 dark:hover:bg-purple-900/20 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-purple-600 dark:text-purple-400 mb-1">In Review</p>
+              <h3 className="text-3xl font-black text-purple-700 dark:text-purple-500 tracking-tight">{inReview}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[15px] font-medium text-zinc-500 dark:text-zinc-400">In Review</p>
-              <h4 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5">{inReview}</h4>
+            <div className="h-12 w-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-purple-600 group-hover:scale-110 transition-all duration-300">
+              <AlertCircle className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-purple-600 dark:text-purple-500 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-purple-500" /> Pending approval
+          </div>
+        </div>
         
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col transition-all duration-300">
-          <div className="p-6 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl border border-emerald-100 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <CheckSquare className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+        <div className="p-6 relative group hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-colors flex flex-col justify-between min-h-[140px] overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-10 scale-150 rotate-12 transform-gpu pointer-events-none group-hover:rotate-45 transition-all duration-700">
+             <CheckSquare className="h-32 w-32 text-emerald-500" />
+           </div>
+          <div className="flex items-start justify-between relative z-10">
+            <div>
+              <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-1">Closed</p>
+              <h3 className="text-3xl font-black text-emerald-700 dark:text-emerald-500 tracking-tight">{closed}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[15px] font-medium text-zinc-500 dark:text-zinc-400">Closed</p>
-              <h4 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5">{closed}</h4>
+            <div className="h-12 w-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-all duration-300">
+              <CheckSquare className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-emerald-600 dark:text-emerald-400 font-medium relative z-10">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500" /> Completed
+          </div>
+        </div>
       </motion.div>
 
       {/* Main Table */}

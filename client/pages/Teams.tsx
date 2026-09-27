@@ -119,57 +119,69 @@ export default function Teams() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.5 }}
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
+        className="grid grid-cols-1 md:grid-cols-4 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-sm overflow-hidden divide-y md:divide-y-0 md:divide-x divide-zinc-200/80 dark:divide-zinc-800/80"
       >
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col group transition-all duration-300">
-          <div className="p-6 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl border border-indigo-100 dark:border-indigo-900/30 bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <Briefcase className="h-6 w-6 text-indigo-600 dark:text-indigo-400" strokeWidth={1.5} />
+        <div className="p-6 relative group hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">Total Teams</p>
+              <h3 className="text-3xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{totalTeams}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[15px] font-medium text-zinc-500 dark:text-zinc-400">Total Teams</p>
-              <h4 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5">{totalTeams}</h4>
+            <div className="h-12 w-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform duration-300">
+              <Briefcase className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-zinc-500 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-indigo-400" /> Active departments
+          </div>
+        </div>
 
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col group transition-all duration-300">
-          <div className="p-6 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl border border-violet-100 dark:border-violet-900/30 bg-violet-50 dark:bg-violet-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <UsersIcon className="h-6 w-6 text-violet-600 dark:text-violet-400" strokeWidth={1.5} />
+        <div className="p-6 relative group hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">Total Members</p>
+              <h3 className="text-3xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{totalMembers}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[15px] font-medium text-zinc-500 dark:text-zinc-400">Total Members</p>
-              <h4 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5">{totalMembers}</h4>
+            <div className="h-12 w-12 bg-violet-100 dark:bg-violet-900/30 rounded-xl flex items-center justify-center text-violet-600 dark:text-violet-400 group-hover:scale-110 transition-transform duration-300">
+              <UsersIcon className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-zinc-500 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-violet-400" /> Organization wide
+          </div>
+        </div>
 
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col group transition-all duration-300">
-          <div className="p-6 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl border border-blue-100 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <TrendingUp className="h-6 w-6 text-blue-600 dark:text-blue-400" strokeWidth={1.5} />
+        <div className="p-6 relative group hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">Avg. Team Size</p>
+              <h3 className="text-3xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{avgMembers}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[15px] font-medium text-zinc-500 dark:text-zinc-400">Avg. Team Size</p>
-              <h4 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5">{avgMembers}</h4>
+            <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">
+              <TrendingUp className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-zinc-500 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-blue-400" /> Members per team
+          </div>
+        </div>
         
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col group transition-all duration-300">
-          <div className="p-6 flex items-center gap-4">
-            <div className="h-14 w-14 rounded-2xl border border-emerald-100 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <Activity className="h-6 w-6 text-emerald-600 dark:text-emerald-400" strokeWidth={1.5} />
+        <div className="p-6 relative group hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">System Status</p>
+              <h3 className="text-3xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight flex items-center gap-2">
+                Active
+              </h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[15px] font-medium text-zinc-500 dark:text-zinc-400">System Status</p>
-              <h4 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight mt-0.5 flex items-center gap-2">
-                Active <span className="h-3 w-3 rounded-full bg-emerald-500 animate-pulse"></span>
-              </h4>
+            <div className="h-12 w-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
+              <Activity className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-zinc-500 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" /> All systems normal
+          </div>
+        </div>
       </motion.div>
 
       {/* Main Content Area */}

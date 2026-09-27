@@ -185,67 +185,82 @@ export default function Projects() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.5 }}
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-5"
+        className="grid grid-cols-1 md:grid-cols-5 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-sm overflow-hidden divide-y md:divide-y-0 md:divide-x divide-zinc-200/80 dark:divide-zinc-800/80"
       >
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col transition-all duration-300">
-          <div className="p-5 xl:p-6 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl border border-blue-100 dark:border-blue-900/30 bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        <div className="p-5 xl:p-6 relative group hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-1">Active</p>
+              <h3 className="text-3xl font-black text-blue-700 dark:text-blue-500 tracking-tight">{activeCount}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[13px] xl:text-[14px] font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap">Active</p>
-              <h4 className="text-2xl xl:text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">{activeCount}</h4>
+            <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">
+              <Activity className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse" /> In progress
+          </div>
+        </div>
 
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col transition-all duration-300">
-          <div className="p-5 xl:p-6 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl border border-emerald-100 dark:border-emerald-900/30 bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <Target className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+        <div className="p-5 xl:p-6 relative group hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-1">Completed</p>
+              <h3 className="text-3xl font-black text-emerald-700 dark:text-emerald-500 tracking-tight">{completedCount}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[13px] xl:text-[14px] font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap">Completed</p>
-              <h4 className="text-2xl xl:text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">{completedCount}</h4>
+            <div className="h-12 w-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
+              <Target className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-emerald-600 dark:text-emerald-400 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500" /> Delivered
+          </div>
+        </div>
 
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col transition-all duration-300">
-          <div className="p-5 xl:p-6 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl border border-purple-100 dark:border-purple-900/30 bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <Settings className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+        <div className="p-5 xl:p-6 relative group hover:bg-purple-50/50 dark:hover:bg-purple-900/20 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-purple-600 dark:text-purple-400 mb-1">Maintenance</p>
+              <h3 className="text-3xl font-black text-purple-700 dark:text-purple-500 tracking-tight">{maintenanceCount}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[13px] xl:text-[14px] font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap">Maintenance</p>
-              <h4 className="text-2xl xl:text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">{maintenanceCount}</h4>
+            <div className="h-12 w-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform duration-300">
+              <Settings className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-purple-600 dark:text-purple-400 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-purple-500" /> Ongoing support
+          </div>
+        </div>
 
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col transition-all duration-300">
-          <div className="p-5 xl:p-6 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl border border-red-100 dark:border-red-900/30 bg-red-50 dark:bg-red-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
+        <div className="p-5 xl:p-6 relative group hover:bg-red-50/50 dark:hover:bg-red-900/20 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-red-600 dark:text-red-400 mb-1">At Risk</p>
+              <h3 className="text-3xl font-black text-red-700 dark:text-red-500 tracking-tight">{atRiskCount}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[13px] xl:text-[14px] font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap">At Risk</p>
-              <h4 className="text-2xl xl:text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">{atRiskCount}</h4>
+            <div className="h-12 w-12 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform duration-300">
+              <AlertTriangle className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-red-600 dark:text-red-400 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-red-500" /> Needs attention
+          </div>
+        </div>
 
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm hover:shadow-md bg-white dark:bg-zinc-950 overflow-hidden flex flex-col transition-all duration-300">
-          <div className="p-5 xl:p-6 flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl border border-indigo-100 dark:border-indigo-900/30 bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center shrink-0 shadow-sm">
-              <Folder className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+        <div className="p-5 xl:p-6 relative group hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">Total</p>
+              <h3 className="text-3xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{totalCount}</h3>
             </div>
-            <div className="flex flex-col justify-center">
-              <p className="text-[13px] xl:text-[14px] font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap">Total</p>
-              <h4 className="text-2xl xl:text-3xl font-bold text-zinc-900 dark:text-zinc-100 leading-tight">{totalCount}</h4>
+            <div className="h-12 w-12 bg-zinc-100 dark:bg-zinc-900 rounded-xl flex items-center justify-center text-zinc-500 group-hover:scale-110 transition-transform duration-300">
+              <Folder className="h-6 w-6" />
             </div>
           </div>
-        </Card>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-zinc-500 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-zinc-400" /> All projects
+          </div>
+        </div>
       </motion.div>
 
       {/* Main Table */}
