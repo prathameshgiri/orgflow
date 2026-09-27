@@ -607,52 +607,31 @@ export default function Index() {
                     <MockSLAEngine />
                   </motion.div>
                   <motion.div variants={reveal} className="lg:col-span-2 relative h-full w-full overflow-hidden rounded-[2rem] border border-white/5 bg-[#0a0a0a] p-6 lg:p-8 flex flex-col justify-center group hover:border-white/10 transition-colors">
-                     <div className="relative z-10 w-full">
-                       <h4 className="text-xl font-bold text-white mb-2">Developer API</h4>
-                       <p className="text-sm text-zinc-400 mb-6">Integrate programmatically with ease.</p>
-                       <div className="rounded-xl border border-white/10 bg-[#000000] p-4 overflow-x-auto shadow-2xl">
-                         <pre className="text-sm font-mono text-zinc-300">
-                           <code className="text-purple-400">import</code> {'{ OrgMan }'} <code className="text-purple-400">from</code> <code className="text-emerald-400">'@orgman/sdk'</code>;<br/><br/>
-                           <code className="text-blue-400">const</code> client = <code className="text-purple-400">new</code> OrgMan(process.env.ORGMAN_KEY);<br/>
-                           <code className="text-zinc-500">// Fetch all P1 incidents</code><br/>
-                           <code className="text-blue-400">const</code> incidents = <code className="text-purple-400">await</code> client.incidents.list({'{ priority: '} <code className="text-emerald-400">'P1'</code> {'}'});
-                         </pre>
-                       </div>
+                     <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none">
+                       <Command size={100} />
                      </div>
-                  </motion.div>
-                </div>
-              </motion.div>
-
-              {/* ═══════════════════════════════════════════════════════
-                  9.5. ENTERPRISE BENTO BOX
-              ═══════════════════════════════════════════════════════ */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={stagger} className="mt-32">
-                <div className="text-center mb-16 max-w-2xl mx-auto">
-                  <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">Enterprise-grade capabilities.<br className="hidden sm:block"/> Out of the box.</h2>
-                  <p className="text-lg text-zinc-400">Built for scale, security, and absolute clarity.</p>
-                </div>
-                
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-                  <motion.div variants={reveal} className="lg:col-span-2">
-                    <MockAdvancedAnalytics />
-                  </motion.div>
-                  <motion.div variants={reveal} className="lg:col-span-1">
-                    <MockAuditLogs />
-                  </motion.div>
-                  <motion.div variants={reveal} className="md:col-span-2 lg:col-span-1">
-                    <MockSLAEngine />
-                  </motion.div>
-                  <motion.div variants={reveal} className="lg:col-span-2 relative h-full w-full overflow-hidden rounded-[2rem] border border-white/5 bg-[#0a0a0a] p-6 lg:p-8 flex flex-col justify-center group hover:border-white/10 transition-colors">
-                     <div className="relative z-10 w-full">
+                     <div className="relative z-10 w-full max-w-2xl">
                        <h4 className="text-xl font-bold text-white mb-2">Developer API</h4>
-                       <p className="text-sm text-zinc-400 mb-6">Integrate programmatically with ease.</p>
-                       <div className="rounded-xl border border-white/10 bg-[#000000] p-4 overflow-x-auto shadow-2xl">
-                         <pre className="text-sm font-mono text-zinc-300">
-                           <code className="text-purple-400">import</code> {'{ OrgMan }'} <code className="text-purple-400">from</code> <code className="text-emerald-400">'@orgman/sdk'</code>;<br/><br/>
-                           <code className="text-blue-400">const</code> client = <code className="text-purple-400">new</code> OrgMan(process.env.ORGMAN_KEY);<br/>
-                           <code className="text-zinc-500">// Fetch all P1 incidents</code><br/>
-                           <code className="text-blue-400">const</code> incidents = <code className="text-purple-400">await</code> client.incidents.list({'{ priority: '} <code className="text-emerald-400">'P1'</code> {'}'});
-                         </pre>
+                       <p className="text-sm text-zinc-400 mb-6">Integrate programmatically with ease. Build custom workflows or connect your existing tools.</p>
+                       <div className="rounded-xl border border-white/10 bg-[#050505] overflow-hidden shadow-2xl">
+                         {/* MacOS Style Window Header */}
+                         <div className="flex items-center gap-2 px-4 py-3 bg-[#111] border-b border-white/5">
+                           <div className="flex gap-1.5">
+                             <div className="w-3 h-3 rounded-full bg-rose-500/80"></div>
+                             <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
+                             <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+                           </div>
+                           <div className="ml-4 text-[10px] font-mono text-zinc-500">app.ts</div>
+                         </div>
+                         <div className="p-5 overflow-x-auto">
+                           <pre className="text-sm font-mono text-zinc-300 leading-relaxed">
+                             <code className="text-purple-400">import</code> {'{ OrgMan }'} <code className="text-purple-400">from</code> <code className="text-emerald-400">'@orgman/sdk'</code>;<br/><br/>
+                             <code className="text-zinc-500">// Initialize client with secure token</code><br/>
+                             <code className="text-blue-400">const</code> client = <code className="text-purple-400">new</code> OrgMan(<code className="text-emerald-400">"&lt;YOUR_SECURE_API_KEY&gt;"</code>);<br/><br/>
+                             <code className="text-zinc-500">// Fetch all critical P1 incidents</code><br/>
+                             <code className="text-blue-400">const</code> incidents = <code className="text-purple-400">await</code> client.incidents.list({'{ priority: '} <code className="text-emerald-400">'P1'</code> {'}'});
+                           </pre>
+                         </div>
                        </div>
                      </div>
                   </motion.div>
