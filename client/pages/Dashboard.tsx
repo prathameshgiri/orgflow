@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { 
   CheckSquare, AlertCircle, Clock, CheckCircle2, 
   ArrowRight, Search, Menu, Bell, LayoutDashboard,
-  MessageSquare, Settings, Activity, Briefcase, Folder, Calendar
+  MessageSquare, Settings, Activity, Briefcase, Folder, Calendar, Megaphone
 } from "lucide-react";
 import { supabase } from "../../shared/supabase";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,7 @@ export default function Dashboard() {
   const [allProjects, setAllProjects] = useState<any[]>([]);
   const [orgSCTasksCount, setOrgSCTasksCount] = useState(0);
   const [orgIncidentsCount, setOrgIncidentsCount] = useState(0);
+  const [latestOrgUpdate, setLatestOrgUpdate] = useState<any>(null);
 
   const fetchDashboardData = async () => {
     if (!orgId || !user) {
@@ -49,7 +50,8 @@ export default function Dashboard() {
         supabase.from("incidents").select("*").eq('assignee_id', user.id).order('updated_at', { ascending: false }),
         supabase.from("projects").select("*").eq('organization_id', orgId),
         supabase.from("tasks").select("id, title, updated_at, status, assignee:users(full_name)").eq('organization_id', orgId).order('updated_at', { ascending: false }).limit(5),
-        supabase.from("incidents").select("id, title, ticket_type, status").eq('organization_id', orgId)
+        supabase.from("incidents").select("id, title, ticket_type, status").eq('organization_id', orgId),
+        supabase.from("org_updates").select("*").eq('organization_id', orgId).order('created_at', { ascending: false }).limit(1).maybeSingle()
       ]);
 
       const scTasks = (tasksRes.data || []).map(t => ({ ...t, _type: 'SCTASK' }));
@@ -81,6 +83,9 @@ export default function Dashboard() {
       });
       setOrgSCTasksCount(scCount);
       setOrgIncidentsCount(incCount);
+      
+      const updateRes = arguments[0]?.[6] || (await supabase.from("org_updates").select("*").eq('organization_id', orgId).order('created_at', { ascending: false }).limit(1).maybeSingle());
+      setLatestOrgUpdate(updateRes?.data || null);
       
     } catch (err) {
       console.error(err);

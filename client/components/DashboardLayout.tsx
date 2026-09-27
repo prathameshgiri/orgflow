@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useOrgStore } from "../store/orgStore";
 import { supabase } from "../../shared/supabase";
 import AppSidebar from "./AppSidebar";
-import { Search, Bell, Menu, CheckCircle2, Clock, X } from "lucide-react";
+import { Search, Bell, Menu, CheckCircle2, Clock, X, Megaphone } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { formatDistanceToNow } from "date-fns";
@@ -15,6 +15,7 @@ const DashboardLayout = () => {
   const [organizations, setOrganizations] = useState<any[]>([]);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [latestUpdate, setLatestUpdate] = useState<any>(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -155,35 +156,51 @@ const DashboardLayout = () => {
   }, [user?.id]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !activeOrganizationId) return;
     
-    const fetchNotifications = async () => {
+    const fetchNotificationsAndLatest = async () => {
       const { data } = await supabase
-        .from('notifications')
+        .from('org_updates')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('organization_id', activeOrganizationId)
         .order('created_at', { ascending: false })
-        .limit(20);
+        .limit(10);
         
-      if (data) {
-        setNotifications(data);
-        setUnreadCount(data.filter(n => !n.is_read).length);
+      if (data && data.length > 0) {
+        setLatestUpdate(data[0]);
+        
+        const lastRead = localStorage.getItem(`last_read_updates_${activeOrganizationId}`);
+        const count = lastRead ? data.filter(d => new Date(d.created_at) > new Date(lastRead)).length : data.length;
+        setUnreadCount(count);
+        
+        setNotifications(data.map(d => ({
+          id: d.id,
+          title: d.priority === 'high' ? `🚨 ${d.title}` : `📢 ${d.title}`,
+          message: d.content,
+          created_at: d.created_at,
+          is_read: lastRead ? new Date(d.created_at) <= new Date(lastRead) : false,
+          link: '/dashboard/updates'
+        })));
+      } else {
+        setLatestUpdate(null);
+        setNotifications([]);
+        setUnreadCount(0);
       }
     };
 
-    fetchNotifications();
+    fetchNotificationsAndLatest();
 
-    const channel = supabase.channel('realtime-notifications')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` }, () => {
-        fetchNotifications();
+    const channel = supabase.channel('realtime-updates-header')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'org_updates', filter: `organization_id=eq.${activeOrganizationId}` }, () => {
+        fetchNotificationsAndLatest();
       })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [user]);
+  }, [user, activeOrganizationId]);
 
-  const markAsRead = async (id: string, link?: string) => {
-    await supabase.from('notifications').update({ is_read: true }).eq('id', id);
+  const markAsRead = (id: string, link?: string) => {
+    // Single item read just updates local state for now
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
     setUnreadCount(prev => Math.max(0, prev - 1));
     if (link) {
@@ -191,8 +208,8 @@ const DashboardLayout = () => {
     }
   };
 
-  const markAllAsRead = async () => {
-    await supabase.from('notifications').update({ is_read: true }).eq('user_id', user?.id).eq('is_read', false);
+  const markAllAsRead = () => {
+    localStorage.setItem(`last_read_updates_${activeOrganizationId}`, new Date().toISOString());
     setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
     setUnreadCount(0);
   };
@@ -224,11 +241,12 @@ const DashboardLayout = () => {
                 <AppSidebar organizations={organizations} onSignOut={handleSignOut} isMobile />
               </SheetContent>
             </Sheet>
-            <div className="font-semibold text-lg text-ink dark:text-white capitalize">
+            <div className="font-semibold text-lg text-ink dark:text-white capitalize whitespace-nowrap">
               {location.pathname.split('/').pop()?.replace('-', ' ') || 'Dashboard'}
             </div>
           </div>
-          <div className="flex items-center gap-2 sm:gap-4">
+
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" size={16} />
               <input 
