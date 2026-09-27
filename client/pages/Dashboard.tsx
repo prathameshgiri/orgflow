@@ -52,7 +52,7 @@ export default function Dashboard() {
       const pTasks = (pTasksRes.data || []).map(t => ({ ...t, _type: 'PTASK' }));
       const incTasks = (incidentsRes.data || []).map(t => ({ 
         ...t, 
-        _type: t.ticket_type === 'sctask' ? 'SCTASK' : 'INCIDENT',
+        _type: (t.ticket_type === 'sctask' || (t.title && t.title.toLowerCase().includes('sctask'))) ? 'SCTASK' : 'INCIDENT',
         projects: { name: 'Service Desk' } 
       }));
 
