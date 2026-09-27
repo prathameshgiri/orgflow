@@ -228,7 +228,7 @@ export default function ApprovalDetails() {
   // APPROVER VIEW UI
   // ---------------------------------------------------------
   return (
-    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen pt-4">
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen pt-4">
       <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-6">
         <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" className="rounded-full h-10 w-10 shrink-0" asChild>
@@ -251,110 +251,108 @@ export default function ApprovalDetails() {
         )}
       </div>
 
-      <div className="grid md:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="md:col-span-2 space-y-8">
-          <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl shadow-sm p-8 md:p-10 relative overflow-hidden">
+      <div className="space-y-8">
+        {/* Main Content - Request Details + Requester Info */}
+        <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl shadow-sm relative overflow-hidden">
+          <div className="p-8 md:p-10 border-b border-zinc-100 dark:border-zinc-800/80">
             <Badge variant="outline" className="mb-6 text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800/50 px-4 py-1.5 rounded-lg font-bold text-xs uppercase tracking-wider">{approval.approval_type} Request</Badge>
             <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-zinc-50 mb-8">{approval.title}</h2>
             
-            <div className="bg-zinc-50/80 dark:bg-zinc-900/50 p-8 rounded-2xl border border-zinc-100 dark:border-zinc-800/80">
-              <h4 className="text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-4 flex items-center gap-2">
-                <FileText className="h-5 w-5 text-indigo-500" /> Full Description
-              </h4>
-              <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap text-[16px]">
-                {approval.description || <span className="italic text-zinc-400">No additional details provided.</span>}
-              </p>
-            </div>
-
-            {approval.comments && (
-              <div className="mt-8 bg-indigo-50/80 dark:bg-indigo-900/20 p-8 rounded-2xl border border-indigo-100 dark:border-indigo-800/30">
-                <h4 className="text-sm font-bold text-indigo-900 dark:text-indigo-300 mb-4 flex items-center gap-2">
-                  <FileText className="h-5 w-5 text-indigo-500" /> Your Comment
-                </h4>
-                <p className="text-indigo-800 dark:text-indigo-200 leading-relaxed whitespace-pre-wrap text-[16px]">
-                  {approval.comments}
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Sidebar Info & Actions */}
-        <div className="space-y-8">
-          <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl shadow-sm p-8 relative overflow-hidden">
-            <h3 className="font-bold text-zinc-700 dark:text-zinc-300 mb-6 flex items-center gap-2 text-sm uppercase tracking-wider">
-              <User className="h-4 w-4 text-zinc-400" /> Requester Info
-            </h3>
-            <div className="flex items-center gap-5">
-              <Avatar className="h-14 w-14 border-2 border-white dark:border-zinc-900 shadow-md">
-                <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-purple-500 text-white font-bold text-lg">
+            {/* Requester Info Integrated Here */}
+            <div className="flex items-center gap-3 mt-2">
+              <Avatar className="h-8 w-8">
+                <AvatarFallback className="bg-indigo-100 text-indigo-700 font-bold text-xs">
                   {approval.requester?.full_name?.charAt(0) || "U"}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-extrabold text-zinc-900 dark:text-zinc-100 text-lg">{approval.requester?.full_name || "Unknown"}</p>
-                <p className="text-sm text-zinc-500 mt-1 font-medium">{format(new Date(approval.created_at), "MMM d, yyyy")}</p>
+                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mb-0.5">Requested By</p>
+                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{approval.requester?.full_name || "Unknown"}</p>
+              </div>
+              <div className="ml-4 pl-4 border-l border-zinc-200 dark:border-zinc-800">
+                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mb-0.5">Date</p>
+                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{format(new Date(approval.created_at), "MMM d, yyyy")}</p>
               </div>
             </div>
           </div>
+          
+          <div className="p-8 md:p-10 bg-zinc-50/30 dark:bg-zinc-950">
+            <h4 className="text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-4 flex items-center gap-2">
+              <FileText className="h-5 w-5 text-indigo-500" /> Full Description
+            </h4>
+            <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed whitespace-pre-wrap text-[16px]">
+              {approval.description || <span className="italic text-zinc-400">No additional details provided.</span>}
+            </p>
+          </div>
 
-            {approval.status === 'pending' && (
-              <div className="bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/30 rounded-3xl shadow-sm p-8 space-y-6">
-                <div>
-                  <h3 className="font-extrabold text-indigo-900 dark:text-indigo-300 text-lg mb-2">Your Decision</h3>
-                  <p className="text-sm text-indigo-700/80 dark:text-indigo-400/80 font-medium">You are assigned to review this request. Once decided, the requester will be notified.</p>
-                </div>
-                
-                <div>
-                  <Textarea 
-                    placeholder="Add an optional comment..."
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    className="min-h-[100px] bg-white dark:bg-zinc-900 border-indigo-200 dark:border-indigo-800 focus-visible:ring-indigo-500 resize-none text-[15px] placeholder:text-indigo-300 dark:placeholder:text-indigo-700 rounded-2xl p-4 shadow-sm"
-                  />
-                </div>
-                
-                <div className="flex flex-col gap-4">
-                  <Button 
-                    className="w-full h-12 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white shadow-lg shadow-indigo-500/25 rounded-xl font-bold"
-                    onClick={() => handleStatusUpdate('approved')}
-                    disabled={updating}
-                  >
-                    <CheckCircle2 className="w-5 h-5 mr-2" /> Approve Request
-                  </Button>
-                  <Button 
-                    variant="outline"
-                    className="w-full h-12 text-rose-600 border-rose-200 hover:bg-rose-50 hover:text-rose-700 rounded-xl font-bold bg-white dark:bg-zinc-950"
-                    onClick={() => handleStatusUpdate('rejected')}
-                    disabled={updating}
-                  >
-                    <XCircle className="w-5 h-5 mr-2" /> Reject
-                  </Button>
-                </div>
-              </div>
-            )}
-            
-            {approval.status !== 'pending' && (
-              <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl shadow-sm p-8 relative overflow-hidden">
-                 <h3 className="font-bold text-zinc-700 dark:text-zinc-300 mb-6 flex items-center gap-2 text-sm uppercase tracking-wider">
-                   <Clock className="h-4 w-4 text-zinc-400" /> Decision Timeline
-                 </h3>
-                 <div className="space-y-4 relative before:absolute before:inset-0 before:ml-2 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-zinc-200 dark:before:via-zinc-800 before:to-transparent">
-                    <div className="relative flex items-center justify-between gap-4 z-10 bg-white dark:bg-zinc-950 py-1">
-                      <div className="text-sm font-semibold text-zinc-500">{format(new Date(approval.created_at), "MMM d, h:mm a")}</div>
-                      <div className="text-sm font-bold text-zinc-900 dark:text-zinc-100">Requested</div>
-                    </div>
-                    <div className="relative flex items-center justify-between gap-4 z-10 bg-white dark:bg-zinc-950 py-1">
-                      <div className="text-sm font-semibold text-zinc-500">{format(new Date(approval.updated_at), "MMM d, h:mm a")}</div>
-                      <div className={`text-sm font-black capitalize ${approval.status === 'approved' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                        {approval.status}
-                      </div>
-                    </div>
-                 </div>
-              </div>
-            )}
+          {approval.comments && (
+            <div className="p-8 md:p-10 bg-indigo-50/50 dark:bg-indigo-900/10 border-t border-indigo-100 dark:border-indigo-800/30">
+              <h4 className="text-sm font-bold text-indigo-900 dark:text-indigo-300 mb-4 flex items-center gap-2">
+                <FileText className="h-5 w-5 text-indigo-500" /> Your Comment
+              </h4>
+              <p className="text-indigo-800 dark:text-indigo-200 leading-relaxed whitespace-pre-wrap text-[16px]">
+                {approval.comments}
+              </p>
+            </div>
+          )}
         </div>
+
+        {/* Action Panel */}
+        {approval.status === 'pending' && (
+          <div className="bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/30 rounded-3xl shadow-sm p-8 md:p-10 space-y-6">
+            <div>
+              <h3 className="font-extrabold text-indigo-900 dark:text-indigo-300 text-xl mb-2">Your Decision</h3>
+              <p className="text-sm text-indigo-700/80 dark:text-indigo-400/80 font-medium">You are assigned to review this request. Once decided, the requester will be notified.</p>
+            </div>
+            
+            <div>
+              <Textarea 
+                placeholder="Add an optional comment to explain your decision..."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                className="min-h-[120px] bg-white dark:bg-zinc-900 border-indigo-200 dark:border-indigo-800 focus-visible:ring-indigo-500 resize-none text-[15px] placeholder:text-indigo-300 dark:placeholder:text-indigo-700 rounded-2xl p-5 shadow-sm"
+              />
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button 
+                className="h-10 px-6 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white shadow-sm shadow-emerald-500/25 rounded-xl font-bold text-sm w-fit"
+                onClick={() => handleStatusUpdate('approved')}
+                disabled={updating}
+              >
+                <CheckCircle2 className="w-4 h-4 mr-2" /> Approve Request
+              </Button>
+              <Button 
+                variant="outline"
+                className="h-10 px-8 text-rose-600 border-rose-200 hover:bg-rose-50 hover:text-rose-700 rounded-xl font-bold bg-white dark:bg-zinc-950 text-sm w-fit"
+                onClick={() => handleStatusUpdate('rejected')}
+                disabled={updating}
+              >
+                <XCircle className="w-4 h-4 mr-2" /> Reject
+              </Button>
+            </div>
+          </div>
+        )}
+        
+        {approval.status !== 'pending' && (
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl shadow-sm p-8 flex items-center justify-between">
+             <div className="flex items-center gap-5">
+               <div className={`p-4 rounded-2xl ${statusConfig.bg} ${statusConfig.color}`}>
+                 {statusConfig.icon}
+               </div>
+               <div>
+                 <p className="text-sm font-bold text-zinc-500 uppercase tracking-wider mb-1">Final Decision</p>
+                 <h3 className={`text-2xl font-black capitalize ${approval.status === 'approved' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                   {approval.status}
+                 </h3>
+               </div>
+             </div>
+             <div className="text-right border-l border-zinc-200 dark:border-zinc-800 pl-6">
+                <p className="text-sm font-bold text-zinc-500 uppercase tracking-wider mb-1">Decision Date</p>
+                <p className="font-bold text-zinc-900 dark:text-zinc-100">{format(new Date(approval.updated_at), "MMM d, yyyy h:mm a")}</p>
+             </div>
+          </div>
+        )}
       </div>
     </div>
   );
