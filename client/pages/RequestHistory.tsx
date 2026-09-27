@@ -110,27 +110,27 @@ export default function RequestHistory() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out max-w-4xl mx-auto">
-      <div className="flex items-center gap-4 mb-8">
-        <Link to="/dashboard/requests">
-          <Button variant="outline" size="icon" className="h-10 w-10 rounded-full">
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen pt-4">
+      <div className="flex items-center gap-4 border-b border-zinc-200 dark:border-zinc-800 pb-6">
+        <Button variant="outline" size="icon" className="rounded-full h-10 w-10 shrink-0" asChild>
+          <Link to="/dashboard/requests">
             <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+          </Link>
+        </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100 flex items-center gap-3">
             Request History
           </h1>
-          <p className="text-zinc-500">
+          <p className="text-zinc-500 mt-1">
             {request ? `Audit log for request: ${request.title}` : 'Loading request details...'}
           </p>
         </div>
       </div>
 
       {/* Update Progress Box */}
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
-        <h3 className="text-lg font-semibold mb-3 tracking-tight">Update Progress</h3>
+      <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-8 shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+        <h3 className="text-xl font-extrabold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">Update Progress</h3>
         <textarea
           value={progressText}
           onChange={e => setProgressText(e.target.value)}
@@ -152,25 +152,25 @@ export default function RequestHistory() {
             ))}
           </div>
         )}
-        <div className="flex justify-end">
-          <Button onClick={submitProgress} disabled={submitting || (!progressText.trim() && pastedImages.length === 0)} className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 shadow-md shadow-blue-500/20 rounded-full transition-all">
+        <div className="flex justify-end pt-2">
+          <Button onClick={submitProgress} disabled={submitting || (!progressText.trim() && pastedImages.length === 0)} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-8 h-12 shadow-lg shadow-blue-500/25 rounded-xl transition-all">
             {submitting ? "Updating..." : "Update Progress"}
           </Button>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
-        <div className="p-6 border-b border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
-          <div className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/20 rounded-full flex items-center justify-center text-indigo-600">
-            <Clock className="h-5 w-5" />
+      <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl overflow-hidden shadow-sm">
+        <div className="p-8 border-b border-zinc-100 dark:border-zinc-800 flex items-center gap-4 bg-zinc-50/50 dark:bg-zinc-900/30">
+          <div className="h-12 w-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600">
+            <Clock className="h-6 w-6" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold">Activity Timeline</h2>
-            <p className="text-sm text-zinc-500">All status and assignee changes made to this request.</p>
+            <h2 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-100">Activity Timeline</h2>
+            <p className="text-sm text-zinc-500 mt-1">All status and assignee changes made to this request.</p>
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-8">
           {loading ? (
             <div className="py-12 text-center text-zinc-500 flex flex-col items-center justify-center">
               <Activity className="h-8 w-8 animate-pulse text-zinc-400 mb-4" />
