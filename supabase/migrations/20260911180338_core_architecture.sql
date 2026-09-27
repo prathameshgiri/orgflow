@@ -1129,3 +1129,113 @@ CREATE POLICY "Users can delete project tasks in their organization"
     USING (organization_id = (
         SELECT organization_id FROM public.users WHERE id = auth.uid()
     ));
+
+-- ==========================================
+-- 23. AUTO-GENERATED TICKET NUMBERS
+-- ==========================================
+
+-- Add ticket_number and ticket_type columns
+ALTER TABLE public.incidents ADD COLUMN IF NOT EXISTS ticket_number TEXT;
+ALTER TABLE public.incidents ADD COLUMN IF NOT EXISTS ticket_type TEXT DEFAULT 'incident';
+ALTER TABLE public.tasks ADD COLUMN IF NOT EXISTS ticket_number TEXT;
+ALTER TABLE public.service_requests ADD COLUMN IF NOT EXISTS ticket_number TEXT;
+ALTER TABLE public.approvals ADD COLUMN IF NOT EXISTS ticket_number TEXT;
+ALTER TABLE public.project_tasks ADD COLUMN IF NOT EXISTS ticket_number TEXT;
+
+-- Create global sequences
+CREATE SEQUENCE IF NOT EXISTS sctask_seq START 1001;
+CREATE SEQUENCE IF NOT EXISTS inc_seq START 1001;
+CREATE SEQUENCE IF NOT EXISTS task_seq START 1001;
+CREATE SEQUENCE IF NOT EXISTS ptask_seq START 1001;
+CREATE SEQUENCE IF NOT EXISTS req_seq START 1001;
+CREATE SEQUENCE IF NOT EXISTS app_seq START 1001;
+
+-- Triggers to auto-generate ticket numbers
+CREATE OR REPLACE FUNCTION generate_incident_ticket_number()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.ticket_number IS NULL THEN
+        -- Check if it's an SCTASK based on title or ticket_type
+        IF NEW.title LIKE '[SCTASK]%' OR NEW.ticket_type = 'sctask' THEN
+            NEW.ticket_number := 'SCTASK' || nextval('sctask_seq')::TEXT;
+        ELSE
+            NEW.ticket_number := 'INC' || nextval('inc_seq')::TEXT;
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_generate_incident_ticket_number ON public.incidents;
+CREATE TRIGGER trg_generate_incident_ticket_number
+BEFORE INSERT ON public.incidents
+FOR EACH ROW EXECUTE PROCEDURE generate_incident_ticket_number();
+
+CREATE OR REPLACE FUNCTION generate_task_ticket_number()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.ticket_number IS NULL THEN
+        NEW.ticket_number := 'TASK' || nextval('task_seq')::TEXT;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_generate_task_ticket_number ON public.tasks;
+CREATE TRIGGER trg_generate_task_ticket_number
+BEFORE INSERT ON public.tasks
+FOR EACH ROW EXECUTE PROCEDURE generate_task_ticket_number();
+
+CREATE OR REPLACE FUNCTION generate_req_ticket_number()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.ticket_number IS NULL THEN
+        NEW.ticket_number := 'REQ' || nextval('req_seq')::TEXT;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_generate_req_ticket_number ON public.service_requests;
+CREATE TRIGGER trg_generate_req_ticket_number
+BEFORE INSERT ON public.service_requests
+FOR EACH ROW EXECUTE PROCEDURE generate_req_ticket_number();
+
+CREATE OR REPLACE FUNCTION generate_app_ticket_number()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.ticket_number IS NULL THEN
+        NEW.ticket_number := 'APP' || nextval('app_seq')::TEXT;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_generate_app_ticket_number ON public.approvals;
+CREATE TRIGGER trg_generate_app_ticket_number
+BEFORE INSERT ON public.approvals
+FOR EACH ROW EXECUTE PROCEDURE generate_app_ticket_number();
+
+CREATE OR REPLACE FUNCTION generate_ptask_ticket_number()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.ticket_number IS NULL THEN
+        NEW.ticket_number := 'PTASK' || nextval('ptask_seq')::TEXT;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_generate_ptask_ticket_number ON public.project_tasks;
+CREATE TRIGGER trg_generate_ptask_ticket_number
+BEFORE INSERT ON public.project_tasks
+FOR EACH ROW EXECUTE PROCEDURE generate_ptask_ticket_number();
+
+-- Update existing records if they don't have a ticket number
+UPDATE public.incidents SET ticket_number = 'SCTASK' || nextval('sctask_seq')::TEXT WHERE ticket_number IS NULL AND (title LIKE '[SCTASK]%' OR ticket_type = 'sctask');
+UPDATE public.incidents SET ticket_number = 'INC' || nextval('inc_seq')::TEXT WHERE ticket_number IS NULL AND ticket_type != 'sctask' AND title NOT LIKE '[SCTASK]%';
+
+UPDATE public.tasks SET ticket_number = 'TASK' || nextval('task_seq')::TEXT WHERE ticket_number IS NULL;
+UPDATE public.service_requests SET ticket_number = 'REQ' || nextval('req_seq')::TEXT WHERE ticket_number IS NULL;
+UPDATE public.approvals SET ticket_number = 'APP' || nextval('app_seq')::TEXT WHERE ticket_number IS NULL;
+UPDATE public.project_tasks SET ticket_number = 'PTASK' || nextval('ptask_seq')::TEXT WHERE ticket_number IS NULL;

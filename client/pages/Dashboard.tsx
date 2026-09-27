@@ -24,6 +24,8 @@ export default function Dashboard() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [recentOrgActivity, setRecentOrgActivity] = useState<any[]>([]);
   const [allProjects, setAllProjects] = useState<any[]>([]);
+  const [orgSCTasksCount, setOrgSCTasksCount] = useState(0);
+  const [orgIncidentsCount, setOrgIncidentsCount] = useState(0);
 
   const fetchDashboardData = async () => {
     if (!orgId || !user) {
@@ -39,13 +41,15 @@ export default function Dashboard() {
         pTasksRes,
         incidentsRes,
         projectsRes,
-        orgTasksRes // For activity feed
+        orgTasksRes, // For activity feed
+        orgIncidentsRes
       ] = await Promise.all([
         supabase.from("tasks").select("*, projects(name)").eq('assignee_id', user.id).order('updated_at', { ascending: false }),
         supabase.from("project_tasks").select("*, projects(name)").eq('assignee_id', user.id).order('updated_at', { ascending: false }),
         supabase.from("incidents").select("*").eq('assignee_id', user.id).order('updated_at', { ascending: false }),
         supabase.from("projects").select("*").eq('organization_id', orgId),
-        supabase.from("tasks").select("id, title, updated_at, status, assignee:users(full_name)").eq('organization_id', orgId).order('updated_at', { ascending: false }).limit(5)
+        supabase.from("tasks").select("id, title, updated_at, status, assignee:users(full_name)").eq('organization_id', orgId).order('updated_at', { ascending: false }).limit(5),
+        supabase.from("incidents").select("id, title, ticket_type, status").eq('organization_id', orgId)
       ]);
 
       const scTasks = (tasksRes.data || []).map(t => ({ ...t, _type: 'SCTASK' }));
@@ -63,6 +67,20 @@ export default function Dashboard() {
       setTasks(allMyTasks);
       setAllProjects(projectsRes.data || []);
       setRecentOrgActivity(orgTasksRes.data || []);
+      const allOrgIncidents = orgIncidentsRes?.data || [];
+      let scCount = 0;
+      let incCount = 0;
+      allOrgIncidents.forEach((inc: any) => {
+        if (!['resolved', 'closed'].includes(inc.status)) {
+          if (inc.ticket_type === 'sctask' || inc.title?.startsWith('[SCTASK]')) {
+            scCount++;
+          } else {
+            incCount++;
+          }
+        }
+      });
+      setOrgSCTasksCount(scCount);
+      setOrgIncidentsCount(incCount);
       
     } catch (err) {
       console.error(err);
@@ -336,7 +354,7 @@ export default function Dashboard() {
                 </h3>
                 <p className="text-xs text-zinc-500 mt-1 mb-4">Quick access to all your service requests and active incidents.</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-4xl font-extrabold text-zinc-900 dark:text-white">{pendingSCTasks.length + pendingIncidents.length}</span>
+                  <span className="text-4xl font-extrabold text-zinc-900 dark:text-white">{orgSCTasksCount + orgIncidentsCount}</span>
                   <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Total Pending</span>
                 </div>
               </div>
@@ -350,7 +368,7 @@ export default function Dashboard() {
                     <span className="font-semibold text-sm text-zinc-700 dark:text-zinc-300 group-hover:text-orange-700 dark:group-hover:text-orange-400">Tasks (SCTASK)</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2 py-0.5 rounded-full group-hover:bg-orange-100 group-hover:text-orange-600 transition-colors">{pendingSCTasks.length}</span>
+                    <span className="text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2 py-0.5 rounded-full group-hover:bg-orange-100 group-hover:text-orange-600 transition-colors">{orgSCTasksCount}</span>
                     <ArrowRight size={16} className="text-zinc-400 group-hover:text-orange-500" />
                   </div>
                 </Button>
@@ -363,7 +381,7 @@ export default function Dashboard() {
                     <span className="font-semibold text-sm text-zinc-700 dark:text-zinc-300 group-hover:text-red-700 dark:group-hover:text-red-400">Active Incidents</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2 py-0.5 rounded-full group-hover:bg-red-100 group-hover:text-red-600 transition-colors">{pendingIncidents.length}</span>
+                    <span className="text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2 py-0.5 rounded-full group-hover:bg-red-100 group-hover:text-red-600 transition-colors">{orgIncidentsCount}</span>
                     <ArrowRight size={16} className="text-zinc-400 group-hover:text-red-500" />
                   </div>
                 </Button>

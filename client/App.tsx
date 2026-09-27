@@ -108,9 +108,10 @@ const App = () => (
 
                 {/* Service Management */}
                 <Route path="service-desk" element={<ServiceDesk />} />
-                <Route path="service-activity" element={<ServiceActivity />} />
+                <Route path="service-desk/service-activity" element={<ServiceActivity />} />
                 <Route path="service-desk/create" element={<CreateTicket />} />
                 <Route path="incidents" element={<Incidents />} />
+                <Route path="incidents/service-activity" element={<ServiceActivity />} />
                 <Route path="incidents/create" element={<CreateIncident />} />
                 <Route path="incidents/:id" element={<IncidentDetails />} />
                 <Route path="incidents/:id/update" element={<UpdateIncident />} />

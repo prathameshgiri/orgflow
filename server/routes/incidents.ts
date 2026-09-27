@@ -14,11 +14,7 @@ export const getIncidents = async (req: OrgRequest, res: Response) => {
   try {
     const supabase = getAuthSupabase(req);
     
-    // First, determine if user is admin/owner
-    const isAdmin = ['Admin', 'Owner'].includes(req.memberRole || '');
-    
-    // Construct the query
-    let query = supabase
+    const query = supabase
       .from("incidents")
       .select(`
         id, 
@@ -26,6 +22,7 @@ export const getIncidents = async (req: OrgRequest, res: Response) => {
         description, 
         status, 
         priority, 
+        ticket_number,
         created_at,
         reporter:users!incidents_reporter_id_fkey(id, full_name, avatar_url, email),
         assignee:users!incidents_assignee_id_fkey(id, full_name, avatar_url, email),
@@ -33,28 +30,6 @@ export const getIncidents = async (req: OrgRequest, res: Response) => {
       `)
       .eq("organization_id", req.orgId)
       .order("created_at", { ascending: false });
-
-    // If not admin, apply team/user filtering
-    if (!isAdmin) {
-      // Fetch user's teams
-      const { data: userTeams } = await supabase
-        .from("team_members")
-        .select("team_id")
-        .eq("user_id", req.user?.id);
-        
-      const teamIds = userTeams?.map(t => t.team_id) || [];
-      
-      const orConditions = [
-        `reporter_id.eq.${req.user?.id}`,
-        `assignee_id.eq.${req.user?.id}`
-      ];
-      
-      if (teamIds.length > 0) {
-        orConditions.push(`team_id.in.(${teamIds.join(',')})`);
-      }
-      
-      query = query.or(orConditions.join(','));
-    }
 
     const { data: incidents, error } = await query;
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { AlertCircle, Plus, MoreHorizontal, Filter, Search, Edit3, Users, User, AlertTriangle, CheckCircle, Ticket, History, Clock, Activity } from "lucide-react";
+import { AlertCircle, Plus, MoreHorizontal, Filter, Search, Edit3, Users, User, AlertTriangle, CheckCircle, CheckCircle2, Ticket, History, Clock, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -78,7 +78,7 @@ export default function Incidents() {
       
     if (data) {
       const incidentsOnly = data.filter((inc: any) => 
-        inc.ticket_type !== 'sctask' && !inc.title.toLowerCase().includes('sctask')
+        inc.ticket_type !== 'sctask' && !inc.title.startsWith('[SCTASK]')
       );
       setIncidents(incidentsOnly);
     }
@@ -94,8 +94,147 @@ export default function Incidents() {
     (i.description && i.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const newIncidents = filteredIncidents.filter(i => i.status === 'new');
+  const progressIncidents = filteredIncidents.filter(i => ['in_progress', 'resolved'].includes(i.status));
+  const closedIncidents = filteredIncidents.filter(i => i.status === 'closed');
+
   const activeCount = incidents.filter(i => i.status !== 'closed' && i.status !== 'resolved').length;
   const criticalCount = incidents.filter(i => i.priority === 'p1_critical' && i.status !== 'closed' && i.status !== 'resolved').length;
+  const resolvedCount = incidents.filter(i => i.status === 'resolved' || i.status === 'closed').length;
+
+  const renderTable = (list, emptyTitle, emptyDesc) => {
+    if (loading) {
+      return (
+        <div className="p-12 flex flex-col items-center justify-center">
+          <div className="h-8 w-8 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+          <p className="text-zinc-500 font-medium">Loading tickets...</p>
+        </div>
+      );
+    }
+    if (list.length === 0) {
+      return (
+        <div className="p-12 flex flex-col items-center justify-center text-center">
+          <div className="h-16 w-16 bg-zinc-100 dark:bg-zinc-900 rounded-full flex items-center justify-center mb-4">
+            <Ticket className="h-6 w-6 text-zinc-400 dark:text-zinc-600" />
+          </div>
+          <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">{emptyTitle}</h3>
+          <p className="text-zinc-500 text-sm mt-1 max-w-xs">{emptyDesc}</p>
+        </div>
+      );
+    }
+    return (
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 border-zinc-100 dark:border-zinc-800">
+            <TableHead className="h-10 font-bold text-[11px] uppercase tracking-wider text-zinc-500 w-[45%]">Ticket Details</TableHead>
+            <TableHead className="h-10 font-bold text-[11px] uppercase tracking-wider text-zinc-500">Priority</TableHead>
+            <TableHead className="h-10 font-bold text-[11px] uppercase tracking-wider text-zinc-500">Status</TableHead>
+            <TableHead className="h-10 font-bold text-[11px] uppercase tracking-wider text-zinc-500">Assignment</TableHead>
+            <TableHead className="h-10 font-bold text-[11px] uppercase tracking-wider text-zinc-500 text-right pr-4">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {list.map((incident) => (
+            <TableRow 
+              key={incident.id} 
+              className="group border-zinc-100 dark:border-zinc-800/80 hover:bg-zinc-50/80 dark:hover:bg-zinc-900/40 transition-colors cursor-pointer"
+              onClick={() => navigate(`/dashboard/incidents/${incident.id}`)}
+            >
+              <TableCell className="py-3 align-top">
+                <div className="flex flex-col min-w-[280px]">
+                  <div className="flex items-center gap-2">
+                    {incident.ticket_number && (
+                      <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-1.5 py-0.5 rounded">
+                        {incident.ticket_number}
+                      </span>
+                    )}
+                    <span className="font-bold text-zinc-900 dark:text-zinc-100 text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+                      {incident.title}
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-zinc-500 mt-1 flex items-center gap-1.5">
+                    <Clock className="h-3 w-3" /> 
+                    {formatDistanceToNow(new Date(incident.created_at), { addSuffix: true })}
+                  </span>
+                </div>
+              </TableCell>
+              
+              <TableCell className="py-3 align-top">
+                <Badge variant="secondary" className={`font-bold capitalize px-2 py-0 text-[10px] rounded-md ${getPriorityColor(incident.priority)}`}>
+                  {getDisplayPriority(incident.priority)}
+                </Badge>
+              </TableCell>
+
+              <TableCell className="py-3 align-top">
+                <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold border uppercase tracking-wider ${getStatusColor(incident.status)}`}>
+                  {incident.status.replace('_', ' ')}
+                </span>
+              </TableCell>
+              
+              <TableCell className="py-3 align-top">
+                {incident.assignee ? (
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-6 w-6 border border-white dark:border-zinc-900 shadow-sm">
+                      <AvatarFallback className="text-[9px] bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-bold">
+                        {getInitials(incident.assignee.full_name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 truncate max-w-[150px] lg:max-w-[200px]">{incident.assignee.full_name}</span>
+                  </div>
+                ) : incident.team ? (
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-6 w-6 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                      <Users className="h-3 w-3" />
+                    </div>
+                    <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 truncate max-w-[150px] lg:max-w-[200px]">{incident.team.name}</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-zinc-400 dark:text-zinc-500">
+                    <div className="h-6 w-6 rounded-full bg-zinc-50 dark:bg-zinc-900 border border-dashed border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
+                      <span className="text-[10px] font-bold text-zinc-300 dark:text-zinc-600">?</span>
+                    </div>
+                    <span className="text-xs font-medium italic">Unassigned</span>
+                  </div>
+                )}
+              </TableCell>
+              
+              <TableCell className="py-3 align-top text-right pr-4">
+                <div className="flex items-center justify-end gap-1 transition-opacity">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-7 w-7 rounded-full hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-900/30"
+                    onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/incidents/${incident.id}/update`); }}
+                  >
+                    <Edit3 className="h-3.5 w-3.5" />
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                      <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full">
+                        <MoreHorizontal className="h-3.5 w-3.5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48 rounded-xl p-1">
+                      <DropdownMenuItem asChild className="rounded-lg cursor-pointer py-2" onClick={(e) => e.stopPropagation()}>
+                        <Link to={`/dashboard/incidents/${incident.id}/update`} className="flex items-center text-xs">
+                          <Edit3 className="mr-2 h-3.5 w-3.5 text-indigo-500" /> <span className="font-medium">Update Ticket</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="rounded-lg cursor-pointer py-2" onClick={(e) => e.stopPropagation()}>
+                        <Link to={`/dashboard/incidents/${incident.id}/history`} className="flex items-center text-xs">
+                          <History className="mr-2 h-3.5 w-3.5 text-zinc-500" /> <span className="font-medium">View History</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    );
+  };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen">
@@ -128,7 +267,7 @@ export default function Incidents() {
       </div>
 
       {/* Stats Grid */}
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         <Card className="p-6 rounded-3xl border-zinc-200/80 dark:border-zinc-800/80 shadow-sm bg-white dark:bg-zinc-950">
           <div className="flex items-start justify-between">
             <div>
@@ -165,148 +304,103 @@ export default function Incidents() {
             </div>
           </div>
         </Card>
+
+        <Card className="p-6 rounded-3xl border-emerald-200/80 dark:border-emerald-900/40 shadow-sm bg-white dark:bg-zinc-950 relative overflow-hidden">
+          <div className="absolute inset-0 bg-emerald-500/5" />
+          <div className="flex items-start justify-between relative z-10">
+            <div>
+              <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-1">Resolved Tickets</p>
+              <h3 className="text-3xl font-black text-emerald-700 dark:text-emerald-500">{resolvedCount}</h3>
+            </div>
+            <div className="h-12 w-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600">
+              <CheckCircle2 className="h-6 w-6" />
+            </div>
+          </div>
+        </Card>
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden">
-          <div className="p-4 sm:p-5 border-b border-zinc-100 dark:border-zinc-800 flex flex-col sm:flex-row sm:items-center gap-4 bg-zinc-50/50 dark:bg-zinc-900/30 justify-between">
-            <div className="relative w-full max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-              <Input 
-                placeholder="Search tickets by title or description..." 
-                className="pl-9 h-11 bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm focus-visible:ring-indigo-500 w-full"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" className="h-11 rounded-xl border-zinc-200 dark:border-zinc-800 shadow-sm font-semibold text-zinc-600 dark:text-zinc-300">
-                <Filter className="h-4 w-4 mr-2" /> Filter
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between mb-6">
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+            <Input 
+              placeholder="Search tickets by title or description..." 
+              className="pl-9 h-11 bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm focus-visible:ring-indigo-500 w-full"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" className="h-11 rounded-xl border-zinc-200 dark:border-zinc-800 shadow-sm font-semibold text-zinc-600 dark:text-zinc-300">
+              <Filter className="h-4 w-4 mr-2" /> Filter
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-8">
+          {/* New Tickets Section */}
+          <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden flex flex-col h-[400px]">
+            <div className="p-5 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/30 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 bg-rose-100 dark:bg-rose-900/30 rounded-xl flex items-center justify-center text-rose-600 dark:text-rose-400">
+                  <AlertCircle className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-zinc-900 dark:text-zinc-100">Action Required</h3>
+                  <p className="text-xs font-medium text-zinc-500">New tickets</p>
+                </div>
+              </div>
+              <Button asChild variant="outline" size="sm" className="rounded-full text-xs font-bold border-zinc-200 dark:border-zinc-800">
+                <Link to="/dashboard/incidents/service-activity">View All</Link>
               </Button>
             </div>
-          </div>
-
-          {loading ? (
-            <div className="p-20 flex flex-col items-center justify-center">
-              <div className="h-10 w-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
-              <p className="text-zinc-500 font-medium">Loading tickets...</p>
+            <div className="flex-1 overflow-y-auto min-h-0 custom-scrollbar">
+              {renderTable(newIncidents, "No new tickets", "All caught up!")}
             </div>
-          ) : filteredIncidents.length === 0 ? (
-            <div className="p-20 flex flex-col items-center justify-center text-center">
-              <div className="h-20 w-20 bg-zinc-100 dark:bg-zinc-900 rounded-full flex items-center justify-center mb-4">
-                <Ticket className="h-8 w-8 text-zinc-400 dark:text-zinc-600" />
+          </Card>
+
+          {/* Progress & Resolved Section */}
+          <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden flex flex-col h-[400px]">
+            <div className="p-5 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/30 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                  <Activity className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-zinc-900 dark:text-zinc-100">In Progress & Resolved</h3>
+                  <p className="text-xs font-medium text-zinc-500">Recent activity</p>
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">No tickets found</h3>
-              <p className="text-zinc-500 text-sm mt-1 max-w-xs">We couldn't find any tickets matching your search query.</p>
+              <Button asChild variant="outline" size="sm" className="rounded-full text-xs font-bold border-zinc-200 dark:border-zinc-800">
+                <Link to="/dashboard/incidents/service-activity">View All</Link>
+              </Button>
             </div>
-          ) : (
-            <div className="overflow-x-auto custom-scrollbar">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 border-zinc-100 dark:border-zinc-800">
-                    <TableHead className="h-12 font-bold text-xs uppercase tracking-wider text-zinc-500">Ticket Details</TableHead>
-                    <TableHead className="h-12 font-bold text-xs uppercase tracking-wider text-zinc-500">Priority</TableHead>
-                    <TableHead className="h-12 font-bold text-xs uppercase tracking-wider text-zinc-500">Status</TableHead>
-                    <TableHead className="h-12 font-bold text-xs uppercase tracking-wider text-zinc-500">Assignment</TableHead>
-                    <TableHead className="h-12 font-bold text-xs uppercase tracking-wider text-zinc-500 text-right pr-6">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredIncidents.map((incident) => (
-                    <TableRow 
-                      key={incident.id} 
-                      className="group border-zinc-100 dark:border-zinc-800/80 hover:bg-zinc-50/80 dark:hover:bg-zinc-900/40 transition-colors cursor-pointer"
-                      onClick={() => navigate(`/dashboard/incidents/${incident.id}`)}
-                    >
-                      <TableCell className="py-4 align-top">
-                        <div className="flex flex-col max-w-md">
-                          <span className="font-bold text-zinc-900 dark:text-zinc-100 text-[15px] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
-                            {incident.title}
-                          </span>
-                          <span className="text-xs text-zinc-500 mt-1 flex items-center gap-1.5">
-                            <Clock className="h-3.5 w-3.5" /> 
-                            {formatDistanceToNow(new Date(incident.created_at), { addSuffix: true })}
-                          </span>
-                        </div>
-                      </TableCell>
-                      
-                      <TableCell className="py-4 align-top">
-                        <Badge variant="secondary" className={`font-bold capitalize px-2.5 py-0.5 rounded-md ${getPriorityColor(incident.priority)}`}>
-                          {getDisplayPriority(incident.priority)}
-                        </Badge>
-                      </TableCell>
+            <div className="flex-1 overflow-y-auto min-h-0 custom-scrollbar">
+              {renderTable(progressIncidents, "No active tickets", "Tickets in progress will appear here.")}
+            </div>
+          </Card>
 
-                      <TableCell className="py-4 align-top">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold border uppercase tracking-wider ${getStatusColor(incident.status)}`}>
-                          {incident.status.replace('_', ' ')}
-                        </span>
-                      </TableCell>
-                      
-                      <TableCell className="py-4 align-top">
-                        {incident.assignee ? (
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-8 w-8 border-2 border-white dark:border-zinc-900 shadow-sm">
-                              <AvatarFallback className="text-[10px] bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-bold">
-                                {getInitials(incident.assignee.full_name)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{incident.assignee.full_name}</span>
-                          </div>
-                        ) : incident.team ? (
-                          <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                              <Users className="h-4 w-4" />
-                            </div>
-                            <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">{incident.team.name}</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-3 text-zinc-400 dark:text-zinc-500">
-                            <div className="h-8 w-8 rounded-full bg-zinc-50 dark:bg-zinc-900 border-2 border-dashed border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
-                              <span className="text-xs font-bold text-zinc-300 dark:text-zinc-600">?</span>
-                            </div>
-                            <span className="text-sm font-medium italic">Unassigned</span>
-                          </div>
-                        )}
-                      </TableCell>
-                      
-                      <TableCell className="py-4 align-top text-right pr-6">
-                        <div className="flex items-center justify-end gap-2 transition-opacity">
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="h-8 w-8 rounded-full hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-900/30"
-                            onClick={(e) => { e.stopPropagation(); navigate(`/dashboard/incidents/${incident.id}/update`); }}
-                          >
-                            <Edit3 className="h-4 w-4" />
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48 rounded-xl p-1">
-                              <DropdownMenuItem asChild className="rounded-lg cursor-pointer py-2.5" onClick={(e) => e.stopPropagation()}>
-                                <Link to={`/dashboard/incidents/${incident.id}/update`} className="flex items-center">
-                                  <Edit3 className="mr-3 h-4 w-4 text-indigo-500" /> <span className="font-medium">Update Ticket</span>
-                                </Link>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem asChild className="rounded-lg cursor-pointer py-2.5" onClick={(e) => e.stopPropagation()}>
-                                <Link to={`/dashboard/incidents/${incident.id}/history`} className="flex items-center">
-                                  <History className="mr-3 h-4 w-4 text-zinc-500" /> <span className="font-medium">View History</span>
-                                </Link>
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+          {/* Closed Tickets Section */}
+          <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden flex flex-col h-[400px] opacity-90 hover:opacity-100 transition-opacity">
+            <div className="p-5 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/30 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 bg-zinc-100 dark:bg-zinc-800 rounded-xl flex items-center justify-center text-zinc-600 dark:text-zinc-400">
+                  <CheckCircle className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-zinc-900 dark:text-zinc-100">Closed Tickets</h3>
+                  <p className="text-xs font-medium text-zinc-500">Archived items</p>
+                </div>
+              </div>
+              <Button asChild variant="outline" size="sm" className="rounded-full text-xs font-bold border-zinc-200 dark:border-zinc-800">
+                <Link to="/dashboard/incidents/service-activity">View All</Link>
+              </Button>
             </div>
-          )}
-        </Card>
+            <div className="flex-1 overflow-y-auto min-h-0 custom-scrollbar">
+              {renderTable(closedIncidents, "No closed tickets", "Closed items will appear here.")}
+            </div>
+          </Card>
+        </div>
       </motion.div>
     </div>
   );

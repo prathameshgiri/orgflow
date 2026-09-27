@@ -50,7 +50,8 @@ export default function ServiceDesk() {
         if (res.ok) {
           const data = await res.json();
           const allIncidents = data.incidents || [];
-          setIncidents(allIncidents);
+          const sctaskIncidents = allIncidents.filter((inc: any) => inc.title.startsWith('[SCTASK]'));
+          setIncidents(sctaskIncidents);
         }
       } catch (err) {
         console.error(err);
@@ -97,6 +98,7 @@ export default function ServiceDesk() {
   };
 
   const unassignedCount = incidents.filter(i => !i.assignee).length;
+  const activeCount = incidents.filter(i => !['resolved', 'closed'].includes(i.status)).length;
   const resolvedCount = incidents.filter(i => i.status === 'resolved' || i.status === 'closed').length;
   const newTickets = incidents.filter(i => i.status === 'new');
   const recentActivity = incidents.filter(i => i.status !== 'closed');
@@ -136,7 +138,7 @@ export default function ServiceDesk() {
         </div>
       </div>
 
-      <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5">
         <motion.div variants={itemVariants}>
           <Card className="bg-white dark:bg-zinc-950 p-6 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-sm hover:shadow-md transition-all group">
             <div className="flex items-start justify-between">
@@ -150,6 +152,23 @@ export default function ServiceDesk() {
             </div>
             <div className="mt-4 flex items-center gap-1.5 text-sm text-zinc-500 font-medium">
               <span className="flex h-2 w-2 rounded-full bg-zinc-400" /> Awaiting triage
+            </div>
+          </Card>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <Card className="bg-white dark:bg-zinc-950 p-6 rounded-2xl border border-indigo-200/80 dark:border-indigo-900/40 shadow-sm hover:shadow-md transition-all group">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-1">Active Tickets</p>
+                <h3 className="text-3xl font-black text-indigo-700 dark:text-indigo-500 tracking-tight">{loading ? "-" : activeCount}</h3>
+              </div>
+              <div className="h-12 w-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-all duration-300">
+                <Activity className="h-6 w-6" />
+              </div>
+            </div>
+            <div className="mt-4 flex items-center gap-1.5 text-sm text-indigo-600 dark:text-indigo-500 font-medium">
+              <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse" /> In progress
             </div>
           </Card>
         </motion.div>
@@ -253,7 +272,14 @@ export default function ServiceDesk() {
                        </div>
                     </div>
                     <div className="pr-10">
-                      <h4 className="font-bold text-sm text-zinc-900 dark:text-zinc-100 line-clamp-1 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">{incident.title.replace('[SCTASK] ', '')}</h4>
+                      <div className="flex items-center gap-2 mb-1">
+                        {incident.ticket_number && (
+                          <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-1.5 py-0.5 rounded">
+                            {incident.ticket_number}
+                          </span>
+                        )}
+                        <h4 className="font-bold text-sm text-zinc-900 dark:text-zinc-100 line-clamp-1 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">{incident.title.replace('[SCTASK] ', '')}</h4>
+                      </div>
                       <p className="text-xs text-zinc-500 mt-1 line-clamp-1">{incident.description || "No description provided."}</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-2 mt-4">
@@ -289,7 +315,7 @@ export default function ServiceDesk() {
                 </div>
               </div>
               <Button variant="outline" size="sm" asChild className="rounded-full h-8 text-xs font-bold border-zinc-200 dark:border-zinc-800">
-                <Link to="/dashboard/service-activity">View All</Link>
+                <Link to="/dashboard/service-desk/service-activity">View All</Link>
               </Button>
             </div>
 
@@ -315,7 +341,14 @@ export default function ServiceDesk() {
                     <Link key={incident.id} to={`/dashboard/incidents/${incident.id}`} className="p-5 hover:bg-zinc-50/80 dark:hover:bg-zinc-900/50 transition-colors group block">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1 pr-4">
-                          <h4 className="font-bold text-[15px] text-zinc-900 dark:text-zinc-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{incident.title.replace('[SCTASK] ', '')}</h4>
+                          <div className="flex items-center gap-2 mb-1">
+                            {incident.ticket_number && (
+                              <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-1.5 py-0.5 rounded">
+                                {incident.ticket_number}
+                              </span>
+                            )}
+                            <h4 className="font-bold text-[15px] text-zinc-900 dark:text-zinc-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{incident.title.replace('[SCTASK] ', '')}</h4>
+                          </div>
                           <p className="text-xs text-zinc-500 mt-1 line-clamp-2">{incident.description || "No description provided."}</p>
                         </div>
                         <div className="flex gap-2">
@@ -395,7 +428,7 @@ export default function ServiceDesk() {
               </div>
             </div>
             <Button variant="outline" size="sm" asChild className="rounded-full h-8 text-xs font-bold border-zinc-200 dark:border-zinc-800">
-              <Link to="/dashboard/service-activity">View All History</Link>
+              <Link to="/dashboard/service-desk/service-activity">View All History</Link>
             </Button>
           </div>
 
@@ -421,7 +454,14 @@ export default function ServiceDesk() {
                   <Link key={incident.id} to={`/dashboard/incidents/${incident.id}`} className="p-5 hover:bg-zinc-50/80 dark:hover:bg-zinc-900/50 transition-colors group block">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex-1 pr-4">
-                        <h4 className="font-bold text-[15px] text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-400 transition-colors">{incident.title.replace('[SCTASK] ', '')}</h4>
+                        <div className="flex items-center gap-2 mb-1">
+                          {incident.ticket_number && (
+                            <span className="text-xs font-bold text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
+                              {incident.ticket_number}
+                            </span>
+                          )}
+                          <h4 className="font-bold text-[15px] text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-400 transition-colors">{incident.title.replace('[SCTASK] ', '')}</h4>
+                        </div>
                         <p className="text-xs text-zinc-500 mt-1 line-clamp-2">{incident.description || "No description provided."}</p>
                       </div>
                       <div className="flex gap-2">

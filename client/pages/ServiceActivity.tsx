@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Activity, Clock, CheckCircle2, FileText, Users, User, ArrowRight, CheckCircle, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useOrganization } from "../hooks/useOrganization";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
@@ -42,6 +42,7 @@ export default function ServiceActivity() {
   const { orgId } = useOrganization();
   const { session } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchIncidents = async () => {
@@ -76,8 +77,18 @@ export default function ServiceActivity() {
     }
   }, [orgId, session]);
 
-  const activeActivity = incidents.filter(i => ['new', 'in_progress', 'resolved'].includes(i.status));
-  const closedActivity = incidents.filter(i => i.status === 'closed');
+  const isServiceDesk = location.pathname.includes('/service-desk');
+  const isIncidents = location.pathname.includes('/incidents');
+
+  let displayIncidents = incidents;
+  if (isServiceDesk) {
+    displayIncidents = incidents.filter(i => i.title.startsWith('[SCTASK]'));
+  } else if (isIncidents) {
+    displayIncidents = incidents.filter(i => !i.title.startsWith('[SCTASK]'));
+  }
+
+  const activeActivity = displayIncidents.filter(i => ['new', 'in_progress', 'resolved'].includes(i.status));
+  const closedActivity = displayIncidents.filter(i => i.status === 'closed');
 
   const renderActivityList = (activityList: any[]) => {
     if (loading) {
@@ -108,7 +119,14 @@ export default function ServiceActivity() {
           <Link key={incident.id} to={`/dashboard/incidents/${incident.id}`} className="p-5 hover:bg-zinc-50/80 dark:hover:bg-zinc-900/50 transition-colors group block">
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1 pr-4">
-                <h4 className="font-bold text-[15px] text-zinc-900 dark:text-zinc-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{incident.title.replace('[SCTASK] ', '')}</h4>
+                <div className="flex items-center gap-2 mb-1">
+                  {incident.ticket_number && (
+                    <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-1.5 py-0.5 rounded">
+                      {incident.ticket_number}
+                    </span>
+                  )}
+                  <h4 className="font-bold text-[15px] text-zinc-900 dark:text-zinc-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{incident.title.replace('[SCTASK] ', '')}</h4>
+                </div>
                 <p className="text-xs text-zinc-500 mt-1 line-clamp-2">{incident.description || "No description provided."}</p>
               </div>
               <div className="flex gap-2">
