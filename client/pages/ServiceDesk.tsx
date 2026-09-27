@@ -11,6 +11,23 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+const formatCompactTime = (dateStr: string) => {
+  if (!dateStr) return '';
+  return formatDistanceToNow(new Date(dateStr), { addSuffix: true })
+    .replace('less than a minute', '< 1 min')
+    .replace('about ', '')
+    .replace(' hours', 'hr')
+    .replace(' hour', 'hr')
+    .replace(' minutes', 'min')
+    .replace(' minute', 'min')
+    .replace(' days', 'd')
+    .replace(' day', 'd')
+    .replace(' months', 'mo')
+    .replace(' month', 'mo')
+    .replace(' years', 'y')
+    .replace(' year', 'y');
+};
+
 export default function ServiceDesk() {
   const [incidents, setIncidents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -227,14 +244,14 @@ export default function ServiceDesk() {
                       <h4 className="font-bold text-sm text-zinc-900 dark:text-zinc-100 line-clamp-1 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">{incident.title.replace('[SCTASK] ', '')}</h4>
                       <p className="text-xs text-zinc-500 mt-1 line-clamp-1">{incident.description || "No description provided."}</p>
                     </div>
-                    <div className="flex items-center gap-3 mt-4">
-                       <div className="flex items-center gap-1.5 text-[11px] font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 px-2.5 py-1 rounded-md border border-rose-100 dark:border-rose-900/50">
-                         <Clock className="h-3 w-3" />
-                         {formatDistanceToNow(new Date(incident.created_at), { addSuffix: true })}
+                    <div className="flex flex-wrap items-center gap-2 mt-4">
+                       <div className="flex items-center gap-1 text-[10px] font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/20 px-2 py-0.5 rounded-md border border-rose-100 dark:border-rose-900/50 whitespace-nowrap">
+                         <Clock className="h-2.5 w-2.5" />
+                         {formatCompactTime(incident.created_at)}
                        </div>
-                       <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-wider rounded-md border-rose-200 text-rose-600">New</Badge>
+                       <Badge variant="outline" className="text-[9px] uppercase font-bold tracking-wider rounded-md border-rose-200 text-rose-600 whitespace-nowrap px-1.5 py-0">New</Badge>
                        {incident.priority && (
-                         <Badge variant="outline" className={`text-[10px] uppercase font-bold tracking-wider rounded-md ${getPriorityColor(incident.priority)}`}>
+                         <Badge variant="outline" className={`text-[9px] uppercase font-bold tracking-wider rounded-md whitespace-nowrap px-1.5 py-0 ${getPriorityColor(incident.priority)}`}>
                            {incident.priority.split('_')[1]}
                          </Badge>
                        )}
