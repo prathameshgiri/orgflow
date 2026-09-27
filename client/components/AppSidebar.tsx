@@ -76,28 +76,28 @@ export default function AppSidebar({ organizations, onSignOut, isMobile }: Sideb
   const activeOrg = organizations.find(o => o.id === activeOrganizationId);
 
   return (
-    <aside className={`w-64 border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex-col h-screen sticky top-0 ${isMobile ? 'flex' : 'hidden md:flex'}`}>
+    <aside className={`w-56 border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex-col h-screen sticky top-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)] dark:shadow-[4px_0_24px_rgba(0,0,0,0.2)] z-10 ${isMobile ? 'flex' : 'hidden md:flex'}`}>
       {/* Brand */}
-      <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-start gap-2">
+      <div className="p-3 px-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-start gap-2">
         {activeOrg?.logo_url ? (
-          <img src={activeOrg.logo_url} alt="Logo" className="flex h-7 w-7 items-center justify-center rounded-lg object-cover bg-white" />
+          <img src={activeOrg.logo_url} alt="Logo" className="flex h-6 w-6 items-center justify-center rounded-lg object-cover bg-white" />
         ) : (
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-coral text-white">
-              <Command size={14} />
+          <div className="flex h-6 w-6 items-center justify-center rounded-md bg-coral text-white">
+              <Command size={12} />
           </div>
         )}
-        <div className="font-display font-bold text-lg tracking-tight text-ink dark:text-white truncate">
+        <div className="font-display font-bold text-base tracking-tight text-ink dark:text-white truncate">
           {activeOrg ? activeOrg.name : "ORG MAN"}
         </div>
       </div>
       
       {/* Workspace Switcher */}
-      <div className="p-4 pb-2 border-b border-zinc-100 dark:border-zinc-900">
+      <div className="p-3 border-b border-zinc-100 dark:border-zinc-900 relative z-20">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full justify-between h-9 px-3">
-              <span className="truncate text-sm font-semibold">{activeOrg ? activeOrg.name : "Select Workspace"}</span>
-              <ChevronDown className="h-4 w-4 opacity-50 flex-shrink-0" />
+            <Button variant="outline" className="w-full justify-between h-8 px-2.5 shadow-[0_2px_4px_rgba(0,0,0,0.02)] rounded-lg border-zinc-200 dark:border-zinc-800 hover:shadow-[0_4px_8px_rgba(0,0,0,0.04)] hover:-translate-y-[1px] transition-all bg-gradient-to-b from-white to-zinc-50/80 dark:from-zinc-900 dark:to-zinc-950">
+              <span className="truncate text-xs font-semibold">{activeOrg ? activeOrg.name : "Select Workspace"}</span>
+              <ChevronDown className="h-3 w-3 opacity-50 flex-shrink-0" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
@@ -116,26 +116,26 @@ export default function AppSidebar({ organizations, onSignOut, isMobile }: Sideb
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-6 overflow-y-auto custom-scrollbar">
+      <nav className="flex-1 p-4 space-y-6 overflow-y-auto custom-scrollbar relative z-10">
         {menuSections.map((section) => (
           <div key={section.title}>
-            <div className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider mb-2 px-3">
+            <div className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2 px-3">
               {section.title}
             </div>
-            <div className="space-y-0.5">
+            <div className="space-y-1">
               {section.links.map(({ label, icon: Icon, path }) => {
                 const isActive = location.pathname === path;
                 return (
                   <Link 
                     key={path} 
                     to={path} 
-                    className={`flex items-center gap-3 px-3 py-1.5 rounded-md transition-colors text-[13px] font-medium ${
+                    className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-300 text-sm font-medium relative ${
                       isActive 
-                        ? "bg-coral/10 text-coral dark:bg-coral/20" 
-                        : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:text-zinc-900 dark:hover:text-zinc-50"
+                        ? "bg-gradient-to-b from-indigo-500 to-indigo-600 shadow-[inset_0px_1px_1px_rgba(255,255,255,0.25),_0px_4px_10px_rgba(79,70,229,0.35)] border border-indigo-500/80 text-white font-bold -translate-y-[1px]" 
+                        : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 hover:text-zinc-900 dark:hover:text-zinc-100 hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:-translate-y-[1px]"
                     }`}
                   >
-                    <Icon size={16} />
+                    <Icon size={16} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-indigo-100 drop-shadow-sm" : ""} />
                     {label}
                   </Link>
                 );
@@ -146,18 +146,18 @@ export default function AppSidebar({ organizations, onSignOut, isMobile }: Sideb
       </nav>
 
       {/* User Profile Footer */}
-      <div className="p-3 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
+      <div className="p-2 border-t border-zinc-200 dark:border-zinc-800 bg-gradient-to-b from-zinc-50/50 to-zinc-100/50 dark:from-zinc-900/50 dark:to-zinc-950/50 relative z-20">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="w-full justify-start gap-3 h-10 px-2 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-              <div className="w-7 h-7 rounded-md bg-coral/20 text-coral flex items-center justify-center text-xs font-bold flex-shrink-0">
+            <Button variant="ghost" className="w-full justify-start gap-2 h-10 px-2 hover:bg-white dark:hover:bg-zinc-800 hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:-translate-y-[1px] transition-all rounded-xl border border-transparent hover:border-zinc-200/50 dark:hover:border-zinc-700/50">
+              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-coral to-orange-500 shadow-inner text-white flex items-center justify-center text-[10px] font-bold flex-shrink-0">
                 {user?.user_metadata?.full_name?.charAt(0) || "U"}
               </div>
               <div className="flex-1 text-left truncate">
-                <div className="text-sm font-semibold truncate leading-tight">
+                <div className="text-xs font-semibold truncate leading-tight">
                   {user?.user_metadata?.full_name || user?.email}
                 </div>
-                <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider truncate leading-tight mt-0.5">
+                <div className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider truncate leading-tight mt-0.5">
                   {activeOrg ? activeOrg.name : "ORG MAN"}
                 </div>
               </div>
