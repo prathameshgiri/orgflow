@@ -146,33 +146,35 @@ export default function CreateApproval() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
-      <div className="flex items-center gap-4">
-        <Button variant="outline" size="icon" asChild>
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen pt-4">
+      <div className="flex items-center gap-4 border-b border-zinc-200 dark:border-zinc-800 pb-6">
+        <Button variant="outline" size="icon" className="rounded-full h-10 w-10 shrink-0" asChild>
           <Link to="/dashboard/approvals">
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">New Approval Request</h1>
-          <p className="text-zinc-500">Submit a request for leave, expenses, or general approval.</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100 flex items-center gap-3">
+            New Approval Request
+          </h1>
+          <p className="text-zinc-500 mt-1">Submit a request for leave, expenses, or general approval.</p>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm overflow-hidden">
-        <form onSubmit={handleSubmit} className="p-6 sm:p-8">
-          <div className="space-y-6">
+      <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl shadow-sm overflow-hidden">
+        <form onSubmit={handleSubmit} className="p-8 md:p-10">
+          <div className="space-y-8">
             
             <div className="grid gap-2">
-              <Label htmlFor="type" className="text-base font-semibold">Approval Type</Label>
+              <Label htmlFor="type" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Approval Type</Label>
               <Select 
                 value={formData.approval_type} 
                 onValueChange={(val) => setFormData({...formData, approval_type: val})}
               >
-                <SelectTrigger className="h-11">
+                <SelectTrigger className="h-12 w-full rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 focus:ring-indigo-500">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl">
                   <SelectItem value="leave">Leave Request (Vacation, Sick, etc.)</SelectItem>
                   <SelectItem value="expense">Expense Reimbursement</SelectItem>
                   <SelectItem value="asset">Hardware / Asset Request</SelectItem>
@@ -182,10 +184,10 @@ export default function CreateApproval() {
             </div>
             
             <div className="grid gap-2">
-              <Label htmlFor="title" className="text-base font-semibold">Title</Label>
+              <Label htmlFor="title" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Title</Label>
               <Input 
                 id="title" 
-                className="h-11"
+                className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 focus-visible:ring-indigo-500"
                 placeholder="e.g. Annual Leave (Dec 20-30)" 
                 value={formData.title}
                 onChange={(e) => setFormData({...formData, title: e.target.value})}
@@ -193,15 +195,15 @@ export default function CreateApproval() {
             </div>
             
             <div className="grid gap-2">
-              <Label htmlFor="approver" className="text-base font-semibold">Who should approve this?</Label>
+              <Label htmlFor="approver" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Who should approve this?</Label>
               <Select 
                 value={formData.assignee_id} 
                 onValueChange={(val) => setFormData({...formData, assignee_id: val})}
               >
-                <SelectTrigger className="h-11">
+                <SelectTrigger className="h-12 w-full rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 focus:ring-indigo-500">
                   <SelectValue placeholder="Select an approver..." />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl">
                   {users.length === 0 && teams.length === 0 && (
                     <SelectItem value="admin">Platform Admin</SelectItem>
                   )}
@@ -234,34 +236,34 @@ export default function CreateApproval() {
                   )}
                 </SelectContent>
               </Select>
-              <p className="text-xs text-zinc-500">The selected person or team will be notified to review your request.</p>
+              <p className="text-xs text-zinc-500 font-medium bg-zinc-100 dark:bg-zinc-800/50 inline-block px-3 py-1.5 rounded-lg w-fit">The selected person or team will be notified to review your request.</p>
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="description" className="text-base font-semibold">Details / Justification</Label>
+              <Label htmlFor="description" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Details / Justification</Label>
               <Textarea 
                 id="description" 
                 placeholder="Provide detailed justification or context for the approver..." 
-                className="resize-none min-h-[120px]"
+                className="resize-none min-h-[140px] rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 focus-visible:ring-indigo-500 p-4"
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
               />
             </div>
           </div>
 
-          <div className="mt-8 flex items-center justify-end gap-3 pt-6 border-t border-zinc-100 dark:border-zinc-800">
-            <Button type="button" variant="outline" onClick={() => navigate('/dashboard/approvals')}>
+          <div className="mt-10 flex items-center justify-end gap-4 pt-6 border-t border-zinc-100 dark:border-zinc-800">
+            <Button type="button" variant="outline" className="rounded-xl h-12 px-6 font-bold" onClick={() => navigate('/dashboard/approvals')}>
               Cancel
             </Button>
-            <Button type="submit" disabled={loading} className="bg-indigo-600 hover:bg-indigo-700 min-w-[140px]">
+            <Button type="submit" disabled={loading} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/25 px-8 rounded-xl h-12 font-bold transition-all min-w-[160px]">
               {loading ? (
                 <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                  <div className="h-5 w-5 rounded-full border-2 border-white border-t-transparent animate-spin" />
                   <span>Submitting...</span>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <CheckSquare className="h-4 w-4" />
+                  <CheckSquare className="h-5 w-5" />
                   <span>Submit Request</span>
                 </div>
               )}
