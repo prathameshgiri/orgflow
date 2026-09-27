@@ -15,7 +15,8 @@ import {
   ShieldCheck, FileText, CheckSquare, MessageSquare, 
   Settings, LogOut, ChevronDown, Command, Activity,
   Briefcase, LifeBuoy, AlertCircle, FilePlus, BookOpen,
-  Server, BarChart3, Database, Workflow, Bot, Scale, Book
+  Server, BarChart3, Database, Workflow, Bot, Scale, Book, Zap,
+  Megaphone
 } from "lucide-react";
 
 interface SidebarProps {
@@ -61,7 +62,7 @@ const menuSections = [
     links: [
       { label: "Users", icon: Users, path: "/dashboard/users" },
       { label: "Roles & Permissions", icon: ShieldCheck, path: "/dashboard/roles" },
-      { label: "Automations", icon: Workflow, path: "/dashboard/workflows" },
+      { label: "Org Updates", icon: Megaphone, path: "/dashboard/updates" },
       { label: "Settings", icon: Settings, path: "/dashboard/settings" },
     ]
   }
@@ -78,9 +79,13 @@ export default function AppSidebar({ organizations, onSignOut, isMobile }: Sideb
     <aside className={`w-64 border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex-col h-screen sticky top-0 ${isMobile ? 'flex' : 'hidden md:flex'}`}>
       {/* Brand */}
       <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-start gap-2">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-coral text-white">
-            <Command size={14} />
-        </div>
+        {activeOrg?.logo_url ? (
+          <img src={activeOrg.logo_url} alt="Logo" className="flex h-7 w-7 items-center justify-center rounded-lg object-cover bg-white" />
+        ) : (
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-coral text-white">
+              <Command size={14} />
+          </div>
+        )}
         <div className="font-display font-bold text-lg tracking-tight text-ink dark:text-white truncate">
           {activeOrg ? activeOrg.name : "ORG MAN"}
         </div>

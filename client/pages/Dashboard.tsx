@@ -180,21 +180,14 @@ export default function Dashboard() {
           <p className="text-zinc-500 mt-1">Here is what's happening in your organization today.</p>
         </div>
         
-        <div className="flex flex-wrap items-center gap-2 pb-2 md:pb-0">
-          <div className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl mr-2 shadow-sm">
-            <div className={`w-2.5 h-2.5 rounded-full ${pendingIncidents.length > 0 ? 'bg-amber-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]'}`}></div>
-            <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
-              {pendingIncidents.length > 0 ? 'Degraded System' : 'All Systems Go'}
-            </span>
-          </div>
-          
-          <Button onClick={() => navigate('/dashboard/tasks')} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl shadow-sm whitespace-nowrap">
+        <div className="flex flex-wrap items-center gap-3">
+          <Button onClick={() => navigate('/dashboard/tasks')} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl shadow-sm h-10 whitespace-nowrap">
             <CheckSquare className="mr-2 h-4 w-4 text-blue-500" /> New Task
           </Button>
-          <Button onClick={() => navigate('/dashboard/incidents')} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl shadow-sm whitespace-nowrap">
+          <Button onClick={() => navigate('/dashboard/incidents')} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl shadow-sm h-10 whitespace-nowrap">
             <AlertCircle className="mr-2 h-4 w-4 text-red-500" /> Report Incident
           </Button>
-          <Button onClick={() => navigate('/dashboard/projects/create')} className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md whitespace-nowrap">
+          <Button onClick={() => navigate('/dashboard/projects/create')} className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md h-10 whitespace-nowrap">
             <Folder className="mr-2 h-4 w-4" /> New Project
           </Button>
         </div>

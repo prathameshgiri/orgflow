@@ -4,13 +4,17 @@ import { useAuth } from "../context/AuthContext";
 import { useOrgStore } from "../store/orgStore";
 import { supabase } from "../../shared/supabase";
 import AppSidebar from "./AppSidebar";
-import { Search, Bell, Menu } from "lucide-react";
+import { Search, Bell, Menu, CheckCircle2, Clock, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { formatDistanceToNow } from "date-fns";
 
 const DashboardLayout = () => {
   const { user, session } = useAuth();
   const { activeOrganizationId, setActiveOrganizationId } = useOrgStore();
   const [organizations, setOrganizations] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -59,7 +63,7 @@ const DashboardLayout = () => {
         console.log("[fetchOrgs] Checking for existing org by name:", metadataOrgName);
         const { data: existingOrg, error: existingOrgErr } = await supabase
           .from("organizations")
-          .select("id, name")
+          .select("id, name, logo_url")
           .eq("name", metadataOrgName)
           .maybeSingle();
           
@@ -76,7 +80,7 @@ const DashboardLayout = () => {
               email: user.email,
               admin_name: metadataFullName,
             })
-            .select("id, name")
+            .select("id, name, logo_url")
             .single();
             
           console.log("[fetchOrgs] New Org Created:", newOrg, "Error:", insertOrgErr);
@@ -115,7 +119,7 @@ const DashboardLayout = () => {
         console.log("[fetchOrgs] Fetching org by currentOrgId:", currentOrgId);
         const { data: orgData, error: orgDataErr } = await supabase
           .from("organizations")
-          .select("id, name")
+          .select("id, name, logo_url")
           .eq("id", currentOrgId)
           .maybeSingle();
           
@@ -129,7 +133,7 @@ const DashboardLayout = () => {
         console.log("[fetchOrgs] No org found by ID, fetching all accessible orgs");
         const { data: allOrgs, error: allOrgsErr } = await supabase
           .from("organizations")
-          .select("id, name");
+          .select("id, name, logo_url");
           
         console.log("[fetchOrgs] All Orgs:", allOrgs, "Error:", allOrgsErr);
         if (allOrgs && allOrgs.length > 0) {
@@ -149,6 +153,49 @@ const DashboardLayout = () => {
     };
     if (user) fetchOrgs();
   }, [user?.id]);
+
+  useEffect(() => {
+    if (!user) return;
+    
+    const fetchNotifications = async () => {
+      const { data } = await supabase
+        .from('notifications')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(20);
+        
+      if (data) {
+        setNotifications(data);
+        setUnreadCount(data.filter(n => !n.is_read).length);
+      }
+    };
+
+    fetchNotifications();
+
+    const channel = supabase.channel('realtime-notifications')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` }, () => {
+        fetchNotifications();
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [user]);
+
+  const markAsRead = async (id: string, link?: string) => {
+    await supabase.from('notifications').update({ is_read: true }).eq('id', id);
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
+    setUnreadCount(prev => Math.max(0, prev - 1));
+    if (link) {
+      navigate(link);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    await supabase.from('notifications').update({ is_read: true }).eq('user_id', user?.id).eq('is_read', false);
+    setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+    setUnreadCount(0);
+  };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -190,10 +237,61 @@ const DashboardLayout = () => {
                 className="h-9 w-64 rounded-full border border-zinc-200 bg-zinc-50 pl-9 pr-4 text-sm outline-none transition focus:border-coral focus:ring-1 focus:ring-coral dark:border-zinc-800 dark:bg-zinc-900"
               />
             </div>
-            <button className="h-9 w-9 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 transition relative">
-              <Bell size={18} />
-              <span className="absolute top-2 right-2.5 h-1.5 w-1.5 rounded-full bg-coral"></span>
-            </button>
+            
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="h-9 w-9 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 transition relative">
+                  <Bell size={18} />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-coral text-[9px] font-bold text-white flex items-center justify-center animate-in zoom-in">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-80 p-0 rounded-2xl shadow-xl border-zinc-200 dark:border-zinc-800">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800">
+                  <h3 className="font-bold text-sm">Notifications</h3>
+                  {unreadCount > 0 && (
+                    <button onClick={markAllAsRead} className="text-xs text-indigo-600 dark:text-indigo-400 font-medium hover:underline">
+                      Mark all as read
+                    </button>
+                  )}
+                </div>
+                <div className="max-h-[350px] overflow-y-auto">
+                  {notifications.length === 0 ? (
+                    <div className="p-8 text-center text-zinc-500 flex flex-col items-center">
+                      <CheckCircle2 className="h-8 w-8 mb-2 text-zinc-300" />
+                      <p className="text-sm">You're all caught up!</p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col">
+                      {notifications.map((notif) => (
+                        <div 
+                          key={notif.id} 
+                          onClick={() => markAsRead(notif.id, notif.link)}
+                          className={`p-4 border-b border-zinc-50 dark:border-zinc-800/50 cursor-pointer transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900/50 ${!notif.is_read ? 'bg-indigo-50/30 dark:bg-indigo-900/10' : ''}`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={`mt-1 w-2 h-2 rounded-full shrink-0 ${!notif.is_read ? 'bg-coral' : 'bg-transparent'}`} />
+                            <div className="flex-1">
+                              <p className={`text-sm ${!notif.is_read ? 'font-bold text-zinc-900 dark:text-zinc-100' : 'font-medium text-zinc-700 dark:text-zinc-300'}`}>
+                                {notif.title}
+                              </p>
+                              <p className="text-xs text-zinc-500 mt-0.5 line-clamp-2">{notif.message}</p>
+                              <p className="text-[10px] text-zinc-400 font-medium mt-1 flex items-center gap-1">
+                                <Clock size={10} /> {formatDistanceToNow(new Date(notif.created_at), { addSuffix: true })}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </PopoverContent>
+            </Popover>
+
           </div>
         </header>
 

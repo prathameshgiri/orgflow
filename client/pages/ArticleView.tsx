@@ -124,53 +124,62 @@ export default function ArticleView() {
   const isAuthor = currentUser?.id === article.author_id;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-20">
-      <div className="flex items-center gap-4">
-        <Button variant="outline" size="icon" asChild>
-          <Link to="/dashboard/knowledge">
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-        </Button>
-        <div className="flex-1">
-          <h1 className="text-3xl font-bold tracking-tight">{article.title}</h1>
+    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen pt-4">
+      <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-6">
+        <div className="flex items-center gap-4 flex-1">
+          <Button variant="outline" size="icon" className="rounded-full h-10 w-10 shrink-0" asChild>
+            <Link to="/dashboard/knowledge">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+          </Button>
+          <div>
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100">{article.title}</h1>
+          </div>
         </div>
         {isAuthor && (
-          <Button variant="destructive" size="sm" onClick={handleDelete} className="ml-auto">
+          <Button variant="outline" className="text-rose-600 border-rose-200 hover:bg-rose-50 hover:text-rose-700 ml-4 font-bold rounded-xl shadow-sm" onClick={handleDelete}>
             <Trash2 className="h-4 w-4 mr-2" /> Delete
           </Button>
         )}
       </div>
 
-      <div className="flex items-center gap-6 text-sm text-zinc-500 border-b border-zinc-200 dark:border-zinc-800 pb-4">
-        <div className="flex items-center gap-2">
-          <User className="h-4 w-4" />
-          <span>{article.author?.full_name || "Unknown Author"}</span>
+      <div className="flex flex-wrap items-center justify-between gap-6 px-2">
+        <div className="flex items-center gap-6 text-sm">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm">
+            <User className="h-4 w-4 text-indigo-500" />
+            <span className="font-bold text-zinc-700 dark:text-zinc-300">{article.author?.full_name || "Unknown Author"}</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm">
+            <Calendar className="h-4 w-4 text-indigo-500" />
+            <span className="font-bold text-zinc-700 dark:text-zinc-300">{new Date(article.created_at).toLocaleDateString()}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4" />
-          <span>{new Date(article.created_at).toLocaleDateString()}</span>
-        </div>
+        
         <Button 
-          variant={isLiked ? "default" : "secondary"}
+          variant={isLiked ? "default" : "outline"}
           size="sm"
           onClick={handleLike}
-          className={`ml-auto flex items-center gap-2 rounded-full px-4 ${isLiked ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : ''}`}
+          className={`flex items-center gap-2 h-10 px-5 rounded-xl font-bold shadow-sm transition-all ${
+            isLiked 
+              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-indigo-500/25 border-none' 
+              : 'bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 border-zinc-200 dark:border-zinc-800'
+          }`}
         >
-          <ThumbsUp className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
-          <span>{likesCount} Likes</span>
+          <ThumbsUp className={`h-4 w-4 ${isLiked ? 'fill-current' : 'text-zinc-500'}`} />
+          <span className={isLiked ? '' : 'text-zinc-700 dark:text-zinc-300'}>{likesCount} {likesCount === 1 ? 'Like' : 'Likes'}</span>
         </Button>
       </div>
 
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm p-8 sm:p-12">
-        <article className="prose prose-zinc dark:prose-invert max-w-none">
-          <div className="whitespace-pre-wrap font-sans text-base leading-relaxed break-words">
+      <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl shadow-sm p-8 md:p-12 relative overflow-hidden">
+        <article className="prose prose-zinc dark:prose-invert prose-lg max-w-none prose-headings:font-extrabold prose-a:text-indigo-600 dark:prose-a:text-indigo-400">
+          <div className="whitespace-pre-wrap font-sans leading-relaxed break-words text-zinc-800 dark:text-zinc-200">
             <ReactMarkdown 
               remarkPlugins={[remarkGfm]}
               components={{
                 img: ({node, ...props}) => (
                   <a href={props.src} target="_blank" rel="noopener noreferrer" className="block w-fit">
                     <img 
-                      className="rounded-md max-h-80 w-auto my-4 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md transition-shadow cursor-zoom-in" 
+                      className="rounded-xl max-h-96 w-auto my-6 border border-zinc-200 dark:border-zinc-800 shadow-md hover:shadow-lg transition-shadow cursor-zoom-in" 
                       {...props} 
                     />
                   </a>

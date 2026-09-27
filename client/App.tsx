@@ -61,6 +61,8 @@ import Workflows from "./pages/Workflows";
 import CreateWorkflow from "./pages/CreateWorkflow";
 import WorkflowDetails from "./pages/WorkflowDetails";
 import Settings from "./pages/Settings";
+import OrgUpdates from "./pages/OrgUpdates";
+import CreateOrgUpdate from "./pages/CreateOrgUpdate";
 
 const queryClient = new QueryClient();
 
@@ -91,6 +93,8 @@ const App = () => (
                 <Route path="workflows/new" element={<CreateWorkflow />} />
                 <Route path="workflows/:id" element={<WorkflowDetails />} />
                 <Route path="settings" element={<Settings />} />
+                <Route path="updates" element={<OrgUpdates />} />
+                <Route path="updates/create" element={<CreateOrgUpdate />} />
 
                 {/* Operations */}
                 <Route path="projects" element={<Projects />} />

@@ -91,14 +91,14 @@ export default function Approvals() {
       to={`/dashboard/approvals/${approval.id}?view=approver`}
       className="group block relative overflow-hidden bg-white dark:bg-zinc-950 p-4 sm:px-5 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-800/50 transition-all duration-300"
     >
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-start gap-5">
-          <Avatar className="h-10 w-10 border border-zinc-200 dark:border-zinc-800 shadow-sm mt-0.5">
-            <AvatarFallback className="bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 font-medium text-xs">
+      <div className="flex flex-col sm:flex-row justify-between gap-4">
+        <div className="flex items-start gap-4 flex-1">
+          <Avatar className="hidden sm:flex h-11 w-11 border border-zinc-200 dark:border-zinc-800 shadow-sm mt-0.5 shrink-0 rounded-2xl">
+            <AvatarFallback className="bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 font-bold text-sm rounded-2xl">
               {approval.requester?.full_name?.charAt(0) || "U"}
             </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 flex-1">
             <div className="flex items-center gap-2">
               <h4 className="font-bold text-base text-zinc-900 dark:text-zinc-100 group-hover:text-indigo-600 transition-colors">
                 {approval.title}
@@ -135,12 +135,12 @@ export default function Approvals() {
       to={`/dashboard/approvals/${approval.id}?view=requester`}
       className="group block p-4 sm:px-5 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-800/50 transition-all duration-300"
     >
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-start sm:items-center gap-4 flex-1">
-          <div className="hidden sm:flex h-10 w-10 rounded-xl bg-zinc-100 dark:bg-zinc-900 items-center justify-center text-zinc-500 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors shrink-0">
+      <div className="flex flex-col sm:flex-row justify-between gap-4">
+        <div className="flex items-start gap-4 flex-1">
+          <div className="hidden sm:flex h-11 w-11 rounded-2xl bg-zinc-100 dark:bg-zinc-900 items-center justify-center text-zinc-500 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors shrink-0 mt-0.5 shadow-sm">
             <FileText className="h-5 w-5" />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1.5 flex-1">
             <div className="flex items-center gap-2">
               <h4 className="font-bold text-base text-zinc-900 dark:text-zinc-100 group-hover:text-indigo-600 transition-colors">{approval.title}</h4>
               {getTypeBadge(approval.approval_type)}

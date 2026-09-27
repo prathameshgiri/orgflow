@@ -1239,3 +1239,185 @@ UPDATE public.tasks SET ticket_number = 'TASK' || nextval('task_seq')::TEXT WHER
 UPDATE public.service_requests SET ticket_number = 'REQ' || nextval('req_seq')::TEXT WHERE ticket_number IS NULL;
 UPDATE public.approvals SET ticket_number = 'APP' || nextval('app_seq')::TEXT WHERE ticket_number IS NULL;
 UPDATE public.project_tasks SET ticket_number = 'PTASK' || nextval('ptask_seq')::TEXT WHERE ticket_number IS NULL;
+
+-- --------------------------------------------------------------------------------------
+-- ADVANCED ITSM MODULES (Added later)
+-- --------------------------------------------------------------------------------------
+
+-- Notifications Table
+CREATE TABLE IF NOT EXISTS notifications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    message TEXT,
+    is_read BOOLEAN DEFAULT FALSE,
+    link TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view their own notifications" ON notifications;
+CREATE POLICY "Users can view their own notifications" ON notifications FOR SELECT USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Users can update their own notifications" ON notifications;
+CREATE POLICY "Users can update their own notifications" ON notifications FOR UPDATE USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "System can insert notifications" ON notifications;
+CREATE POLICY "System can insert notifications" ON notifications FOR INSERT WITH CHECK (true);
+
+-- Change Requests Table
+CREATE TABLE IF NOT EXISTS change_requests (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT NOT NULL DEFAULT 'planning', 
+    risk_level TEXT NOT NULL DEFAULT 'low', 
+    start_date TIMESTAMPTZ,
+    end_date TIMESTAMPTZ,
+    requester_id UUID REFERENCES users(id),
+    implementer_id UUID REFERENCES users(id),
+    cab_notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE change_requests ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Org users can view changes" ON change_requests;
+CREATE POLICY "Org users can view changes" ON change_requests FOR SELECT USING (
+    organization_id IN (SELECT organization_id FROM users WHERE id = auth.uid())
+);
+
+DROP POLICY IF EXISTS "Org users can insert changes" ON change_requests;
+CREATE POLICY "Org users can insert changes" ON change_requests FOR INSERT WITH CHECK (
+    organization_id IN (SELECT organization_id FROM users WHERE id = auth.uid())
+);
+
+DROP POLICY IF EXISTS "Org users can update changes" ON change_requests;
+CREATE POLICY "Org users can update changes" ON change_requests FOR UPDATE USING (
+    organization_id IN (SELECT organization_id FROM users WHERE id = auth.uid())
+);
+
+-- CMDB Relationships Table
+CREATE TABLE IF NOT EXISTS cmdb_relationships (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    source_asset_id UUID NOT NULL REFERENCES assets(id) ON DELETE CASCADE,
+    target_asset_id UUID NOT NULL REFERENCES assets(id) ON DELETE CASCADE,
+    relationship_type TEXT NOT NULL, 
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE cmdb_relationships ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Org users can view cmdb" ON cmdb_relationships;
+CREATE POLICY "Org users can view cmdb" ON cmdb_relationships FOR SELECT USING (
+    organization_id IN (SELECT organization_id FROM users WHERE id = auth.uid())
+);
+
+DROP POLICY IF EXISTS "Org admins can insert cmdb" ON cmdb_relationships;
+CREATE POLICY "Org admins can insert cmdb" ON cmdb_relationships FOR INSERT WITH CHECK (
+    organization_id IN (SELECT organization_id FROM users WHERE id = auth.uid())
+);
+
+-- Realtime publication for notifications
+DO $$ BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE notifications;
+EXCEPTION WHEN OTHERS THEN
+    -- Ignore error if table is already in the publication
+    NULL;
+END $$;
+
+-- --------------------------------------------------------
+-- Audit Logs & Storage 
+-- --------------------------------------------------------
+
+-- Add logo_url to organizations
+ALTER TABLE public.organizations ADD COLUMN IF NOT EXISTS logo_url TEXT;
+
+-- Create Audit Logs table
+CREATE TABLE IF NOT EXISTS public.audit_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id UUID NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE,
+    actor_id UUID REFERENCES public.users(id) ON DELETE SET NULL,
+    action TEXT NOT NULL,
+    details JSONB DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
+
+-- Only Org users can view audit logs
+DROP POLICY IF EXISTS "Org users can view audit logs" ON public.audit_logs;
+CREATE POLICY "Org users can view audit logs" ON public.audit_logs FOR SELECT USING (
+    organization_id IN (SELECT organization_id FROM public.users WHERE id = auth.uid())
+);
+
+-- Only Org admins/system can insert audit logs
+DROP POLICY IF EXISTS "System can insert audit logs" ON public.audit_logs;
+CREATE POLICY "System can insert audit logs" ON public.audit_logs FOR INSERT WITH CHECK (
+    organization_id IN (SELECT organization_id FROM public.users WHERE id = auth.uid())
+);
+
+-- Create Storage Bucket for Org Logos (if it doesn't exist)
+INSERT INTO storage.buckets (id, name, public) VALUES ('org_logos', 'org_logos', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Storage Policies for 'org_logos'
+DROP POLICY IF EXISTS "Logos are publicly accessible." ON storage.objects;
+CREATE POLICY "Logos are publicly accessible." ON storage.objects FOR SELECT USING (bucket_id = 'org_logos');
+
+DROP POLICY IF EXISTS "Authenticated users can upload logos" ON storage.objects;
+CREATE POLICY "Authenticated users can upload logos" ON storage.objects FOR INSERT WITH CHECK (
+    bucket_id = 'org_logos' AND auth.role() = 'authenticated'
+);
+
+DROP POLICY IF EXISTS "Users can update their logos" ON storage.objects;
+CREATE POLICY "Users can update their logos" ON storage.objects FOR UPDATE USING (
+    bucket_id = 'org_logos' AND auth.role() = 'authenticated'
+);
+
+-- --------------------------------------------------------
+-- Organization Updates (Announcements)
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS public.org_updates (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    organization_id UUID NOT NULL REFERENCES public.organizations(id) ON DELETE CASCADE,
+    author_id UUID REFERENCES public.users(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    priority TEXT NOT NULL DEFAULT 'low',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.org_updates ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Org users can view org updates" ON public.org_updates;
+CREATE POLICY "Org users can view org updates" ON public.org_updates FOR SELECT USING (
+    organization_id IN (SELECT organization_id FROM public.users WHERE id = auth.uid())
+);
+
+DROP POLICY IF EXISTS "Privileged users can insert org updates" ON public.org_updates;
+CREATE POLICY "Privileged users can insert org updates" ON public.org_updates FOR INSERT WITH CHECK (
+    organization_id IN (SELECT organization_id FROM public.users WHERE id = auth.uid())
+    AND EXISTS (
+        SELECT 1 FROM public.users u
+        JOIN public.roles r ON u.role_id = r.id
+        WHERE u.id = auth.uid() 
+        AND r.name NOT IN ('Member', 'Readonly', 'Read-Only', 'End-User')
+    )
+);
+
+DROP POLICY IF EXISTS "Privileged users can delete org updates" ON public.org_updates;
+CREATE POLICY "Privileged users can delete org updates" ON public.org_updates FOR DELETE USING (
+    organization_id IN (SELECT organization_id FROM public.users WHERE id = auth.uid())
+    AND EXISTS (
+        SELECT 1 FROM public.users u
+        JOIN public.roles r ON u.role_id = r.id
+        WHERE u.id = auth.uid() 
+        AND r.name NOT IN ('Member', 'Readonly', 'Read-Only', 'End-User')
+    )
+);
