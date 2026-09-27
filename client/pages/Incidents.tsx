@@ -74,7 +74,6 @@ export default function Incidents() {
     const { data, error } = await supabase
       .from("incidents")
       .select(`*, assignee:users!incidents_assignee_id_fkey(full_name), team:teams!incidents_team_id_fkey(name)`)
-      .eq("assignee_id", user.id)
       .order("created_at", { ascending: false });
       
     if (data) {
