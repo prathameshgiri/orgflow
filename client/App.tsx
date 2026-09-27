@@ -36,6 +36,7 @@ import TeamHistory from "./pages/TeamHistory";
 import TeamMembers from "./pages/TeamMembers";
 
 import ServiceDesk from "./pages/ServiceDesk";
+import ServiceActivity from "./pages/ServiceActivity";
 import CreateTicket from "./pages/CreateTicket";
 import Incidents from "./pages/Incidents";
 import IncidentHistory from "./pages/IncidentHistory";
@@ -107,6 +108,7 @@ const App = () => (
 
                 {/* Service Management */}
                 <Route path="service-desk" element={<ServiceDesk />} />
+                <Route path="service-activity" element={<ServiceActivity />} />
                 <Route path="service-desk/create" element={<CreateTicket />} />
                 <Route path="incidents" element={<Incidents />} />
                 <Route path="incidents/create" element={<CreateIncident />} />

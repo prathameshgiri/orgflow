@@ -207,11 +207,11 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        {/* Card 2: Pending SCTASKs */}
+        {/* Card 2: Pending Tasks */}
         <Card className="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900 flex flex-col justify-between h-40">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="font-semibold text-zinc-800 dark:text-zinc-200 text-[15px]">Pending SCTASKs</h3>
+              <h3 className="font-semibold text-zinc-800 dark:text-zinc-200 text-[15px]">Pending Tasks</h3>
               <p className="text-xs text-zinc-500 mt-0.5">Service/Standard Tasks</p>
             </div>
             <div className="bg-orange-500 text-white p-2 rounded-lg"><Clock size={18} /></div>
@@ -227,20 +227,20 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        {/* Card 3: Pending Incidents */}
+        {/* Card 3: Total Pending Works */}
         <Card className="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900 flex flex-col justify-between h-40">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="font-semibold text-zinc-800 dark:text-zinc-200 text-[15px]">Active Incidents</h3>
-              <p className="text-xs text-zinc-500 mt-0.5">Service Desk Tickets</p>
+              <h3 className="font-semibold text-zinc-800 dark:text-zinc-200 text-[15px]">Total Pending Work</h3>
+              <p className="text-xs text-zinc-500 mt-0.5">Tasks & Incidents</p>
             </div>
-            <div className="bg-red-500 text-white p-2 rounded-lg"><AlertCircle size={18} /></div>
+            <div className="bg-rose-500 text-white p-2 rounded-lg"><Activity size={18} /></div>
           </div>
           <div>
-            <h2 className="text-4xl font-bold text-zinc-900 dark:text-white">{pendingIncidents.length}</h2>
+            <h2 className="text-4xl font-bold text-zinc-900 dark:text-white">{pendingSCTasks.length + pendingIncidents.length}</h2>
             <div className="mt-4 flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800 pt-3">
               <span className="text-xs text-zinc-500">Real-time sync</span>
-              <button onClick={() => navigate('/dashboard/incidents')} className="text-xs font-semibold flex items-center text-zinc-600 dark:text-zinc-400 hover:text-red-600">
+              <button onClick={() => navigate('/dashboard/service-desk')} className="text-xs font-semibold flex items-center text-zinc-600 dark:text-zinc-400 hover:text-rose-600">
                 View <ArrowRight size={14} className="ml-1" />
               </button>
             </div>
@@ -268,9 +268,10 @@ export default function Dashboard() {
       </div>
 
       {/* Projects Overview Row */}
-      <div className="mb-6">
-        <Card className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900 overflow-hidden relative">
-          <div className="absolute top-0 right-0 p-32 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="lg:col-span-2">
+          <Card className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900 overflow-hidden relative h-full">
+            <div className="absolute top-0 right-0 p-32 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none"></div>
           
           <div className="flex items-center justify-between mb-6 relative z-10">
             <div className="flex items-center gap-3">
@@ -321,6 +322,55 @@ export default function Dashboard() {
             </div>
           </div>
         </Card>
+        </div>
+
+        <div className="lg:col-span-1">
+          <Card className="p-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900 h-full flex flex-col justify-center relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-24 bg-rose-500/5 blur-[80px] rounded-full pointer-events-none"></div>
+            
+            <div className="relative z-10 flex flex-col gap-4">
+              <div>
+                <h3 className="font-bold text-zinc-900 dark:text-zinc-100 text-[17px] flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-rose-500" />
+                  Service Management
+                </h3>
+                <p className="text-xs text-zinc-500 mt-1 mb-4">Quick access to all your service requests and active incidents.</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl font-extrabold text-zinc-900 dark:text-white">{pendingSCTasks.length + pendingIncidents.length}</span>
+                  <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Total Pending</span>
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-3 mt-3">
+                <Button variant="outline" className="w-full justify-between h-12 rounded-xl group hover:border-orange-200 dark:hover:border-orange-900/50 hover:bg-orange-50/50 dark:hover:bg-orange-900/10 transition-colors" onClick={() => navigate('/dashboard/service-desk')}>
+                  <div className="flex items-center gap-3">
+                    <div className="bg-orange-100 dark:bg-orange-900/30 p-1.5 rounded-md text-orange-600">
+                      <Clock size={16} />
+                    </div>
+                    <span className="font-semibold text-sm text-zinc-700 dark:text-zinc-300 group-hover:text-orange-700 dark:group-hover:text-orange-400">Tasks (SCTASK)</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2 py-0.5 rounded-full group-hover:bg-orange-100 group-hover:text-orange-600 transition-colors">{pendingSCTasks.length}</span>
+                    <ArrowRight size={16} className="text-zinc-400 group-hover:text-orange-500" />
+                  </div>
+                </Button>
+                
+                <Button variant="outline" className="w-full justify-between h-12 rounded-xl group hover:border-red-200 dark:hover:border-red-900/50 hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors" onClick={() => navigate('/dashboard/incidents')}>
+                  <div className="flex items-center gap-3">
+                    <div className="bg-red-100 dark:bg-red-900/30 p-1.5 rounded-md text-red-600">
+                      <AlertCircle size={16} />
+                    </div>
+                    <span className="font-semibold text-sm text-zinc-700 dark:text-zinc-300 group-hover:text-red-700 dark:group-hover:text-red-400">Active Incidents</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2 py-0.5 rounded-full group-hover:bg-red-100 group-hover:text-red-600 transition-colors">{pendingIncidents.length}</span>
+                    <ArrowRight size={16} className="text-zinc-400 group-hover:text-red-500" />
+                  </div>
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
 
       {/* Middle Row: Progress & Activity */}

@@ -57,7 +57,7 @@ export default function Incidents() {
   const [loading, setLoading] = useState(true);
 
   const { orgId } = useOrganization();
-  const { session } = useAuth();
+  const { session, user } = useAuth();
   const navigate = useNavigate();
 
   const getInitials = (name?: string) => {
@@ -69,11 +69,12 @@ export default function Incidents() {
   };
 
   const fetchIncidents = async () => {
-    if (!orgId) return;
+    if (!orgId || !user) return;
     setLoading(true);
     const { data, error } = await supabase
       .from("incidents")
       .select(`*, assignee:users!incidents_assignee_id_fkey(full_name), team:teams!incidents_team_id_fkey(name)`)
+      .eq("assignee_id", user.id)
       .order("created_at", { ascending: false });
       
     if (data) {
@@ -87,7 +88,7 @@ export default function Incidents() {
 
   useEffect(() => {
     fetchIncidents();
-  }, [orgId, session]);
+  }, [orgId, session, user]);
 
   const filteredIncidents = incidents.filter(i => 
     i.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
