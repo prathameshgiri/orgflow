@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Ticket, Edit3, Clock, Users, User, History, CheckCircle2, AlertTriangle, ShieldAlert } from "lucide-react";
+import { ArrowLeft, Ticket, Edit3, Clock, Users, User, History, CheckCircle2, AlertTriangle, ShieldAlert, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -146,141 +146,88 @@ export default function IncidentDetails() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Main Content (Left, 2 columns wide) */}
-        <div className="md:col-span-2 space-y-8">
-          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
-            <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden relative">
+      <div className="space-y-8">
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl shadow-sm relative overflow-hidden">
+            
+            {/* Properties & People Banner */}
+            <div className="p-8 md:p-10 border-b border-zinc-100 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-900/20">
+              
+              <div className="flex flex-wrap items-center gap-4 mb-8">
+                <Badge variant="secondary" className={`font-bold capitalize px-4 py-1.5 rounded-lg text-sm shadow-sm border ${getStatusColor(incident?.status || '')}`}>
+                  {(incident?.status || '').replace('_', ' ')}
+                </Badge>
+                <Badge variant="secondary" className={`font-bold capitalize px-4 py-1.5 rounded-lg text-sm shadow-sm border ${getPriorityColor(incident?.priority || '')}`}>
+                  {(incident?.priority || '').split('_')[1] || incident?.priority}
+                </Badge>
+                <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400 text-sm font-semibold ml-auto bg-white dark:bg-zinc-900 px-4 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                  <Clock className="h-4 w-4" />
+                  {incident?.created_at ? format(new Date(incident.created_at), "MMM d, yyyy h:mm a") : 'Unknown Date'}
+                </div>
+              </div>
+
+              <div className="flex flex-col lg:flex-row gap-6 lg:items-center">
+                {/* Raised By */}
+                <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex-1">
+                  <Avatar className="h-10 w-10 border border-zinc-100 dark:border-zinc-800">
+                    <AvatarFallback className="bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 font-bold text-sm">
+                      {getInitials(Array.isArray(incident.reporter) ? incident.reporter[0]?.full_name : incident.reporter?.full_name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mb-0.5">Raised By</p>
+                    <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate max-w-[200px]">
+                      {Array.isArray(incident.reporter) ? incident.reporter[0]?.full_name : incident.reporter?.full_name || "Unknown"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Assigned Team */}
+                <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex-1">
+                  <div className="h-10 w-10 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 border border-blue-100 dark:border-blue-900">
+                    <Users className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mb-0.5">Assigned Team</p>
+                    <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate max-w-[200px]">
+                      {incident.team ? (Array.isArray(incident.team) ? incident.team[0]?.name : incident.team?.name) : "Unassigned"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Assignee */}
+                <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex-1">
+                  <Avatar className="h-10 w-10 border border-zinc-100 dark:border-zinc-800">
+                    <AvatarFallback className="bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 font-bold text-sm">
+                      {incident.assignee ? getInitials(Array.isArray(incident.assignee) ? incident.assignee[0]?.full_name : incident.assignee?.full_name) : <User className="h-4 w-4" />}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mb-0.5">Assignee</p>
+                    <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate max-w-[200px]">
+                      {incident.assignee ? (Array.isArray(incident.assignee) ? incident.assignee[0]?.full_name : incident.assignee?.full_name) : "Unassigned"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Description */}
+            <div className="p-8 md:p-10 relative">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
-              <div className="p-8">
-                <h3 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2">
-                  <Ticket className="h-5 w-5 text-indigo-500" /> Description
-                </h3>
-                <div className="w-full bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800 text-left shadow-inner">
-                  <p className="text-zinc-600 dark:text-zinc-300 text-base leading-relaxed whitespace-pre-wrap break-words">
-                    {incident.description || "No description provided."}
-                  </p>
-                </div>
+              <h4 className="text-sm font-bold text-zinc-700 dark:text-zinc-300 mb-6 flex items-center gap-2">
+                <FileText className="h-5 w-5 text-indigo-500" /> Description
+              </h4>
+              <div className="w-full bg-zinc-50/80 dark:bg-zinc-900/30 rounded-2xl p-8 border border-zinc-100 dark:border-zinc-800 text-left shadow-inner">
+                <p className="text-zinc-700 dark:text-zinc-300 text-[16px] leading-relaxed whitespace-pre-wrap break-words">
+                  {incident.description || <span className="italic text-zinc-400">No description provided.</span>}
+                </p>
               </div>
-            </Card>
-          </motion.div>
-        </div>
-
-        {/* Sidebar Info (Right, 1 column wide) */}
-        <div className="space-y-6">
-          <motion.div initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
-            <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden">
-              <div className="p-6">
-                <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-                   <AlertTriangle className="h-5 w-5 text-indigo-500" /> Ticket Properties
-                </h3>
-                
-                <div className="space-y-5">
-                  <div>
-                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Status</p>
-                    <Badge variant="secondary" className={`font-bold capitalize px-3 py-1 rounded-md text-[13px] ${getStatusColor(incident?.status || '')}`}>
-                      {(incident?.status || '').replace('_', ' ')}
-                    </Badge>
-                  </div>
-                  
-                  <div>
-                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Priority</p>
-                    <Badge variant="secondary" className={`font-bold capitalize px-3 py-1 rounded-md text-[13px] ${getPriorityColor(incident?.priority || '')}`}>
-                      {(incident?.priority || '').split('_')[1] || incident?.priority}
-                    </Badge>
-                  </div>
-                  
-                  <div>
-                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Created</p>
-                    <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300 text-sm font-medium">
-                      <Clock className="h-4 w-4 text-zinc-400" />
-                      {incident?.created_at ? format(new Date(incident.created_at), "MMM d, yyyy h:mm a") : 'Unknown Date'}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3, duration: 0.5 }}>
-            <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden">
-              <div className="p-6">
-                <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-                   <Users className="h-5 w-5 text-indigo-500" /> People
-                </h3>
-                
-                <div className="space-y-6">
-                  {/* Reporter */}
-                  <div>
-                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Raised By</p>
-                    {incident.reporter ? (
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10 border-2 border-white dark:border-zinc-900 shadow-sm">
-                          <AvatarFallback className="bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 font-bold">
-                            {getInitials(Array.isArray(incident.reporter) ? incident.reporter[0]?.full_name : incident.reporter?.full_name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">{Array.isArray(incident.reporter) ? incident.reporter[0]?.full_name : incident.reporter?.full_name}</p>
-                          <p className="text-xs text-zinc-500">{Array.isArray(incident.reporter) ? incident.reporter[0]?.email : incident.reporter?.email}</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-sm text-zinc-500 italic">Unknown User</div>
-                    )}
-                  </div>
-
-                  <div className="h-px bg-zinc-100 dark:bg-zinc-800 w-full"></div>
-
-                  {/* Team Assignment */}
-                  <div>
-                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Assigned Team</p>
-                    {incident.team ? (
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 shadow-sm">
-                          <Users className="h-5 w-5" />
-                        </div>
-                        <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">{Array.isArray(incident.team) ? incident.team[0]?.name : incident.team?.name}</p>
-                      </div>
-                    ) : (
-                      <div className="text-sm text-zinc-500 italic flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-full border border-dashed border-zinc-300 dark:border-zinc-700 flex items-center justify-center">
-                          <Users className="h-4 w-4 text-zinc-300" />
-                        </div>
-                        Unassigned
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Assignee */}
-                  <div>
-                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Assignee</p>
-                    {incident.assignee ? (
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10 border-2 border-white dark:border-zinc-900 shadow-sm">
-                          <AvatarFallback className="bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 font-bold">
-                            {getInitials(Array.isArray(incident.assignee) ? incident.assignee[0]?.full_name : incident.assignee?.full_name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-bold text-zinc-900 dark:text-zinc-100">{Array.isArray(incident.assignee) ? incident.assignee[0]?.full_name : incident.assignee?.full_name}</p>
-                          <p className="text-xs text-zinc-500">{Array.isArray(incident.assignee) ? incident.assignee[0]?.email : incident.assignee?.email}</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-sm text-zinc-500 italic flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-full border border-dashed border-zinc-300 dark:border-zinc-700 flex items-center justify-center">
-                          <User className="h-4 w-4 text-zinc-300" />
-                        </div>
-                        Unassigned
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-        </div>
+            </div>
+            
+          </div>
+        </motion.div>
       </div>
     </div>
   );
