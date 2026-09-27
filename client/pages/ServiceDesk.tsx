@@ -138,95 +138,87 @@ export default function ServiceDesk() {
         </div>
       </div>
 
-      <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5">
-        <motion.div variants={itemVariants}>
-          <Card className="bg-white dark:bg-zinc-950 p-6 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-sm hover:shadow-md transition-all group">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">Unassigned Tickets</p>
-                <h3 className="text-3xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{loading ? "-" : unassignedCount}</h3>
-              </div>
-              <div className="h-12 w-12 bg-zinc-100 dark:bg-zinc-900 rounded-xl flex items-center justify-center text-zinc-500 dark:text-zinc-400 group-hover:scale-110 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-all duration-300">
-                <Ticket className="h-6 w-6" />
-              </div>
+      <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-5 bg-white dark:bg-zinc-950 rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 shadow-sm overflow-hidden divide-y md:divide-y-0 md:divide-x divide-zinc-200/80 dark:divide-zinc-800/80">
+        
+        <motion.div variants={itemVariants} className="p-6 relative group hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">Unassigned</p>
+              <h3 className="text-3xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight">{loading ? "-" : unassignedCount}</h3>
             </div>
-            <div className="mt-4 flex items-center gap-1.5 text-sm text-zinc-500 font-medium">
-              <span className="flex h-2 w-2 rounded-full bg-zinc-400" /> Awaiting triage
+            <div className="h-12 w-12 bg-zinc-100 dark:bg-zinc-900 rounded-xl flex items-center justify-center text-zinc-500 dark:text-zinc-400 group-hover:scale-110 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-all duration-300">
+              <Ticket className="h-6 w-6" />
             </div>
-          </Card>
+          </div>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-zinc-500 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-zinc-400" /> Awaiting triage
+          </div>
         </motion.div>
 
-        <motion.div variants={itemVariants}>
-          <Card className="bg-white dark:bg-zinc-950 p-6 rounded-2xl border border-indigo-200/80 dark:border-indigo-900/40 shadow-sm hover:shadow-md transition-all group">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-1">Active Tickets</p>
-                <h3 className="text-3xl font-black text-indigo-700 dark:text-indigo-500 tracking-tight">{loading ? "-" : activeCount}</h3>
-              </div>
-              <div className="h-12 w-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-all duration-300">
-                <Activity className="h-6 w-6" />
-              </div>
+        <motion.div variants={itemVariants} className="p-6 relative group hover:bg-indigo-50/50 dark:hover:bg-indigo-900/20 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-1">Active</p>
+              <h3 className="text-3xl font-black text-indigo-700 dark:text-indigo-500 tracking-tight">{loading ? "-" : activeCount}</h3>
             </div>
-            <div className="mt-4 flex items-center gap-1.5 text-sm text-indigo-600 dark:text-indigo-500 font-medium">
-              <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse" /> In progress
+            <div className="h-12 w-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-all duration-300">
+              <Activity className="h-6 w-6" />
             </div>
-          </Card>
+          </div>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-indigo-600 dark:text-indigo-500 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse" /> In progress
+          </div>
         </motion.div>
 
-        <motion.div variants={itemVariants}>
-          <Card className="bg-white dark:bg-zinc-950 p-6 rounded-2xl border border-rose-200/80 dark:border-rose-900/40 shadow-sm hover:shadow-md transition-all group relative overflow-hidden">
-            <div className="absolute inset-0 bg-rose-500/5 group-hover:bg-rose-500/10 transition-colors" />
-            <div className="flex items-start justify-between relative z-10">
-              <div>
-                <p className="text-sm font-semibold text-rose-600 dark:text-rose-400 mb-1">SLA Breached</p>
-                <h3 className="text-3xl font-black text-rose-700 dark:text-rose-500 tracking-tight">0</h3>
-              </div>
-              <div className="h-12 w-12 bg-rose-100 dark:bg-rose-900/30 rounded-xl flex items-center justify-center text-rose-600 dark:text-rose-400 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                <AlertTriangle className="h-6 w-6" />
-              </div>
+        <motion.div variants={itemVariants} className="p-6 relative group hover:bg-rose-50/50 dark:hover:bg-rose-900/20 transition-colors flex flex-col justify-between min-h-[140px] overflow-hidden">
+          <div className="absolute inset-0 bg-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <div className="flex items-start justify-between relative z-10">
+            <div>
+              <p className="text-sm font-semibold text-rose-600 dark:text-rose-400 mb-1">SLA Breached</p>
+              <h3 className="text-3xl font-black text-rose-700 dark:text-rose-500 tracking-tight">0</h3>
             </div>
-            <div className="mt-4 flex items-center gap-1.5 text-sm text-rose-600 dark:text-rose-500 font-medium relative z-10">
-              <span className="flex h-2 w-2 rounded-full bg-rose-500 animate-pulse" /> Critical attention
+            <div className="h-12 w-12 bg-rose-100 dark:bg-rose-900/30 rounded-xl flex items-center justify-center text-rose-600 dark:text-rose-400 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+              <AlertTriangle className="h-6 w-6" />
             </div>
-          </Card>
+          </div>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-rose-600 dark:text-rose-500 font-medium relative z-10">
+            <span className="flex h-2 w-2 rounded-full bg-rose-500 animate-pulse" /> Critical
+          </div>
         </motion.div>
 
-        <motion.div variants={itemVariants}>
-          <Card className="bg-white dark:bg-zinc-950 p-6 rounded-2xl border border-blue-200/80 dark:border-blue-900/40 shadow-sm hover:shadow-md transition-all group">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-1">Avg Resolution</p>
-                <h3 className="text-3xl font-black text-blue-700 dark:text-blue-500 tracking-tight">0<span className="text-xl">h</span></h3>
-              </div>
-              <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:scale-110 group-hover:-rotate-12 transition-all duration-300">
-                <Clock className="h-6 w-6" />
-              </div>
+        <motion.div variants={itemVariants} className="p-6 relative group hover:bg-blue-50/50 dark:hover:bg-blue-900/20 transition-colors flex flex-col justify-between min-h-[140px]">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-1">Resolution</p>
+              <h3 className="text-3xl font-black text-blue-700 dark:text-blue-500 tracking-tight">0<span className="text-xl">h</span></h3>
             </div>
-            <div className="mt-4 flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 font-medium">
-              <span className="flex h-2 w-2 rounded-full bg-blue-500" /> Optimal performance
+            <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:scale-110 group-hover:-rotate-12 transition-all duration-300">
+              <Clock className="h-6 w-6" />
             </div>
-          </Card>
+          </div>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 font-medium">
+            <span className="flex h-2 w-2 rounded-full bg-blue-500" /> Optimal
+          </div>
         </motion.div>
 
-        <motion.div variants={itemVariants}>
-          <Card className="bg-white dark:bg-zinc-950 p-6 rounded-2xl border border-emerald-200/80 dark:border-emerald-900/40 shadow-sm hover:shadow-md transition-all group relative overflow-hidden">
-             <div className="absolute top-0 right-0 p-4 opacity-10 scale-150 rotate-12 transform-gpu pointer-events-none group-hover:rotate-45 transition-transform duration-700">
-               <CheckCircle2 className="h-32 w-32 text-emerald-500" />
-             </div>
-            <div className="flex items-start justify-between relative z-10">
-              <div>
-                <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-1">Resolved Today</p>
-                <h3 className="text-3xl font-black text-emerald-700 dark:text-emerald-500 tracking-tight">{loading ? "-" : resolvedCount}</h3>
-              </div>
-              <div className="h-12 w-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-all duration-300">
-                <CheckCircle2 className="h-6 w-6" />
-              </div>
+        <motion.div variants={itemVariants} className="p-6 relative group hover:bg-emerald-50/50 dark:hover:bg-emerald-900/20 transition-colors flex flex-col justify-between min-h-[140px] overflow-hidden">
+           <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-10 scale-150 rotate-12 transform-gpu pointer-events-none group-hover:rotate-45 transition-all duration-700">
+             <CheckCircle2 className="h-32 w-32 text-emerald-500" />
+           </div>
+          <div className="flex items-start justify-between relative z-10">
+            <div>
+              <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-1">Resolved</p>
+              <h3 className="text-3xl font-black text-emerald-700 dark:text-emerald-500 tracking-tight">{loading ? "-" : resolvedCount}</h3>
             </div>
-            <div className="mt-4 flex items-center gap-1.5 text-sm text-emerald-600 dark:text-emerald-400 font-medium relative z-10">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-500" /> Great job!
+            <div className="h-12 w-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-all duration-300">
+              <CheckCircle2 className="h-6 w-6" />
             </div>
-          </Card>
+          </div>
+          <div className="mt-4 flex items-center gap-1.5 text-sm text-emerald-600 dark:text-emerald-500 font-medium relative z-10">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500" /> Great job!
+          </div>
         </motion.div>
+
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
