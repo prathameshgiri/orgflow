@@ -295,7 +295,7 @@ export default function UpdateTask() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <Label htmlFor="update-status" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Status</Label>
+                      <Label htmlFor="update-status" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center h-5">Status</Label>
                       <Select value={updateStatus} onValueChange={setUpdateStatus}>
                         <SelectTrigger id="update-status" className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus:ring-4 focus:ring-blue-500/10">
                           <SelectValue placeholder="Select status" />
@@ -310,7 +310,7 @@ export default function UpdateTask() {
                     </div>
 
                     <div className="space-y-3">
-                      <Label htmlFor="update-priority" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
+                      <Label htmlFor="update-priority" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5 h-5">
                         <ShieldAlert className="h-4 w-4 text-zinc-400" /> Priority
                       </Label>
                       <Select value={updatePriority} onValueChange={setUpdatePriority}>
@@ -337,7 +337,7 @@ export default function UpdateTask() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-3">
-                      <Label htmlFor="update-team" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Assign to Team</Label>
+                      <Label htmlFor="update-team" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center h-5">Assign to Team</Label>
                       <Select value={updateTeamId} onValueChange={setUpdateTeamId}>
                         <SelectTrigger id="update-team" className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus:ring-4 focus:ring-blue-500/10">
                           <SelectValue placeholder="Select team" />
@@ -352,7 +352,7 @@ export default function UpdateTask() {
                     </div>
 
                     <div className="space-y-3">
-                      <Label htmlFor="update-assignee" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
+                      <Label htmlFor="update-assignee" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5 h-5">
                         <UserPlus className="h-4 w-4 text-zinc-400" /> Assign to Person
                       </Label>
                       <Select value={updateAssigneeId} onValueChange={setUpdateAssigneeId}>
