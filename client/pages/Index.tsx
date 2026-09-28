@@ -9,8 +9,10 @@ import {
   Database, Search, Cpu
 } from "lucide-react";
 import { useState } from "react";
+import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { FeatureSection, productFeatures } from "./Features";
 
 /* ─── Animation Variants ─── */
 const reveal: Variants = {
@@ -228,6 +230,31 @@ export default function Index() {
         </motion.section>
 
         {/* ═══════════════════════════════════════════════════════
+            2.5. ACTUAL SCREENSHOT FEATURES (Moved to top)
+        ═══════════════════════════════════════════════════════ */}
+        <section className="relative w-full bg-[#0a0a0a] px-5 py-24 lg:px-8 lg:py-32 overflow-hidden border-t border-white/5">
+          <div className="mx-auto max-w-7xl">
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={reveal} className="max-w-3xl mx-auto text-center mb-24">
+              <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-white mb-6">
+                Everything you need.<br/>
+                <span className="text-zinc-500">In one platform.</span>
+              </h2>
+            </motion.div>
+            
+            <div className="space-y-0">
+              {productFeatures.map((feat, index) => (
+                <React.Fragment key={index}>
+                  <FeatureSection {...feat} />
+                  {index < productFeatures.length - 1 && (
+                    <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════
             3. PLATFORM MODULES (Dark Agentic UI)
         ═══════════════════════════════════════════════════════ */}
         <section
@@ -239,9 +266,9 @@ export default function Index() {
           
           <div className="mx-auto max-w-7xl">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={reveal} className="max-w-3xl mx-auto text-center mb-24">
-              <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-white mb-6">
-                Everything you need.<br/>
-                <span className="text-zinc-500">In one platform.</span>
+              <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl text-white mb-6">
+                Modular Architecture.<br/>
+                <span className="text-zinc-500">Built for scale.</span>
               </h2>
             </motion.div>
 
@@ -455,251 +482,6 @@ export default function Index() {
                     Eliminate the chaotic back-and-forth of managing permissions. ORG MAN acts as a single, immutable source of truth for your entire company's hierarchy.
                   </p>
                 </motion.div>
-              </motion.div>
-
-
-
-              {/* Category 4: Access Control (Image Left, Text Right) */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                <motion.div variants={scaleIn} className="lg:col-span-7 order-2 lg:order-1">
-                  <RolesPreview />
-                </motion.div>
-                <motion.div variants={reveal} className="lg:col-span-5 order-1 lg:order-2">
-                  <div className="text-indigo-400 font-bold uppercase tracking-[0.2em] text-[11px] mb-4">SECURITY</div>
-                  <h3 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-white mb-5">
-                    Granular permissions, <br className="hidden sm:block" /><span className="text-zinc-500">that scale with you.</span>
-                  </h3>
-                  <p className="text-lg leading-relaxed text-zinc-400">
-                    Say goodbye to chaotic permission matrices. Create custom roles, group people into teams, and define precise access policies down to the module level.
-                  </p>
-                  <ul className="mt-6 space-y-3">
-                    {['Role-based access control (RBAC)', 'Team-based routing', 'Automated invite management'].map(f => (
-                      <li key={f} className="flex items-center gap-3 text-sm font-medium text-zinc-300"><CheckCircle2 size={16} className="text-indigo-400" /> {f}</li>
-                    ))}
-                  </ul>
-                </motion.div>
-              </motion.div>
-
-              {/* Category 5: Incident Management (Text Left, Image Right) */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                <motion.div variants={reveal} className="lg:col-span-5">
-                  <div className="text-rose-400 font-bold uppercase tracking-[0.2em] text-[11px] mb-4">ITSM CORE</div>
-                  <h3 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-white mb-5">
-                    Turn chaos into <br className="hidden sm:block" /><span className="text-zinc-500">rapid resolution.</span>
-                  </h3>
-                  <p className="text-lg leading-relaxed text-zinc-400">
-                    Detect, assign, and resolve critical incidents faster. With real-time alerts and severity tracking, your IT team will never miss a beat.
-                  </p>
-                  <ul className="mt-6 space-y-3">
-                    {['Automated escalation policies', 'Real-time status tracking', 'Detailed post-mortem history'].map(f => (
-                      <li key={f} className="flex items-center gap-3 text-sm font-medium text-zinc-300"><CheckCircle2 size={16} className="text-rose-400" /> {f}</li>
-                    ))}
-                  </ul>
-                </motion.div>
-                <motion.div variants={scaleIn} className="lg:col-span-7">
-                  <MockIncidentView />
-                </motion.div>
-              </motion.div>
-
-              {/* Category 6: Service Requests (Image Left, Text Right) */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                <motion.div variants={scaleIn} className="lg:col-span-7 order-2 lg:order-1">
-                  <MockRequestForm />
-                </motion.div>
-                <motion.div variants={reveal} className="lg:col-span-5 order-1 lg:order-2">
-                  <div className="text-emerald-400 font-bold uppercase tracking-[0.2em] text-[11px] mb-4">SERVICE DESK</div>
-                  <h3 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-white mb-5">
-                    A self-service portal, <br className="hidden sm:block" /><span className="text-zinc-500">employees will love.</span>
-                  </h3>
-                  <p className="text-lg leading-relaxed text-zinc-400">
-                    Give your team a consumer-grade experience for IT requests. From software access to hardware procurement, standardize how work gets requested.
-                  </p>
-                  <ul className="mt-6 space-y-3">
-                    {['Custom request forms', 'Consumer-grade tracking UI', 'Automated catalog fulfillment'].map(f => (
-                      <li key={f} className="flex items-center gap-3 text-sm font-medium text-zinc-300"><CheckCircle2 size={16} className="text-emerald-400" /> {f}</li>
-                    ))}
-                  </ul>
-                </motion.div>
-              </motion.div>
-
-              {/* Category 7: Approvals (Text Left, Image Right) */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                <motion.div variants={reveal} className="lg:col-span-5">
-                  <div className="text-amber-400 font-bold uppercase tracking-[0.2em] text-[11px] mb-4">CHANGE MANAGEMENT</div>
-                  <h3 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-white mb-5">
-                    Streamline decisions, <br className="hidden sm:block" /><span className="text-zinc-500">securely.</span>
-                  </h3>
-                  <p className="text-lg leading-relaxed text-zinc-400">
-                    Don't let bottlenecks slow you down. Route critical requests and system changes through multi-tier approval workflows automatically.
-                  </p>
-                  <ul className="mt-6 space-y-3">
-                    {['Multi-level approval chains', 'Immutable audit trails', '1-click email approvals'].map(f => (
-                      <li key={f} className="flex items-center gap-3 text-sm font-medium text-zinc-300"><CheckCircle2 size={16} className="text-amber-400" /> {f}</li>
-                    ))}
-                  </ul>
-                </motion.div>
-                <motion.div variants={scaleIn} className="lg:col-span-7">
-                  <MockApprovalQueue />
-                </motion.div>
-              </motion.div>
-
-
-
-              {/* Category 9: Projects & Tasks (Image Left, Text Right) */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                <motion.div variants={scaleIn} className="lg:col-span-7 order-2 lg:order-1">
-                  <MockKanbanBoard />
-                </motion.div>
-                <motion.div variants={reveal} className="lg:col-span-5 order-1 lg:order-2">
-                  <div className="text-blue-400 font-bold uppercase tracking-[0.2em] text-[11px] mb-4">PORTFOLIO MANAGEMENT</div>
-                  <h3 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-white mb-5">
-                    Execute initiatives, <br className="hidden sm:block" /><span className="text-zinc-500">with precision.</span>
-                  </h3>
-                  <p className="text-lg leading-relaxed text-zinc-400">
-                    Break down massive IT rollouts into manageable projects and tasks. Track progress, assign ownership, and collaborate across teams effortlessly.
-                  </p>
-                  <ul className="mt-6 space-y-3">
-                    {['Project milestones', 'Task dependency mapping', 'Progress tracking dashboards'].map(f => (
-                      <li key={f} className="flex items-center gap-3 text-sm font-medium text-zinc-300"><CheckCircle2 size={16} className="text-blue-400" /> {f}</li>
-                    ))}
-                  </ul>
-                </motion.div>
-              </motion.div>
-
-              {/* Category 10: Visual Workflows (Text Left, Image Right) */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-                <motion.div variants={reveal} className="lg:col-span-5">
-                  <div className="text-[#00e5ff] font-bold uppercase tracking-[0.2em] text-[11px] mb-4">AUTOMATION</div>
-                  <h3 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-white mb-5">
-                    Automate the mundane, <br className="hidden sm:block" /><span className="text-zinc-500">focus on what matters.</span>
-                  </h3>
-                  <p className="text-lg leading-relaxed text-zinc-400">
-                    Build powerful, logic-driven workflows without writing a single line of code. Automate ticket routing, approval chains, and notifications.
-                  </p>
-                  <ul className="mt-6 space-y-3">
-                    {['No-code visual builder', 'Conditional routing logic', 'Automated trigger events'].map(f => (
-                      <li key={f} className="flex items-center gap-3 text-sm font-medium text-zinc-300"><CheckCircle2 size={16} className="text-[#00e5ff]" /> {f}</li>
-                    ))}
-                  </ul>
-                </motion.div>
-                <motion.div variants={scaleIn} className="lg:col-span-7">
-                  <MockWorkflowBuilder />
-                </motion.div>
-              </motion.div>
-
-              {/* ═══════════════════════════════════════════════════════
-                  9.5. ENTERPRISE BENTO BOX
-              ═══════════════════════════════════════════════════════ */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={stagger} className="mt-32">
-                <div className="text-center mb-16 max-w-2xl mx-auto">
-                  <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">Enterprise-grade capabilities.<br className="hidden sm:block"/> Out of the box.</h2>
-                  <p className="text-lg text-zinc-400">Built for scale, security, and absolute clarity.</p>
-                </div>
-                
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-                  <motion.div variants={reveal} className="lg:col-span-2">
-                    <MockAdvancedAnalytics />
-                  </motion.div>
-                  <motion.div variants={reveal} className="lg:col-span-1">
-                    <MockAuditLogs />
-                  </motion.div>
-                  <motion.div variants={reveal} className="md:col-span-2 lg:col-span-1">
-                    <MockSLAEngine />
-                  </motion.div>
-                  <motion.div variants={reveal} className="lg:col-span-2 relative h-full w-full overflow-hidden rounded-[2rem] border border-white/5 bg-[#0a0a0a] p-6 lg:p-8 flex flex-col justify-center group hover:border-white/10 transition-colors">
-                     <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none">
-                       <Command size={100} />
-                     </div>
-                     <div className="relative z-10 w-full max-w-2xl">
-                       <h4 className="text-xl font-bold text-white mb-2">Developer API</h4>
-                       <p className="text-sm text-zinc-400 mb-6">Integrate programmatically with ease. Build custom workflows or connect your existing tools.</p>
-                       <div className="rounded-xl border border-white/10 bg-[#050505] overflow-hidden shadow-2xl">
-                         {/* MacOS Style Window Header */}
-                         <div className="flex items-center gap-2 px-4 py-3 bg-[#111] border-b border-white/5">
-                           <div className="flex gap-1.5">
-                             <div className="w-3 h-3 rounded-full bg-rose-500/80"></div>
-                             <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
-                             <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
-                           </div>
-                           <div className="ml-4 text-[10px] font-mono text-zinc-500">app.ts</div>
-                         </div>
-                         <div className="p-5 overflow-x-auto">
-                           <pre className="text-sm font-mono text-zinc-300 leading-relaxed">
-                             <code className="text-purple-400">import</code> {'{ OrgMan }'} <code className="text-purple-400">from</code> <code className="text-emerald-400">'@orgman/sdk'</code>;<br/><br/>
-                             <code className="text-zinc-500">// Initialize client with secure token</code><br/>
-                             <code className="text-blue-400">const</code> client = <code className="text-purple-400">new</code> OrgMan(<code className="text-emerald-400">"&lt;YOUR_SECURE_API_KEY&gt;"</code>);<br/><br/>
-                             <code className="text-zinc-500">// Fetch all critical P1 incidents</code><br/>
-                             <code className="text-blue-400">const</code> incidents = <code className="text-purple-400">await</code> client.incidents.list({'{ priority: '} <code className="text-emerald-400">'P1'</code> {'}'});
-                           </pre>
-                         </div>
-                       </div>
-                     </div>
-                  </motion.div>
-                </div>
-              </motion.div>
-
-              {/* Unified More Capabilities Grid */}
-              <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={reveal} className="mt-32 border-t border-white/5 pt-24 pb-12">
-                <div className="text-center mb-20 max-w-2xl mx-auto">
-                  <h3 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">Everything else you need <br className="hidden sm:block"/>to run your organization</h3>
-                  <p className="text-lg text-zinc-400">Included out-of-the-box, natively integrated.</p>
-                </div>
-                
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-12 max-w-6xl mx-auto text-left px-4">
-                  {/* Multi-Org */}
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <Globe2 size={22} className="text-[#00e5ff]" />
-                      <h4 className="text-xl font-bold text-white">Multi-Org Architecture</h4>
-                    </div>
-                    <p className="text-zinc-400 text-[15px] leading-relaxed">Switch between organizations seamlessly while maintaining strict data isolation. Perfect for MSPs and holding companies.</p>
-                  </div>
-                  
-                  {/* Knowledge Base */}
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <Book size={22} className="text-purple-400" />
-                      <h4 className="text-xl font-bold text-white">Knowledge Base</h4>
-                    </div>
-                    <p className="text-zinc-400 text-[15px] leading-relaxed">Deflect tickets before they happen. Empower your workforce with a rich, searchable knowledge base for FAQs and SOPs.</p>
-                  </div>
-
-                  {/* SLA Management */}
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <Clock size={22} className="text-cyan-400" />
-                      <h4 className="text-xl font-bold text-white">SLA Management</h4>
-                    </div>
-                    <p className="text-zinc-400 text-[15px] leading-relaxed">Never miss a deadline. Ensure every ticket is handled on time with real-time countdowns and proactive breach warnings.</p>
-                  </div>
-
-                  {/* Real-time Analytics */}
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <BarChart3 size={22} className="text-orange-400" />
-                      <h4 className="text-xl font-bold text-white">Real-time Analytics</h4>
-                    </div>
-                    <p className="text-zinc-400 text-[15px] leading-relaxed">Data-driven insights at your fingertips. Generate reports on ticket volume, resolution times, and team workload.</p>
-                  </div>
-
-                  {/* Organization Updates */}
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <Megaphone size={22} className="text-pink-400" />
-                      <h4 className="text-xl font-bold text-white">Organization Updates</h4>
-                    </div>
-                    <p className="text-zinc-400 text-[15px] leading-relaxed">Keep everyone aligned. Broadcast critical maintenance windows or announcements directly to targeted teams.</p>
-                  </div>
-
-                  {/* Super Admin Command Center */}
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <Settings size={22} className="text-white" />
-                      <h4 className="text-xl font-bold text-white">Super Admin Console</h4>
-                    </div>
-                    <p className="text-zinc-400 text-[15px] leading-relaxed">Complete control from a single pane of glass. Monitor platform health, manage global settings, and oversee all user activity.</p>
-                  </div>
-                </div>
               </motion.div>
 
             </div>

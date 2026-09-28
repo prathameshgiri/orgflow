@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useOrgStore } from "../store/orgStore";
 import { supabase } from "../../shared/supabase";
 import AppSidebar from "./AppSidebar";
-import { Search, Bell, Menu, CheckCircle2, Clock, X, Megaphone } from "lucide-react";
+import { Search, Bell, Menu, CheckCircle2, Clock, X, Megaphone, Moon, Sun } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { formatDistanceToNow } from "date-fns";
@@ -18,6 +18,17 @@ const DashboardLayout = () => {
   const [latestUpdate, setLatestUpdate] = useState<any>(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     const processPendingInvite = async () => {
@@ -255,6 +266,10 @@ const DashboardLayout = () => {
                 className="h-9 w-64 rounded-full border border-zinc-200 bg-zinc-50 pl-9 pr-4 text-sm outline-none transition focus:border-coral focus:ring-1 focus:ring-coral dark:border-zinc-800 dark:bg-zinc-900"
               />
             </div>
+            
+            <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="h-9 w-9 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-500 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 transition relative mr-1">
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             
             <Popover>
               <PopoverTrigger asChild>
