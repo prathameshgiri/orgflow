@@ -193,9 +193,9 @@ export default function Index() {
               <motion.p variants={reveal} className="mt-7 max-w-xl text-[17px] leading-8 text-zinc-400">
                 Unify your entire company's hierarchy, access controls, and IT service desk into one incredibly fast, beautifully designed platform. Eliminate the chaos and scale with clarity.
               </motion.p>
-              <motion.div variants={reveal} className="mt-9 flex flex-col gap-3 sm:flex-row">
-                <Link to="/signup" className="rounded-xl bg-[#00e5ff] px-6 py-3.5 text-center text-sm font-bold text-black shadow-xl shadow-[#00e5ff]/20 transition hover:-translate-y-1 hover:bg-[#00cce6]">Start for free <ArrowRight className="ml-2 inline" size={16} /></Link>
-                <a href="#platform" className="rounded-xl border border-white/10 bg-[#111111] px-6 py-3.5 text-center text-sm font-bold text-white transition hover:border-white/20 hover:bg-[#161616]"><Play className="mr-2 inline fill-current" size={14} /> See how it works</a>
+              <motion.div variants={reveal} className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:items-center">
+                <Link to="/signup" className="w-full max-w-xs sm:w-auto rounded-xl bg-[#00e5ff] px-6 py-3.5 text-center text-sm font-bold text-black shadow-xl shadow-[#00e5ff]/20 transition hover:-translate-y-1 hover:bg-[#00cce6]">Start for free <ArrowRight className="ml-2 inline" size={16} /></Link>
+                <a href="#platform" className="w-full max-w-xs sm:w-auto rounded-xl border border-white/10 bg-[#111111] px-6 py-3.5 text-center text-sm font-bold text-white transition hover:border-white/20 hover:bg-[#161616]"><Play className="mr-2 inline fill-current" size={14} /> See how it works</a>
               </motion.div>
               <motion.div variants={reveal} className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-zinc-500">
                 <span><Check className="mr-1 inline text-[#00e5ff]" size={14} /> Free forever plan</span>
