@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, useInView } from "framer-motion";
 import {
   ArrowRight, Check, ChevronDown, Command, Globe2, Layers3, LockKeyhole, Play, 
   ShieldCheck, Sparkles, UsersRound, Zap, BarChart3, Clock, Bell, Workflow, 
   FileText, HeartHandshake, ArrowUpRight, ArrowDownRight, Shield, Server, Star, Quote,
   LayoutDashboard, Briefcase, CheckSquare, LifeBuoy, AlertTriangle, FilePlus, 
   CheckCircle2, Book, Activity, Users, Megaphone, Settings, User, X, MessageSquare,
-  Database, Search, Cpu
+  Database, Search, Cpu, TrendingUp, Award, Globe
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -28,6 +28,24 @@ const scaleIn: Variants = {
   visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
+/* ─── Animated Counter Hook ─── */
+function useCounter(target: number, duration = 2000, shouldStart = false) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!shouldStart) return;
+    let startTime: number | null = null;
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [target, duration, shouldStart]);
+  return count;
+}
+
 /* ─── Data ─── */
 const features = [
   { icon: Globe2, title: "Organization management", text: "Keep every workspace, brand, and client account organized in one calm, connected home.", color: "bg-coral/10 text-coral" },
@@ -37,30 +55,20 @@ const features = [
 ];
 
 const itsmModules = [
-  { icon: Bell, title: "Incident Management", desc: "Detect, escalate, and resolve incidents faster with automated workflows and real-time alerts.", color: "from-red-500 to-rose-600" },
-  { icon: FileText, title: "Service Requests", desc: "Empower employees with a self-service portal for IT requests, approvals, and tracking.", color: "from-blue-500 to-indigo-600" },
-  { icon: Workflow, title: "Change Management", desc: "Plan, approve, and execute changes with built-in risk assessment and rollback capabilities.", color: "from-violet-500 to-purple-600" },
-  { icon: BarChart3, title: "Asset Tracking", desc: "Complete lifecycle management for all hardware, software, and cloud assets in your org.", color: "from-emerald-500 to-teal-600" },
-  { icon: HeartHandshake, title: "Problem Management", desc: "Identify root causes, link related incidents, and eliminate recurring issues permanently.", color: "from-amber-500 to-orange-600" },
-  { icon: Clock, title: "SLA Management", desc: "Define, track, and enforce service level agreements with automated breach notifications.", color: "from-cyan-500 to-sky-600" },
+  { icon: Bell, title: "Incident Management", desc: "Detect, escalate, and resolve incidents faster with automated workflows and real-time alerts.", color: "from-red-500 to-rose-600", glow: "rgba(239,68,68,0.15)" },
+  { icon: FileText, title: "Service Requests", desc: "Empower employees with a self-service portal for IT requests, approvals, and tracking.", color: "from-blue-500 to-indigo-600", glow: "rgba(59,130,246,0.15)" },
+  { icon: Workflow, title: "Change Management", desc: "Plan, approve, and execute changes with built-in risk assessment and rollback capabilities.", color: "from-violet-500 to-purple-600", glow: "rgba(139,92,246,0.15)" },
+  { icon: BarChart3, title: "Asset Tracking", desc: "Complete lifecycle management for all hardware, software, and cloud assets in your org.", color: "from-emerald-500 to-teal-600", glow: "rgba(16,185,129,0.15)" },
+  { icon: HeartHandshake, title: "Problem Management", desc: "Identify root causes, link related incidents, and eliminate recurring issues permanently.", color: "from-amber-500 to-orange-600", glow: "rgba(245,158,11,0.15)" },
+  { icon: Clock, title: "SLA Management", desc: "Define, track, and enforce service level agreements with automated breach notifications.", color: "from-cyan-500 to-sky-600", glow: "rgba(6,182,212,0.15)" },
 ];
 
 const testimonials = [
   { name: "Priya Sharma", role: "CTO, Finvesta", quote: "ORG MAN transformed how we manage access across 12 subsidiaries. What used to take days now takes minutes.", avatar: "from-violet-400 to-indigo-500" },
   { name: "James Chen", role: "VP Engineering, CloudScale", quote: "The permissions matrix alone saved our compliance team 20+ hours per week. Absolute game-changer.", avatar: "from-emerald-400 to-teal-500" },
-  { name: "Maria Rodriguez", role: "IT Director, NovaTech", quote: "Finally, an ITSM tool that doesn't feel like it was built in 2005. Beautiful, fast, and incredibly intuitive.", avatar: "from-coral to-rose-500" },
+  { name: "Maria Rodriguez", role: "IT Director, NovaTech", quote: "Finally, an ITSM tool that doesn't feel like it was built in 2005. Beautiful, fast, and incredibly intuitive.", avatar: "from-[#00e5ff] to-blue-500" },
 ];
 
-const integrations = [
-  { name: "Slack", color: "bg-[#611f69]" },
-  { name: "Teams", color: "bg-[#464EB8]" },
-  { name: "Jira", color: "bg-[#0052CC]" },
-  { name: "GitHub", color: "bg-[#1B1F23]" },
-  { name: "AWS", color: "bg-[#FF9900]" },
-  { name: "Azure", color: "bg-[#0078D4]" },
-  { name: "Okta", color: "bg-[#007DC1]" },
-  { name: "Zendesk", color: "bg-[#03363D]" },
-];
 
 const faqData = [
   { q: "What is an organization in ORG MAN?", a: "An organization is a top-level container that holds all your teams, members, roles, and configurations. You can manage multiple organizations from a single account." },
@@ -70,6 +78,182 @@ const faqData = [
   { q: "Is there a free plan?", a: "Yes! Our free tier includes up to 3 organizations, 10 team members each, and access to core ITSM modules. No credit card required to get started." },
   { q: "How secure is ORG MAN?", a: "Bank-grade security with SOC 2 Type II compliance, end-to-end encryption, SAML SSO, and row-level security powered by Supabase. Your data never leaves your control." },
 ];
+
+/* ─── Stats Counter Section ─── */
+function StatsSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const count0 = useCounter(10000, 2000, isInView);
+  const count2 = useCounter(62, 1800, isInView);
+
+  return (
+    <section className="border-t border-white/5 bg-[#0a0a0a] py-20 lg:py-24" ref={ref}>
+      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={reveal} className="text-center mb-14">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#00e5ff] mb-3">By the numbers</p>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">Trusted by teams that move fast</h2>
+        </motion.div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 rounded-2xl overflow-hidden border border-white/5">
+          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
+            <div className="h-10 w-10 rounded-xl bg-[#00e5ff]/10 flex items-center justify-center text-[#00e5ff] mb-4"><Globe size={20} /></div>
+            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
+              {isInView ? count0.toLocaleString() : "0"}<span className="text-[#00e5ff]">+</span>
+            </div>
+            <div className="text-sm text-zinc-500 font-medium">Organizations managed</div>
+          </div>
+          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
+            <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4"><Award size={20} /></div>
+            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
+              {isInView ? "99.9" : "0"}<span className="text-emerald-400">%</span>
+            </div>
+            <div className="text-sm text-zinc-500 font-medium">Uptime guarantee</div>
+          </div>
+          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
+            <div className="h-10 w-10 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-400 mb-4"><TrendingUp size={20} /></div>
+            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
+              {isInView ? count2 : "0"}<span className="text-violet-400">%</span>
+            </div>
+            <div className="text-sm text-zinc-500 font-medium">Less admin overhead</div>
+          </div>
+          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
+            <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4"><Zap size={20} /></div>
+            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
+              {isInView ? "4.2" : "0"}<span className="text-amber-400">x</span>
+            </div>
+            <div className="text-sm text-zinc-500 font-medium">Faster team onboarding</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── ITSM Modules Grid ─── */
+function ITSMSection() {
+  return (
+    <section className="border-t border-white/5 bg-[#0a0a0a] py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={reveal} className="max-w-2xl mx-auto text-center mb-16">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#00e5ff] mb-4">ITSM Suite</p>
+          <h2 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-white mb-5">
+            Everything IT needs.<br /><span className="text-zinc-500">Nothing it doesn't.</span>
+          </h2>
+          <p className="text-lg text-zinc-400 leading-relaxed">A complete ITSM platform built for modern IT teams — from incident triage to SLA enforcement.</p>
+        </motion.div>
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={stagger} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {itsmModules.map((mod) => (
+            <motion.div key={mod.title} variants={reveal} className="group relative rounded-2xl border border-white/5 bg-[#111111] p-6 overflow-hidden hover:border-white/10 transition-all duration-300 hover:-translate-y-1">
+              <div className="absolute -top-8 -right-8 h-24 w-24 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: mod.glow }} />
+              <div className={`h-11 w-11 rounded-xl bg-gradient-to-br ${mod.color} flex items-center justify-center text-white mb-4 shadow-lg`}><mod.icon size={20} /></div>
+              <h3 className="text-base font-bold text-white mb-2">{mod.title}</h3>
+              <p className="text-sm text-zinc-400 leading-relaxed">{mod.desc}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+
+/* ─── Accordion FAQ ─── */
+function FAQAccordion() {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  return (
+    <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} className="border-t border-white/5 bg-[#0a0a0a] px-5 py-24 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <motion.div variants={reveal} className="text-center mb-16">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#00e5ff] mb-3">FAQ</p>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">Frequently Asked Questions</h2>
+          <p className="text-lg text-zinc-400">Everything you need to know about the platform.</p>
+        </motion.div>
+        <motion.div variants={stagger} className="space-y-3">
+          {faqData.map((faq, idx) => {
+            const isOpen = openIdx === idx;
+            return (
+              <motion.div key={idx} variants={reveal}>
+                <button onClick={() => setOpenIdx(isOpen ? null : idx)} className={`w-full text-left rounded-2xl border transition-all duration-300 overflow-hidden ${isOpen ? "border-[#00e5ff]/20 bg-[#00e5ff]/5" : "border-white/5 bg-[#111111] hover:border-white/10 hover:bg-[#161616]"}`}>
+                  <div className="flex items-center justify-between gap-4 px-6 py-5">
+                    <span className={`text-base font-bold transition-colors ${isOpen ? "text-white" : "text-zinc-200"}`}>{faq.q}</span>
+                    <ChevronDown size={18} className={`shrink-0 transition-all duration-300 ${isOpen ? "rotate-180 text-[#00e5ff]" : "text-zinc-500"}`} />
+                  </div>
+                  <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"}`}>
+                    <p className="px-6 pb-6 text-sm leading-relaxed text-zinc-400">{faq.a}</p>
+                  </div>
+                </button>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+}
+
+/* ─── Final CTA Section ─── */
+function CTASection() {
+  return (
+    <section className="border-t border-white/5 bg-[#0a0a0a] py-10 lg:py-14 overflow-hidden">
+      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+        <motion.div
+          initial="hidden" whileInView="visible" viewport={{ once: true }}
+          variants={stagger}
+          className="relative rounded-2xl overflow-hidden"
+        >
+          {/* Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#00e5ff]/10 via-[#00e5ff]/5 to-violet-500/10" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_0%_50%,rgba(0,229,255,0.12),transparent)]" />
+          <div className="absolute inset-0 rounded-2xl border border-[#00e5ff]/15" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:20px_20px]" />
+          <div className="absolute -top-12 right-0 h-48 w-72 rounded-full bg-[#00e5ff]/8 blur-[70px]" />
+          <div className="absolute -bottom-12 left-1/3 h-40 w-64 rounded-full bg-violet-500/8 blur-[60px]" />
+
+          {/* Content — horizontal split */}
+          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 px-8 py-9 sm:px-12 lg:px-14">
+
+            {/* Left: text */}
+            <div className="flex-1 min-w-0">
+              <motion.div variants={reveal} className="inline-flex items-center gap-2 rounded-full border border-[#00e5ff]/20 bg-[#00e5ff]/10 px-3 py-1 text-[10px] font-bold text-[#00e5ff] mb-3 uppercase tracking-widest">
+                <Sparkles size={10} /> Start for free today
+              </motion.div>
+              <motion.h2 variants={reveal} className="font-display text-2xl sm:text-3xl lg:text-[2rem] font-bold tracking-tight text-white mb-2.5 leading-[1.2]">
+                Ready to bring order{" "}
+                <span className="text-[#00e5ff]">to your organization?</span>
+              </motion.h2>
+              <motion.p variants={reveal} className="text-sm text-zinc-400 leading-relaxed max-w-lg">
+                Join thousands of teams who’ve replaced chaos with clarity. Set up your workspace in minutes, no credit card required.
+              </motion.p>
+            </div>
+
+            {/* Right: buttons + trust badges */}
+            <motion.div variants={reveal} className="flex flex-col items-center lg:items-end gap-3.5 shrink-0">
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <Link
+                  to="/signup"
+                  className="group flex items-center gap-2 rounded-xl bg-[#00e5ff] px-7 py-3 text-sm font-bold text-black shadow-lg shadow-[#00e5ff]/20 transition-all hover:-translate-y-0.5 hover:bg-[#00cce6] hover:shadow-[#00e5ff]/35 whitespace-nowrap"
+                >
+                  Create your workspace <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+                </Link>
+                <Link
+                  to="/pricing"
+                  className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-7 py-3 text-sm font-bold text-white transition-all hover:border-white/20 hover:bg-white/10 whitespace-nowrap"
+                >
+                  View pricing
+                </Link>
+              </div>
+              <div className="flex flex-wrap items-center justify-center lg:justify-end gap-x-5 gap-y-1.5 text-[11px] text-zinc-500 font-medium">
+                <span className="flex items-center gap-1.5"><Check size={11} className="text-[#00e5ff]" /> No credit card</span>
+                <span className="flex items-center gap-1.5"><Check size={11} className="text-[#00e5ff]" /> Free forever</span>
+                <span className="flex items-center gap-1.5"><Check size={11} className="text-[#00e5ff]" /> SOC 2 compliant</span>
+              </div>
+            </motion.div>
+
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
 
 /* ─── Mock Enterprise Capabilities ─── */
 const MockAdvancedAnalytics = () => (
@@ -253,6 +437,11 @@ export default function Index() {
             </div>
           </div>
         </section>
+
+        {/* ═══════════════════════════════════════════════════════
+            STATS COUNTER
+        ═══════════════════════════════════════════════════════ */}
+        <StatsSection />
 
         {/* ═══════════════════════════════════════════════════════
             3. PLATFORM MODULES (Dark Agentic UI)
@@ -489,52 +678,43 @@ export default function Index() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════
-            9.9. FAQ
+            ITSM MODULES GRID
         ═══════════════════════════════════════════════════════ */}
-        <motion.section
-          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}
-          className="border-t border-white/5 bg-[#0a0a0a] px-5 py-24 lg:px-8"
-        >
-          <div className="max-w-3xl mx-auto">
-            <motion.div variants={reveal} className="text-center mb-16">
-              <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">Frequently Asked Questions</h2>
-              <p className="text-lg text-zinc-400">Everything you need to know about the platform.</p>
-            </motion.div>
-            <motion.div variants={stagger} className="grid gap-4">
-              {faqData.map((faq, idx) => (
-                <motion.div key={idx} variants={reveal} className="rounded-2xl border border-white/5 bg-[#111111] p-6 hover:border-white/10 transition-colors">
-                  <h4 className="text-lg font-bold text-white mb-2">{faq.q}</h4>
-                  <p className="text-sm leading-relaxed text-zinc-400">{faq.a}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </motion.section>
+        <ITSMSection />
 
         {/* ═══════════════════════════════════════════════════════
-            10. TESTIMONIALS
+            TESTIMONIALS
         ═══════════════════════════════════════════════════════ */}
         <motion.section
-          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}
-          className="border-t border-white/5 bg-[#0a0a0a] px-5 py-24 lg:px-8 lg:py-32"
+          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }}
+          className="border-t border-white/5 bg-[#060606] px-5 py-24 lg:px-8 lg:py-32"
         >
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={reveal} className="max-w-3xl mx-auto text-center mb-16">
-            <div className="inline-flex items-center justify-center gap-4">
-              <div className="h-[2px] w-8 rounded-full bg-[#00e5ff]/50" />
-              <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-white">
-                Loved by teams <span className="text-[#00e5ff]">worldwide</span>
-              </h2>
-              <div className="h-[2px] w-8 rounded-full bg-[#00e5ff]/50" />
-            </div>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#00e5ff] mb-3">Wall of love</p>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
+              Loved by teams <span className="text-zinc-500">worldwide</span>
+            </h2>
+            <p className="text-zinc-400 text-lg">Don't take our word for it — hear from teams using ORG MAN daily.</p>
           </motion.div>
 
           <motion.div variants={stagger} className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
             {testimonials.map((t) => (
-              <motion.div key={t.name} variants={reveal} className="relative rounded-[1.6rem] border border-white/5 bg-[#111111] p-6 transition hover:-translate-y-1 hover:bg-[#161616] hover:border-white/10">
-                <Quote size={28} className="mb-4 text-[#00e5ff]/20" />
-                <p className="text-sm leading-7 text-zinc-400">{t.quote}</p>
+              <motion.div
+                key={t.name}
+                variants={reveal}
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className="relative rounded-[1.6rem] border border-white/5 bg-[#111111] p-6 hover:bg-[#161616] hover:border-white/10 hover:shadow-2xl hover:shadow-black/40 transition-colors duration-300"
+              >
+                {/* Stars */}
+                <div className="flex gap-0.5 mb-4">
+                  {Array(5).fill(0).map((_, i) => (
+                    <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <Quote size={22} className="mb-3 text-[#00e5ff]/25" />
+                <p className="text-sm leading-7 text-zinc-300">{t.quote}</p>
                 <div className="mt-6 flex items-center gap-3 border-t border-white/5 pt-5">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#00e5ff] to-blue-500 text-sm font-bold text-black`}>
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${t.avatar} text-sm font-bold text-black shadow-lg`}>
                     {t.name.split(" ").map((n) => n[0]).join("")}
                   </div>
                   <div>
@@ -542,21 +722,27 @@ export default function Index() {
                     <div className="text-xs text-zinc-500">{t.role}</div>
                   </div>
                 </div>
-                <div className="mt-4 flex gap-0.5">
-                  {Array(5).fill(0).map((_, i) => (
-                    <Star key={i} size={14} className="fill-[#00e5ff] text-[#00e5ff]" />
-                  ))}
-                </div>
               </motion.div>
             ))}
           </motion.div>
         </motion.section>
+
+        {/* ═══════════════════════════════════════════════════════
+            FAQ ACCORDION
+        ═══════════════════════════════════════════════════════ */}
+        <FAQAccordion />
+
+        {/* ═══════════════════════════════════════════════════════
+            FINAL CTA
+        ═══════════════════════════════════════════════════════ */}
+        <CTASection />
 
       </main>
       <Footer />
     </div>
   );
 }
+
 
 /* ═══════════════════════════════════════════════════════
    Component Previews
