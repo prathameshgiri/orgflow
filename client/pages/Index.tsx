@@ -306,7 +306,7 @@ const MockSLAEngine = () => (
 /* ─── Page ─── */
 export default function Index() {
   return (
-    <div className="min-h-screen overflow-hidden bg-[#0a0a0a] text-white">
+    <div className="min-h-screen overflow-x-hidden bg-[#0a0a0a] text-white">
       <Navbar />
       <main>
 
@@ -316,7 +316,7 @@ export default function Index() {
         <motion.section
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
           variants={reveal}
-          className="relative mx-auto max-w-7xl px-5 pb-20 pt-20 lg:px-8 lg:pb-32 lg:pt-32"
+          className="relative mx-auto max-w-7xl px-5 pb-20 pt-20 lg:px-8 lg:pb-32 lg:pt-32 overflow-hidden"
         >
           {/* Animated Background Orbs */}
           <motion.div 
@@ -336,16 +336,16 @@ export default function Index() {
                 <motion.div animate={{ x: ["-100%", "200%"] }} transition={{ repeat: Infinity, duration: 3, ease: "linear" }} className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" />
                 <Sparkles size={14} className="animate-pulse" /> The calm way to scale access
               </motion.div>
-              <motion.h1 variants={reveal} className="font-display text-[6.5vw] min-[500px]:text-[32px] sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-6">
+              <motion.h1 variants={reveal} className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.15] text-white mb-6">
                 Next-generation<br />
                 <motion.span 
                   animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
                   transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] via-blue-400 to-[#00e5ff] bg-[length:200%_auto] whitespace-nowrap"
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] via-blue-400 to-[#00e5ff] bg-[length:200%_auto]"
                 >Organization Management</motion.span><br />
                 Absolute control.
               </motion.h1>
-              <motion.p variants={reveal} className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-zinc-400">
+              <motion.p variants={reveal} className="mt-6 text-[15px] sm:text-lg leading-relaxed text-zinc-400">
                 Unify your company and organization's hierarchy, teams, and access controls into one incredibly fast, beautifully designed platform. Eliminate management chaos and scale with absolute clarity.
               </motion.p>
               <motion.div variants={reveal} className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:mt-10">
