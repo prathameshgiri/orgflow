@@ -191,10 +191,10 @@ const Signup = () => {
               <ShieldCheck size={18} /> SOC2 COMPLIANT & SECURE
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Your organizational data is encrypted at rest and in transit.
+              Your organizational data is encrypted at rest and in transit. <Link to="/security" className="text-indigo-600 hover:underline font-semibold">View our security center &rarr;</Link>
             </p>
             <p className="text-[11px] text-slate-400 mt-4 leading-relaxed">
-              By signing up, you agree to ORG MAN's <a href="#" className="underline hover:text-slate-600">Terms of Service</a> and <a href="#" className="underline hover:text-slate-600">Privacy Policy</a>.
+              By signing up, you agree to ORG MAN's <Link to="/terms" className="underline hover:text-slate-600">Terms of Service</Link> and <Link to="/privacy" className="underline hover:text-slate-600">Privacy Policy</Link>.
             </p>
             <div className="mt-4 flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900">

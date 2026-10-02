@@ -27,6 +27,7 @@ import Terms from "./pages/Terms";
 import Cookies from "./pages/Cookies";
 
 import HowItWorks from "./pages/HowItWorks";
+import SecurityCenter from "./pages/SecurityCenter";
 
 import Projects from "./pages/Projects";
 import CreateProject from "./pages/CreateProject";
@@ -92,6 +93,7 @@ const App = () => (
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/cookies" element={<Cookies />} />
+            <Route path="/security" element={<SecurityCenter />} />
             
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<DashboardLayout />}>

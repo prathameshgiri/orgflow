@@ -77,7 +77,7 @@ export default function Privacy() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">6. Contact Us</h2>
               <p className="mb-4">
-              If you have any questions about this privacy policy or our privacy practices, please contact us at privacy@orgman.com.
+              If you have any questions about this privacy policy or our privacy practices, please contact us at contact@prathameshgiri.in.
               </p>
             </section>
           </motion.div>
