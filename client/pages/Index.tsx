@@ -331,12 +331,12 @@ export default function Index() {
           />
           
           <div className="relative grid items-center gap-14 lg:grid-cols-[1.02fr_.98fr] z-10">
-            <div className="max-w-2xl mx-auto text-center lg:text-left lg:mx-0">
-              <motion.div variants={reveal} className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-4 py-2 text-xs font-bold text-[#00e5ff] shadow-sm relative overflow-hidden mx-auto lg:mx-0">
+            <div className="max-w-2xl text-left">
+              <motion.div variants={reveal} className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-4 py-2 text-xs font-bold text-[#00e5ff] shadow-sm relative overflow-hidden">
                 <motion.div animate={{ x: ["-100%", "200%"] }} transition={{ repeat: Infinity, duration: 3, ease: "linear" }} className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" />
                 <Sparkles size={14} className="animate-pulse" /> The calm way to scale access
               </motion.div>
-              <motion.h1 variants={reveal} className="font-display text-[24px] leading-[1.2] sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-6">
+              <motion.h1 variants={reveal} className="font-display text-[22px] leading-[1.2] sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-6">
                 Next-generation<br />
                 <motion.span 
                   animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
@@ -345,18 +345,18 @@ export default function Index() {
                 >Organization Management</motion.span><br />
                 Absolute control.
               </motion.h1>
-              <motion.p variants={reveal} className="mt-6 max-w-xl mx-auto lg:mx-0 text-base sm:text-lg leading-relaxed text-zinc-400">
+              <motion.p variants={reveal} className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-zinc-400">
                 Unify your company and organization's hierarchy, teams, and access controls into one incredibly fast, beautifully designed platform. Eliminate management chaos and scale with absolute clarity.
               </motion.p>
-              <motion.div variants={reveal} className="mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:mt-10">
-                <Link to="/signup" className="group relative w-[220px] sm:w-auto overflow-hidden rounded-xl bg-white px-5 py-3 sm:px-8 sm:py-4 text-center text-sm font-bold text-black shadow-[0_0_40px_rgba(0,229,255,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(0,229,255,0.4)]">
+              <motion.div variants={reveal} className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:mt-10">
+                <Link to="/signup" className="group relative w-full max-w-[220px] sm:w-auto overflow-hidden rounded-xl bg-white px-5 py-3 sm:px-8 sm:py-4 text-center text-sm font-bold text-black shadow-[0_0_40px_rgba(0,229,255,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(0,229,255,0.4)]">
                   <span className="relative z-10 flex items-center justify-center">Start for free <ArrowRight className="ml-2 inline transition-transform group-hover:translate-x-1" size={16} /></span>
                 </Link>
-                <Link to="/how-it-works" className="group w-[220px] sm:w-auto flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 sm:px-8 sm:py-4 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/20">
+                <Link to="/how-it-works" className="group w-full max-w-[220px] sm:w-auto flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 sm:px-8 sm:py-4 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/20">
                   <Play className="fill-current text-[#00e5ff] group-hover:animate-pulse" size={14} /> See how it works
                 </Link>
               </motion.div>
-              <motion.div variants={reveal} className="mt-10 flex flex-wrap justify-center lg:justify-start gap-x-6 gap-y-3 text-xs font-semibold text-zinc-500">
+              <motion.div variants={reveal} className="mt-10 flex flex-col sm:flex-row flex-wrap gap-x-6 gap-y-3 text-xs font-semibold text-zinc-500">
                 <span className="flex items-center gap-2"><div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00e5ff]/20"><Check className="text-[#00e5ff]" size={12} /></div> Free forever plan</span>
                 <span className="flex items-center gap-2"><div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00e5ff]/20"><Check className="text-[#00e5ff]" size={12} /></div> No credit card</span>
                 <span className="flex items-center gap-2"><div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00e5ff]/20"><Check className="text-[#00e5ff]" size={12} /></div> Setup in minutes</span>
