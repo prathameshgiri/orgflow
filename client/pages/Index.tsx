@@ -306,7 +306,7 @@ const MockSLAEngine = () => (
 /* ─── Page ─── */
 export default function Index() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#0a0a0a] text-white">
+    <div className="min-h-screen overflow-hidden bg-[#0a0a0a] text-white">
       <Navbar />
       <main>
 
@@ -316,7 +316,7 @@ export default function Index() {
         <motion.section
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
           variants={reveal}
-          className="relative mx-auto max-w-7xl px-5 pb-20 pt-20 lg:px-8 lg:pb-32 lg:pt-32 overflow-hidden"
+          className="relative mx-auto max-w-7xl px-5 pb-20 pt-20 lg:px-8 lg:pb-32 lg:pt-32"
         >
           {/* Animated Background Orbs */}
           <motion.div 
@@ -331,32 +331,32 @@ export default function Index() {
           />
           
           <div className="relative grid items-center gap-14 lg:grid-cols-[1.02fr_.98fr] z-10">
-            <div className="max-w-2xl text-left">
+            <div className="max-w-2xl">
               <motion.div variants={reveal} className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-4 py-2 text-xs font-bold text-[#00e5ff] shadow-sm relative overflow-hidden">
                 <motion.div animate={{ x: ["-100%", "200%"] }} transition={{ repeat: Infinity, duration: 3, ease: "linear" }} className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" />
                 <Sparkles size={14} className="animate-pulse" /> The calm way to scale access
               </motion.div>
-              <motion.h1 variants={reveal} className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-[1.15] text-white mb-6">
+              <motion.h1 variants={reveal} className="font-display text-4xl sm:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-white mb-6">
                 Next-generation<br />
                 <motion.span 
                   animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
                   transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] via-blue-400 to-[#00e5ff] bg-[length:200%_auto]"
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] via-blue-400 to-[#00e5ff] bg-[length:200%_auto] whitespace-nowrap"
                 >Organization Management</motion.span><br />
                 Absolute control.
               </motion.h1>
-              <motion.p variants={reveal} className="mt-6 text-[15px] sm:text-lg leading-relaxed text-zinc-400">
+              <motion.p variants={reveal} className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-400">
                 Unify your company and organization's hierarchy, teams, and access controls into one incredibly fast, beautifully designed platform. Eliminate management chaos and scale with absolute clarity.
               </motion.p>
-              <motion.div variants={reveal} className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:mt-10">
-                <Link to="/signup" className="group relative w-full max-w-[220px] sm:w-auto overflow-hidden rounded-xl bg-white px-5 py-3 sm:px-8 sm:py-4 text-center text-sm font-bold text-black shadow-[0_0_40px_rgba(0,229,255,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(0,229,255,0.4)]">
+              <motion.div variants={reveal} className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:items-center">
+                <Link to="/signup" className="group relative w-full sm:w-auto overflow-hidden rounded-xl bg-white px-8 py-4 text-center text-sm font-bold text-black shadow-[0_0_40px_rgba(0,229,255,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(0,229,255,0.4)]">
                   <span className="relative z-10 flex items-center justify-center">Start for free <ArrowRight className="ml-2 inline transition-transform group-hover:translate-x-1" size={16} /></span>
                 </Link>
-                <Link to="/how-it-works" className="group w-full max-w-[220px] sm:w-auto flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 sm:px-8 sm:py-4 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/20">
+                <Link to="/how-it-works" className="group w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-8 py-4 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/20">
                   <Play className="fill-current text-[#00e5ff] group-hover:animate-pulse" size={14} /> See how it works
                 </Link>
               </motion.div>
-              <motion.div variants={reveal} className="mt-10 flex flex-col sm:flex-row flex-wrap gap-x-6 gap-y-3 text-xs font-semibold text-zinc-500">
+              <motion.div variants={reveal} className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-xs font-semibold text-zinc-500">
                 <span className="flex items-center gap-2"><div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00e5ff]/20"><Check className="text-[#00e5ff]" size={12} /></div> Free forever plan</span>
                 <span className="flex items-center gap-2"><div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00e5ff]/20"><Check className="text-[#00e5ff]" size={12} /></div> No credit card</span>
                 <span className="flex items-center gap-2"><div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00e5ff]/20"><Check className="text-[#00e5ff]" size={12} /></div> Setup in minutes</span>
@@ -664,10 +664,10 @@ export default function Index() {
 
 function DashboardPreview() {
   return (
-    <div className="relative mx-auto w-[95%] max-w-[540px] lg:ml-auto h-[340px] sm:h-[450px] flex items-center justify-center">
+    <div className="relative mx-auto w-full max-w-[540px] lg:ml-auto h-[450px] flex items-center justify-center">
       {/* Abstract Background Graph */}
       <div className="absolute inset-0 flex items-center justify-center opacity-60">
-        <div className="relative w-full h-full max-w-[400px] max-h-[300px] overflow-hidden sm:overflow-visible">
+        <div className="relative w-full h-full max-w-[400px] max-h-[300px]">
            {/* Center Node */}
            <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-[#00e5ff]/20 rounded-full blur-2xl" />
            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#00e5ff] rounded-full shadow-[0_0_40px_2px_#00e5ff]" />
@@ -686,10 +686,10 @@ function DashboardPreview() {
               </defs>
            </svg>
            
-           <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} className="absolute top-[65px] left-[15%] sm:left-[65px] w-10 h-10 rounded-full border border-[#00e5ff]/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(0,229,255,0.2)]"><Users size={14} className="text-[#00e5ff]" /></motion.div>
-           <motion.div animate={{ y: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 1 }} className="absolute top-[45px] right-[10%] sm:left-[305px] sm:right-auto w-12 h-12 rounded-full border border-purple-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.2)]"><Database size={16} className="text-purple-400" /></motion.div>
-           <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 2 }} className="absolute top-[205px] left-[5%] sm:left-[45px] w-10 h-10 rounded-full border border-emerald-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]"><Shield size={14} className="text-emerald-400" /></motion.div>
-           <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut", delay: 0.5 }} className="absolute top-[225px] right-[5%] sm:left-[325px] sm:right-auto w-14 h-14 rounded-full border border-orange-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.2)]"><Server size={18} className="text-orange-400" /></motion.div>
+           <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} className="absolute top-[65px] left-[65px] w-10 h-10 rounded-full border border-[#00e5ff]/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(0,229,255,0.2)]"><Users size={14} className="text-[#00e5ff]" /></motion.div>
+           <motion.div animate={{ y: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 1 }} className="absolute top-[45px] left-[305px] w-12 h-12 rounded-full border border-purple-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.2)]"><Database size={16} className="text-purple-400" /></motion.div>
+           <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 2 }} className="absolute top-[205px] left-[45px] w-10 h-10 rounded-full border border-emerald-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]"><Shield size={14} className="text-emerald-400" /></motion.div>
+           <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut", delay: 0.5 }} className="absolute top-[225px] left-[325px] w-14 h-14 rounded-full border border-orange-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.2)]"><Server size={18} className="text-orange-400" /></motion.div>
         </div>
       </div>
 
@@ -701,10 +701,10 @@ function DashboardPreview() {
         transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
         className="relative z-10 w-full max-w-[440px] rounded-2xl border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-2xl shadow-[0_30px_60px_rgba(0,0,0,0.6)] overflow-hidden ring-1 ring-white/5"
       >
-        <div className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 border-b border-white/5 bg-white/[0.02]">
-           <Search size={18} className="text-zinc-500 flex-shrink-0" />
-           <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-1.5 h-4 bg-[#00e5ff] flex-shrink-0" />
-           <span className="text-[13px] sm:text-[14px] font-medium text-zinc-500 ml-1 truncate">Search actions, users or roles...</span>
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5 bg-white/[0.02]">
+           <Search size={18} className="text-zinc-500" />
+           <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-1.5 h-4 bg-[#00e5ff]" />
+           <span className="text-[14px] font-medium text-zinc-500 ml-1">Search actions, users or roles...</span>
         </div>
         <div className="p-3 space-y-1">
            <div className="px-3 py-2.5 text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-2">
