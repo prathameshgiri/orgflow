@@ -375,7 +375,7 @@ export default function Index() {
                 Next-generation<br /><span className="text-[#00e5ff]">Organization Management.</span><br />Absolute control.
               </motion.h1>
               <motion.p variants={reveal} className="mt-7 max-w-xl text-[17px] leading-8 text-zinc-400">
-                Unify your entire company's hierarchy, access controls, and IT service desk into one incredibly fast, beautifully designed platform. Eliminate the chaos and scale with clarity.
+                Unify your company and organization's hierarchy, teams, and access controls into one incredibly fast, beautifully designed platform. Eliminate management chaos and scale with absolute clarity.
               </motion.p>
               <motion.div variants={reveal} className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:items-center">
                 <Link to="/signup" className="w-full max-w-xs sm:w-auto rounded-xl bg-[#00e5ff] px-6 py-3.5 text-center text-sm font-bold text-black shadow-xl shadow-[#00e5ff]/20 transition hover:-translate-y-1 hover:bg-[#00cce6]">Start for free <ArrowRight className="ml-2 inline" size={16} /></Link>
