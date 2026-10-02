@@ -79,54 +79,7 @@ const faqData = [
   { q: "How secure is ORG MAN?", a: "Bank-grade security with SOC 2 Type II compliance, end-to-end encryption, SAML SSO, and row-level security powered by Supabase. Your data never leaves your control." },
 ];
 
-/* ─── Stats Counter Section ─── */
-function StatsSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const count0 = useCounter(10000, 2000, isInView);
-  const count2 = useCounter(62, 1800, isInView);
 
-  return (
-    <section className="border-t border-white/5 bg-[#0a0a0a] py-20 lg:py-24" ref={ref}>
-      <div className="mx-auto max-w-7xl px-5 lg:px-8">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={reveal} className="text-center mb-14">
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#00e5ff] mb-3">By the numbers</p>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">Trusted by teams that move fast</h2>
-        </motion.div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 rounded-2xl overflow-hidden border border-white/5">
-          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
-            <div className="h-10 w-10 rounded-xl bg-[#00e5ff]/10 flex items-center justify-center text-[#00e5ff] mb-4"><Globe size={20} /></div>
-            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
-              {isInView ? count0.toLocaleString() : "0"}<span className="text-[#00e5ff]">+</span>
-            </div>
-            <div className="text-sm text-zinc-500 font-medium">Organizations managed</div>
-          </div>
-          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
-            <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4"><Award size={20} /></div>
-            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
-              {isInView ? "99.9" : "0"}<span className="text-emerald-400">%</span>
-            </div>
-            <div className="text-sm text-zinc-500 font-medium">Uptime guarantee</div>
-          </div>
-          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
-            <div className="h-10 w-10 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-400 mb-4"><TrendingUp size={20} /></div>
-            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
-              {isInView ? count2 : "0"}<span className="text-violet-400">%</span>
-            </div>
-            <div className="text-sm text-zinc-500 font-medium">Less admin overhead</div>
-          </div>
-          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
-            <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4"><Zap size={20} /></div>
-            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
-              {isInView ? "4.2" : "0"}<span className="text-amber-400">x</span>
-            </div>
-            <div className="text-sm text-zinc-500 font-medium">Faster team onboarding</div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ─── ITSM Modules Grid ─── */
 function ITSMSection() {
@@ -193,7 +146,7 @@ function FAQAccordion() {
 /* ─── Final CTA Section ─── */
 function CTASection() {
   return (
-    <section className="border-t border-white/5 bg-[#0a0a0a] py-10 lg:py-14 overflow-hidden">
+    <section className="py-10 lg:py-14 overflow-hidden">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true }}
@@ -375,11 +328,11 @@ export default function Index() {
                 Next-generation<br /><span className="text-[#00e5ff]">Organization Management.</span><br />Absolute control.
               </motion.h1>
               <motion.p variants={reveal} className="mt-7 max-w-xl text-[17px] leading-8 text-zinc-400">
-                Unify your entire company's hierarchy, access controls, and IT service desk into one incredibly fast, beautifully designed platform. Eliminate the chaos and scale with clarity.
+                Unify your company and organization's hierarchy, teams, and access controls into one incredibly fast, beautifully designed platform. Eliminate management chaos and scale with absolute clarity.
               </motion.p>
               <motion.div variants={reveal} className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:items-center">
                 <Link to="/signup" className="w-full max-w-xs sm:w-auto rounded-xl bg-[#00e5ff] px-6 py-3.5 text-center text-sm font-bold text-black shadow-xl shadow-[#00e5ff]/20 transition hover:-translate-y-1 hover:bg-[#00cce6]">Start for free <ArrowRight className="ml-2 inline" size={16} /></Link>
-                <a href="#platform" className="w-full max-w-xs sm:w-auto rounded-xl border border-white/10 bg-[#111111] px-6 py-3.5 text-center text-sm font-bold text-white transition hover:border-white/20 hover:bg-[#161616]"><Play className="mr-2 inline fill-current" size={14} /> See how it works</a>
+                <Link to="/how-it-works" className="w-full max-w-xs sm:w-auto rounded-xl border border-white/10 bg-[#111111] px-6 py-3.5 text-center text-sm font-bold text-white transition hover:border-white/20 hover:bg-[#161616]"><Play className="mr-2 inline fill-current" size={14} /> See how it works</Link>
               </motion.div>
               <motion.div variants={reveal} className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-zinc-500">
                 <span><Check className="mr-1 inline text-[#00e5ff]" size={14} /> Free forever plan</span>
@@ -393,25 +346,7 @@ export default function Index() {
           </div>
         </motion.section>
 
-        {/* ═══════════════════════════════════════════════════════
-            2. TRUSTED BY (Logos Banner)
-        ═══════════════════════════════════════════════════════ */}
-        <motion.section
-          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }}
-          variants={reveal}
-          className="border-y border-white/5 bg-[#0a0a0a] py-10"
-        >
-          <div className="mx-auto max-w-7xl px-5 lg:px-8">
-            <p className="mb-8 text-center text-xs font-bold uppercase tracking-[.25em] text-white/30">Trusted by forward-thinking teams</p>
-            <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
-              {["Acme Corp", "Globex Inc", "Initech", "Umbrella Co", "Stark Industries", "Wayne Enterprises"].map((name) => (
-                <div key={name} className="font-display text-lg font-bold tracking-tight text-white/20 transition hover:text-white/40">
-                  {name}
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.section>
+
 
         {/* ═══════════════════════════════════════════════════════
             2.5. ACTUAL SCREENSHOT FEATURES (Moved to top)
@@ -441,8 +376,6 @@ export default function Index() {
         {/* ═══════════════════════════════════════════════════════
             STATS COUNTER
         ═══════════════════════════════════════════════════════ */}
-        <StatsSection />
-
         {/* ═══════════════════════════════════════════════════════
             3. PLATFORM MODULES (Dark Agentic UI)
         ═══════════════════════════════════════════════════════ */}
@@ -682,50 +615,7 @@ export default function Index() {
         ═══════════════════════════════════════════════════════ */}
         <ITSMSection />
 
-        {/* ═══════════════════════════════════════════════════════
-            TESTIMONIALS
-        ═══════════════════════════════════════════════════════ */}
-        <motion.section
-          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }}
-          className="border-t border-white/5 bg-[#060606] px-5 py-24 lg:px-8 lg:py-32"
-        >
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={reveal} className="max-w-3xl mx-auto text-center mb-16">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#00e5ff] mb-3">Wall of love</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
-              Loved by teams <span className="text-zinc-500">worldwide</span>
-            </h2>
-            <p className="text-zinc-400 text-lg">Don't take our word for it — hear from teams using ORG MAN daily.</p>
-          </motion.div>
 
-          <motion.div variants={stagger} className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
-            {testimonials.map((t) => (
-              <motion.div
-                key={t.name}
-                variants={reveal}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="relative rounded-[1.6rem] border border-white/5 bg-[#111111] p-6 hover:bg-[#161616] hover:border-white/10 hover:shadow-2xl hover:shadow-black/40 transition-colors duration-300"
-              >
-                {/* Stars */}
-                <div className="flex gap-0.5 mb-4">
-                  {Array(5).fill(0).map((_, i) => (
-                    <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-                <Quote size={22} className="mb-3 text-[#00e5ff]/25" />
-                <p className="text-sm leading-7 text-zinc-300">{t.quote}</p>
-                <div className="mt-6 flex items-center gap-3 border-t border-white/5 pt-5">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${t.avatar} text-sm font-bold text-black shadow-lg`}>
-                    {t.name.split(" ").map((n) => n[0]).join("")}
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold text-white">{t.name}</div>
-                    <div className="text-xs text-zinc-500">{t.role}</div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.section>
 
         {/* ═══════════════════════════════════════════════════════
             FAQ ACCORDION

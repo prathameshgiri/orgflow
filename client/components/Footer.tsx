@@ -1,11 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Command, ArrowRight } from "lucide-react";
 
 export default function Footer() {
+  const location = useLocation();
+  if (location.pathname !== "/") return null;
+
   return (
-    <footer className="relative overflow-hidden bg-[#0a0a0a] pt-24 text-white lg:pt-32">
+    <footer className="relative overflow-hidden bg-[#0a0a0a] pt-24 text-white lg:pt-32 border-t border-white/5">
       {/* Background Glows */}
-      <div className="absolute -left-1/4 -top-1/4 h-[500px] w-[500px] rounded-full bg-[#00e5ff]/10 blur-[120px]" />
       <div className="absolute -right-1/4 bottom-0 h-[500px] w-[500px] rounded-full bg-blue-500/10 blur-[100px]" />
 
       <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
@@ -74,11 +76,16 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-24 flex flex-col items-center justify-between border-t border-white/10 py-8 sm:flex-row">
-          <p className="text-xs font-semibold text-white/40">
+        <div className="mt-24 flex flex-col items-center justify-between border-t border-white/10 py-8 sm:flex-row text-center sm:text-left gap-4 sm:gap-0">
+          <p className="text-xs font-semibold text-white/40 leading-relaxed">
             © {new Date().getFullYear()} ORG MAN Inc. All rights reserved.
+            <span className="hidden sm:inline"> | </span>
+            <br className="sm:hidden" />
+            <a href="https://build.prathameshgiri.in/" target="_blank" rel="noreferrer" className="text-[#00e5ff] hover:underline transition-colors sm:ml-1">
+              Build With Prathamesh Giri
+            </a>
           </p>
-          <div className="mt-4 flex gap-6 text-xs font-semibold text-white/40 sm:mt-0">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-xs font-semibold text-white/40">
             <Link to="/privacy" className="transition hover:text-white">Privacy Policy</Link>
             <Link to="/terms" className="transition hover:text-white">Terms of Service</Link>
             <Link to="/cookies" className="transition hover:text-white">Cookie Settings</Link>

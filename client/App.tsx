@@ -25,7 +25,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Cookies from "./pages/Cookies";
-import Features from "./pages/Features";
+
+import HowItWorks from "./pages/HowItWorks";
 
 import Projects from "./pages/Projects";
 import CreateProject from "./pages/CreateProject";
@@ -81,7 +82,8 @@ const App = () => (
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/features" element={<Features />} />
+
+            <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
