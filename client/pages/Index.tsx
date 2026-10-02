@@ -79,7 +79,54 @@ const faqData = [
   { q: "How secure is ORG MAN?", a: "Bank-grade security with SOC 2 Type II compliance, end-to-end encryption, SAML SSO, and row-level security powered by Supabase. Your data never leaves your control." },
 ];
 
+/* ─── Stats Counter Section ─── */
+function StatsSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const count0 = useCounter(10000, 2000, isInView);
+  const count2 = useCounter(62, 1800, isInView);
 
+  return (
+    <section className="border-t border-white/5 bg-[#0a0a0a] py-20 lg:py-24" ref={ref}>
+      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={reveal} className="text-center mb-14">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#00e5ff] mb-3">By the numbers</p>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">Trusted by teams that move fast</h2>
+        </motion.div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/5 rounded-2xl overflow-hidden border border-white/5">
+          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
+            <div className="h-10 w-10 rounded-xl bg-[#00e5ff]/10 flex items-center justify-center text-[#00e5ff] mb-4"><Globe size={20} /></div>
+            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
+              {isInView ? count0.toLocaleString() : "0"}<span className="text-[#00e5ff]">+</span>
+            </div>
+            <div className="text-sm text-zinc-500 font-medium">Organizations managed</div>
+          </div>
+          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
+            <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4"><Award size={20} /></div>
+            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
+              {isInView ? "99.9" : "0"}<span className="text-emerald-400">%</span>
+            </div>
+            <div className="text-sm text-zinc-500 font-medium">Uptime guarantee</div>
+          </div>
+          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
+            <div className="h-10 w-10 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-400 mb-4"><TrendingUp size={20} /></div>
+            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
+              {isInView ? count2 : "0"}<span className="text-violet-400">%</span>
+            </div>
+            <div className="text-sm text-zinc-500 font-medium">Less admin overhead</div>
+          </div>
+          <div className="bg-[#0a0a0a] p-8 lg:p-10 flex flex-col items-center text-center hover:bg-[#111111] transition-colors">
+            <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4"><Zap size={20} /></div>
+            <div className="font-display text-4xl lg:text-5xl font-bold text-white mb-1 tabular-nums">
+              {isInView ? "4.2" : "0"}<span className="text-amber-400">x</span>
+            </div>
+            <div className="text-sm text-zinc-500 font-medium">Faster team onboarding</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 /* ─── ITSM Modules Grid ─── */
 function ITSMSection() {
@@ -146,7 +193,7 @@ function FAQAccordion() {
 /* ─── Final CTA Section ─── */
 function CTASection() {
   return (
-    <section className="py-10 lg:py-14 overflow-hidden">
+    <section className="border-t border-white/5 bg-[#0a0a0a] py-10 lg:py-14 overflow-hidden">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true }}
@@ -316,61 +363,55 @@ export default function Index() {
         <motion.section
           initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }}
           variants={reveal}
-          className="relative mx-auto max-w-7xl px-5 pb-20 pt-20 lg:px-8 lg:pb-32 lg:pt-32"
+          className="relative mx-auto max-w-7xl px-5 pb-20 pt-20 lg:px-8 lg:pb-28 lg:pt-28"
         >
-          {/* Animated Background Orbs */}
-          <motion.div 
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-            className="pointer-events-none absolute -right-32 top-0 h-[500px] w-[500px] rounded-full bg-[#00e5ff]/10 blur-[100px]" 
-          />
-          <motion.div 
-            animate={{ scale: [1, 1.5, 1], opacity: [0.1, 0.3, 0.1] }}
-            transition={{ repeat: Infinity, duration: 12, ease: "easeInOut", delay: 2 }}
-            className="pointer-events-none absolute -left-32 top-40 h-[400px] w-[400px] rounded-full bg-violet-500/10 blur-[100px]" 
-          />
-          
-          <div className="relative grid items-center gap-14 lg:grid-cols-[1.02fr_.98fr] z-10">
+          <div className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-full bg-[#00e5ff]/5 blur-3xl" />
+          <div className="relative grid items-center gap-14 lg:grid-cols-[1.02fr_.98fr]">
             <div className="max-w-2xl">
-              <motion.div variants={reveal} className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md px-4 py-2 text-xs font-bold text-[#00e5ff] shadow-sm relative overflow-hidden">
-                <motion.div animate={{ x: ["-100%", "200%"] }} transition={{ repeat: Infinity, duration: 3, ease: "linear" }} className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" />
-                <Sparkles size={14} className="animate-pulse" /> The calm way to scale access
+              <motion.div variants={reveal} className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#111111] px-3 py-1.5 text-xs font-bold text-[#00e5ff] shadow-sm">
+                <Sparkles size={13} /> The calm way to scale access
               </motion.div>
-              <motion.h1 variants={reveal} className="font-display text-4xl sm:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-white mb-6">
-                Next-generation<br />
-                <motion.span 
-                  animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-                  transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] via-blue-400 to-[#00e5ff] bg-[length:200%_auto] whitespace-nowrap"
-                >Organization Management</motion.span><br />
-                Absolute control.
+              <motion.h1 variants={reveal} className="font-display text-3xl font-bold leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl">
+                Next-generation<br /><span className="text-[#00e5ff]">Organization Management.</span><br />Absolute control.
               </motion.h1>
-              <motion.p variants={reveal} className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-400">
-                Unify your company and organization's hierarchy, teams, and access controls into one incredibly fast, beautifully designed platform. Eliminate management chaos and scale with absolute clarity.
+              <motion.p variants={reveal} className="mt-7 max-w-xl text-[17px] leading-8 text-zinc-400">
+                Unify your entire company's hierarchy, access controls, and IT service desk into one incredibly fast, beautifully designed platform. Eliminate the chaos and scale with clarity.
               </motion.p>
-              <motion.div variants={reveal} className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:items-center">
-                <Link to="/signup" className="group relative w-full sm:w-auto overflow-hidden rounded-xl bg-white px-8 py-4 text-center text-sm font-bold text-black shadow-[0_0_40px_rgba(0,229,255,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(0,229,255,0.4)]">
-                  <span className="relative z-10 flex items-center justify-center">Start for free <ArrowRight className="ml-2 inline transition-transform group-hover:translate-x-1" size={16} /></span>
-                </Link>
-                <Link to="/how-it-works" className="group w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-8 py-4 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/20">
-                  <Play className="fill-current text-[#00e5ff] group-hover:animate-pulse" size={14} /> See how it works
-                </Link>
+              <motion.div variants={reveal} className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:items-center">
+                <Link to="/signup" className="w-full max-w-xs sm:w-auto rounded-xl bg-[#00e5ff] px-6 py-3.5 text-center text-sm font-bold text-black shadow-xl shadow-[#00e5ff]/20 transition hover:-translate-y-1 hover:bg-[#00cce6]">Start for free <ArrowRight className="ml-2 inline" size={16} /></Link>
+                <a href="#platform" className="w-full max-w-xs sm:w-auto rounded-xl border border-white/10 bg-[#111111] px-6 py-3.5 text-center text-sm font-bold text-white transition hover:border-white/20 hover:bg-[#161616]"><Play className="mr-2 inline fill-current" size={14} /> See how it works</a>
               </motion.div>
-              <motion.div variants={reveal} className="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-xs font-semibold text-zinc-500">
-                <span className="flex items-center gap-2"><div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00e5ff]/20"><Check className="text-[#00e5ff]" size={12} /></div> Free forever plan</span>
-                <span className="flex items-center gap-2"><div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00e5ff]/20"><Check className="text-[#00e5ff]" size={12} /></div> No credit card</span>
-                <span className="flex items-center gap-2"><div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#00e5ff]/20"><Check className="text-[#00e5ff]" size={12} /></div> Setup in minutes</span>
+              <motion.div variants={reveal} className="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-zinc-500">
+                <span><Check className="mr-1 inline text-[#00e5ff]" size={14} /> Free forever plan</span>
+                <span><Check className="mr-1 inline text-[#00e5ff]" size={14} /> No credit card</span>
+                <span><Check className="mr-1 inline text-[#00e5ff]" size={14} /> Setup in minutes</span>
               </motion.div>
             </div>
-            <motion.div variants={scaleIn} className="relative mt-10 lg:mt-0">
-               {/* Ambient Glow behind Preview */}
-               <motion.div animate={{ rotate: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }} className="absolute -inset-4 bg-gradient-to-tr from-[#00e5ff]/10 to-violet-500/10 rounded-3xl blur-2xl" />
+            <motion.div variants={scaleIn}>
               <DashboardPreview />
             </motion.div>
           </div>
         </motion.section>
 
-
+        {/* ═══════════════════════════════════════════════════════
+            2. TRUSTED BY (Logos Banner)
+        ═══════════════════════════════════════════════════════ */}
+        <motion.section
+          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.5 }}
+          variants={reveal}
+          className="border-y border-white/5 bg-[#0a0a0a] py-10"
+        >
+          <div className="mx-auto max-w-7xl px-5 lg:px-8">
+            <p className="mb-8 text-center text-xs font-bold uppercase tracking-[.25em] text-white/30">Trusted by forward-thinking teams</p>
+            <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+              {["Acme Corp", "Globex Inc", "Initech", "Umbrella Co", "Stark Industries", "Wayne Enterprises"].map((name) => (
+                <div key={name} className="font-display text-lg font-bold tracking-tight text-white/20 transition hover:text-white/40">
+                  {name}
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.section>
 
         {/* ═══════════════════════════════════════════════════════
             2.5. ACTUAL SCREENSHOT FEATURES (Moved to top)
@@ -400,6 +441,8 @@ export default function Index() {
         {/* ═══════════════════════════════════════════════════════
             STATS COUNTER
         ═══════════════════════════════════════════════════════ */}
+        <StatsSection />
+
         {/* ═══════════════════════════════════════════════════════
             3. PLATFORM MODULES (Dark Agentic UI)
         ═══════════════════════════════════════════════════════ */}
@@ -639,7 +682,50 @@ export default function Index() {
         ═══════════════════════════════════════════════════════ */}
         <ITSMSection />
 
+        {/* ═══════════════════════════════════════════════════════
+            TESTIMONIALS
+        ═══════════════════════════════════════════════════════ */}
+        <motion.section
+          initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }}
+          className="border-t border-white/5 bg-[#060606] px-5 py-24 lg:px-8 lg:py-32"
+        >
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={reveal} className="max-w-3xl mx-auto text-center mb-16">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#00e5ff] mb-3">Wall of love</p>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
+              Loved by teams <span className="text-zinc-500">worldwide</span>
+            </h2>
+            <p className="text-zinc-400 text-lg">Don't take our word for it — hear from teams using ORG MAN daily.</p>
+          </motion.div>
 
+          <motion.div variants={stagger} className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
+            {testimonials.map((t) => (
+              <motion.div
+                key={t.name}
+                variants={reveal}
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className="relative rounded-[1.6rem] border border-white/5 bg-[#111111] p-6 hover:bg-[#161616] hover:border-white/10 hover:shadow-2xl hover:shadow-black/40 transition-colors duration-300"
+              >
+                {/* Stars */}
+                <div className="flex gap-0.5 mb-4">
+                  {Array(5).fill(0).map((_, i) => (
+                    <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <Quote size={22} className="mb-3 text-[#00e5ff]/25" />
+                <p className="text-sm leading-7 text-zinc-300">{t.quote}</p>
+                <div className="mt-6 flex items-center gap-3 border-t border-white/5 pt-5">
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${t.avatar} text-sm font-bold text-black shadow-lg`}>
+                    {t.name.split(" ").map((n) => n[0]).join("")}
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-white">{t.name}</div>
+                    <div className="text-xs text-zinc-500">{t.role}</div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
 
         {/* ═══════════════════════════════════════════════════════
             FAQ ACCORDION
@@ -664,20 +750,20 @@ export default function Index() {
 
 function DashboardPreview() {
   return (
-    <div className="relative mx-auto w-full max-w-[540px] lg:ml-auto h-[450px] flex items-center justify-center">
+    <div className="relative mx-auto w-full max-w-[540px] lg:ml-auto h-[400px] flex items-center justify-center">
       {/* Abstract Background Graph */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-60">
+      <div className="absolute inset-0 flex items-center justify-center opacity-40">
         <div className="relative w-full h-full max-w-[400px] max-h-[300px]">
            {/* Center Node */}
-           <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-[#00e5ff]/20 rounded-full blur-2xl" />
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#00e5ff] rounded-full shadow-[0_0_40px_2px_#00e5ff]" />
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-[#00e5ff]/20 rounded-full blur-xl" />
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#00e5ff] rounded-full shadow-[0_0_30px_#00e5ff]" />
            
            {/* Connected Nodes */}
-           <svg className="absolute inset-0 w-full h-full" style={{ filter: "drop-shadow(0 0 10px rgba(0,229,255,0.4))" }}>
-              <path d="M 200 150 L 80 80" stroke="url(#cyan-grad)" strokeWidth="2" fill="none" strokeDasharray="4 4" className="animate-[dash_20s_linear_infinite]" />
+           <svg className="absolute inset-0 w-full h-full" style={{ filter: "drop-shadow(0 0 8px rgba(0,229,255,0.3))" }}>
+              <path d="M 200 150 L 80 80" stroke="url(#cyan-grad)" strokeWidth="1.5" fill="none" strokeDasharray="4 4" className="animate-[dash_20s_linear_infinite]" />
               <path d="M 200 150 L 320 60" stroke="url(#cyan-grad)" strokeWidth="1.5" fill="none" />
               <path d="M 200 150 L 60 220" stroke="url(#cyan-grad)" strokeWidth="1.5" fill="none" />
-              <path d="M 200 150 L 340 240" stroke="url(#cyan-grad)" strokeWidth="2" fill="none" strokeDasharray="6 6" className="animate-[dash_15s_linear_infinite]" />
+              <path d="M 200 150 L 340 240" stroke="url(#cyan-grad)" strokeWidth="1.5" fill="none" strokeDasharray="4 4" />
               <defs>
                  <linearGradient id="cyan-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.8" />
@@ -686,57 +772,49 @@ function DashboardPreview() {
               </defs>
            </svg>
            
-           <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} className="absolute top-[65px] left-[65px] w-10 h-10 rounded-full border border-[#00e5ff]/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(0,229,255,0.2)]"><Users size={14} className="text-[#00e5ff]" /></motion.div>
-           <motion.div animate={{ y: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 1 }} className="absolute top-[45px] left-[305px] w-12 h-12 rounded-full border border-purple-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.2)]"><Database size={16} className="text-purple-400" /></motion.div>
-           <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 2 }} className="absolute top-[205px] left-[45px] w-10 h-10 rounded-full border border-emerald-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]"><Shield size={14} className="text-emerald-400" /></motion.div>
-           <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut", delay: 0.5 }} className="absolute top-[225px] left-[325px] w-14 h-14 rounded-full border border-orange-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.2)]"><Server size={18} className="text-orange-400" /></motion.div>
+           <div className="absolute top-[65px] left-[65px] w-8 h-8 rounded-full border border-[#00e5ff]/30 bg-[#111] flex items-center justify-center"><Users size={12} className="text-[#00e5ff]" /></div>
+           <div className="absolute top-[45px] left-[305px] w-10 h-10 rounded-full border border-purple-500/30 bg-[#111] flex items-center justify-center"><Database size={14} className="text-purple-400" /></div>
+           <div className="absolute top-[205px] left-[45px] w-8 h-8 rounded-full border border-emerald-500/30 bg-[#111] flex items-center justify-center"><Shield size={12} className="text-emerald-400" /></div>
+           <div className="absolute top-[225px] left-[325px] w-12 h-12 rounded-full border border-orange-500/30 bg-[#111] flex items-center justify-center"><Server size={16} className="text-orange-400" /></div>
         </div>
       </div>
 
       {/* Floating Command Palette */}
-      <motion.div 
-        initial={{ y: 20, opacity: 0 }}
-        whileInView={{ y: 0, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-[440px] rounded-2xl border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-2xl shadow-[0_30px_60px_rgba(0,0,0,0.6)] overflow-hidden ring-1 ring-white/5"
-      >
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5 bg-white/[0.02]">
-           <Search size={18} className="text-zinc-500" />
-           <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-1.5 h-4 bg-[#00e5ff]" />
-           <span className="text-[14px] font-medium text-zinc-500 ml-1">Search actions, users or roles...</span>
+      <div className="relative z-10 w-full max-w-[420px] rounded-2xl border border-white/10 bg-[#0a0a0a]/90 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
+        <div className="flex items-center gap-3 px-4 py-4 border-b border-white/5">
+           <Search size={16} className="text-zinc-400" />
+           <span className="text-sm font-mono text-white">Grant <span className="text-[#00e5ff]">@sarah.j</span> admin to Prod-DB</span>
+           <span className="ml-auto w-1.5 h-4 bg-[#00e5ff] animate-pulse" />
         </div>
-        <div className="p-3 space-y-1">
-           <div className="px-3 py-2.5 text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-2">
-             <Sparkles size={12} className="text-amber-500" /> Suggested Actions
+        <div className="p-2 space-y-1">
+           <div className="px-3 py-2 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Suggested Actions</div>
+           <div className="flex items-center gap-3 px-3 py-3 bg-white/5 rounded-xl cursor-pointer border border-white/5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center"><Shield size={14} className="text-emerald-400" /></div>
+              <div>
+                <div className="text-sm text-white font-bold mb-0.5">Update Role Permissions</div>
+                <div className="text-[11px] text-zinc-400">Apply to: @sarah.j • Target: Prod-DB</div>
+              </div>
+              <div className="ml-auto flex items-center gap-2">
+                 <span className="text-[10px] font-bold text-emerald-400">Execute</span>
+                 <kbd className="px-1.5 py-0.5 rounded bg-black border border-white/10 text-[9px] text-zinc-400 font-mono">↵</kbd>
+              </div>
            </div>
-           
-           <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-4 px-3 py-3 rounded-xl bg-white/5 border border-white/5 cursor-pointer group hover:bg-[#00e5ff]/10 hover:border-[#00e5ff]/30 transition-all">
-             <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-black transition-colors"><User size={14} /></div>
-             <div className="flex-1 min-w-0">
-               <div className="text-sm font-bold text-white truncate">Send Invitation</div>
-               <div className="text-[11px] text-zinc-400 truncate">Invite alex.k@acme.com • Role: Manager</div>
-             </div>
-             <div className="text-[10px] font-bold text-[#00e5ff] opacity-0 group-hover:opacity-100 transition-opacity bg-[#00e5ff]/10 px-2 py-1 rounded">Execute</div>
-           </motion.div>
-           
-           <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/5 cursor-pointer transition-all">
-             <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400"><UsersRound size={14} /></div>
-             <div className="flex-1 min-w-0">
-               <div className="text-sm font-medium text-zinc-300">View Engineering Team</div>
-               <div className="text-[11px] text-zinc-500">See current 24 members and open roles</div>
-             </div>
-           </motion.div>
-           
-           <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/5 cursor-pointer transition-all">
-             <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400"><LockKeyhole size={14} /></div>
-             <div className="flex-1 min-w-0">
-               <div className="text-sm font-medium text-zinc-300">Review Manager Permissions</div>
-               <div className="text-[11px] text-zinc-500">Check access levels before inviting</div>
-             </div>
-           </motion.div>
+           <div className="flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer hover:bg-white/5 transition-colors">
+              <div className="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center"><AlertTriangle size={14} className="text-rose-400" /></div>
+              <div>
+                <div className="text-sm text-zinc-300 font-bold mb-0.5">Create Incident Ticket</div>
+                <div className="text-[11px] text-zinc-500">Assign to on-call engineer for Prod-DB</div>
+              </div>
+           </div>
+           <div className="flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer hover:bg-white/5 transition-colors">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center"><Cpu size={14} className="text-blue-400" /></div>
+              <div>
+                <div className="text-sm text-zinc-300 font-bold mb-0.5">Run Automation Script</div>
+                <div className="text-[11px] text-zinc-500">Trigger: db_access_provision.sh</div>
+              </div>
+           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
