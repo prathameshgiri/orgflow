@@ -336,23 +336,23 @@ export default function Index() {
                 <motion.div animate={{ x: ["-100%", "200%"] }} transition={{ repeat: Infinity, duration: 3, ease: "linear" }} className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" />
                 <Sparkles size={14} className="animate-pulse" /> The calm way to scale access
               </motion.div>
-              <motion.h1 variants={reveal} className="font-display text-[2rem] leading-tight sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-6">
+              <motion.h1 variants={reveal} className="font-display text-[26px] leading-[1.2] sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-6">
                 Next-generation<br />
                 <motion.span 
                   animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
                   transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
-                  className="text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] via-blue-400 to-[#00e5ff] bg-[length:200%_auto] sm:whitespace-nowrap"
+                  className="text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] via-blue-400 to-[#00e5ff] bg-[length:200%_auto] whitespace-nowrap"
                 >Organization Management</motion.span><br />
                 Absolute control.
               </motion.h1>
               <motion.p variants={reveal} className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-400">
                 Unify your company and organization's hierarchy, teams, and access controls into one incredibly fast, beautifully designed platform. Eliminate management chaos and scale with absolute clarity.
               </motion.p>
-              <motion.div variants={reveal} className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:mt-10">
-                <Link to="/signup" className="group relative w-[240px] sm:w-auto overflow-hidden rounded-xl bg-white px-6 py-3 sm:px-8 sm:py-4 text-center text-sm font-bold text-black shadow-[0_0_40px_rgba(0,229,255,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(0,229,255,0.4)]">
+              <motion.div variants={reveal} className="mt-8 flex flex-row flex-wrap items-center gap-4 sm:mt-10">
+                <Link to="/signup" className="group relative inline-flex w-auto overflow-hidden rounded-xl bg-white px-5 py-2.5 sm:px-8 sm:py-4 text-center text-sm font-bold text-black shadow-[0_0_40px_rgba(0,229,255,0.3)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(0,229,255,0.4)]">
                   <span className="relative z-10 flex items-center justify-center">Start for free <ArrowRight className="ml-2 inline transition-transform group-hover:translate-x-1" size={16} /></span>
                 </Link>
-                <Link to="/how-it-works" className="group w-[240px] sm:w-auto flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 sm:px-8 sm:py-4 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/20">
+                <Link to="/how-it-works" className="group inline-flex w-auto items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-2.5 sm:px-8 sm:py-4 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/20">
                   <Play className="fill-current text-[#00e5ff] group-hover:animate-pulse" size={14} /> See how it works
                 </Link>
               </motion.div>
