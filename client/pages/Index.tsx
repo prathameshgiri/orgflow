@@ -336,7 +336,7 @@ export default function Index() {
                 <motion.div animate={{ x: ["-100%", "200%"] }} transition={{ repeat: Infinity, duration: 3, ease: "linear" }} className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" />
                 <Sparkles size={14} className="animate-pulse" /> The calm way to scale access
               </motion.div>
-              <motion.h1 variants={reveal} className="font-display text-[22px] leading-[1.2] sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-6">
+              <motion.h1 variants={reveal} className="font-display text-[6.5vw] min-[500px]:text-[32px] sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white mb-6">
                 Next-generation<br />
                 <motion.span 
                   animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
@@ -664,10 +664,10 @@ export default function Index() {
 
 function DashboardPreview() {
   return (
-    <div className="relative mx-auto w-full max-w-[540px] lg:ml-auto h-[380px] sm:h-[450px] flex items-center justify-center scale-[0.85] sm:scale-100 origin-center sm:origin-left">
+    <div className="relative mx-auto w-[95%] max-w-[540px] lg:ml-auto h-[340px] sm:h-[450px] flex items-center justify-center">
       {/* Abstract Background Graph */}
       <div className="absolute inset-0 flex items-center justify-center opacity-60">
-        <div className="relative w-full h-full max-w-[400px] max-h-[300px]">
+        <div className="relative w-full h-full max-w-[400px] max-h-[300px] overflow-hidden sm:overflow-visible">
            {/* Center Node */}
            <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-[#00e5ff]/20 rounded-full blur-2xl" />
            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#00e5ff] rounded-full shadow-[0_0_40px_2px_#00e5ff]" />
@@ -686,10 +686,10 @@ function DashboardPreview() {
               </defs>
            </svg>
            
-           <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} className="absolute top-[65px] left-[65px] w-10 h-10 rounded-full border border-[#00e5ff]/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(0,229,255,0.2)]"><Users size={14} className="text-[#00e5ff]" /></motion.div>
-           <motion.div animate={{ y: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 1 }} className="absolute top-[45px] left-[305px] w-12 h-12 rounded-full border border-purple-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.2)]"><Database size={16} className="text-purple-400" /></motion.div>
-           <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 2 }} className="absolute top-[205px] left-[45px] w-10 h-10 rounded-full border border-emerald-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]"><Shield size={14} className="text-emerald-400" /></motion.div>
-           <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut", delay: 0.5 }} className="absolute top-[225px] left-[325px] w-14 h-14 rounded-full border border-orange-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.2)]"><Server size={18} className="text-orange-400" /></motion.div>
+           <motion.div animate={{ y: [0, -10, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }} className="absolute top-[65px] left-[15%] sm:left-[65px] w-10 h-10 rounded-full border border-[#00e5ff]/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(0,229,255,0.2)]"><Users size={14} className="text-[#00e5ff]" /></motion.div>
+           <motion.div animate={{ y: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 1 }} className="absolute top-[45px] right-[10%] sm:left-[305px] sm:right-auto w-12 h-12 rounded-full border border-purple-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.2)]"><Database size={16} className="text-purple-400" /></motion.div>
+           <motion.div animate={{ y: [0, -15, 0] }} transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 2 }} className="absolute top-[205px] left-[5%] sm:left-[45px] w-10 h-10 rounded-full border border-emerald-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]"><Shield size={14} className="text-emerald-400" /></motion.div>
+           <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut", delay: 0.5 }} className="absolute top-[225px] right-[5%] sm:left-[325px] sm:right-auto w-14 h-14 rounded-full border border-orange-500/40 bg-[#111] flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.2)]"><Server size={18} className="text-orange-400" /></motion.div>
         </div>
       </div>
 
@@ -701,10 +701,10 @@ function DashboardPreview() {
         transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
         className="relative z-10 w-full max-w-[440px] rounded-2xl border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-2xl shadow-[0_30px_60px_rgba(0,0,0,0.6)] overflow-hidden ring-1 ring-white/5"
       >
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5 bg-white/[0.02]">
-           <Search size={18} className="text-zinc-500" />
-           <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-1.5 h-4 bg-[#00e5ff]" />
-           <span className="text-[14px] font-medium text-zinc-500 ml-1">Search actions, users or roles...</span>
+        <div className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 border-b border-white/5 bg-white/[0.02]">
+           <Search size={18} className="text-zinc-500 flex-shrink-0" />
+           <motion.span animate={{ opacity: [1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-1.5 h-4 bg-[#00e5ff] flex-shrink-0" />
+           <span className="text-[13px] sm:text-[14px] font-medium text-zinc-500 ml-1 truncate">Search actions, users or roles...</span>
         </div>
         <div className="p-3 space-y-1">
            <div className="px-3 py-2.5 text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-2">
