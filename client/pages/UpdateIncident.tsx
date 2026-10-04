@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Edit3, Settings, ShieldAlert, CheckCircle2, Save } from "lucide-react";
+import { ArrowLeft, Edit3, Settings, ShieldAlert, CheckCircle2, Save, AlertCircle, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
@@ -208,76 +208,100 @@ export default function UpdateIncident() {
 
               {/* Update Form */}
               <form onSubmit={handleUpdate} className="space-y-8 pt-10 border-t border-zinc-100 dark:border-zinc-800/50">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 pb-4">
-                  <div className="lg:col-span-1 space-y-2">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-lg">
-                        <Settings className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-                      </div>
-                      <h3 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Update Details</h3>
-                    </div>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Update the status, priority, and assignments for this incident.</p>
-                  </div>
+                {/* Left/Right Grid for Classification and Assignment */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 pt-6">
                   
-                  <div className="lg:col-span-2 flex flex-col gap-6 max-w-md">
-                    <div className="space-y-3">
-                      <Label htmlFor="update-status" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Status</Label>
-                      <Select value={updateStatus} onValueChange={setUpdateStatus}>
-                        <SelectTrigger id="update-status" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                          <SelectItem value="new" className="py-2.5 font-medium text-rose-600">New</SelectItem>
-                          <SelectItem value="in_progress" className="py-2.5 font-medium text-amber-600">In Progress</SelectItem>
-                          <SelectItem value="resolved" className="py-2.5 font-medium text-emerald-600">Resolved</SelectItem>
-                          <SelectItem value="closed" className="py-2.5 font-medium text-zinc-600">Closed</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label htmlFor="update-priority" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Priority</Label>
-                      <Select value={updatePriority} onValueChange={setUpdatePriority}>
-                        <SelectTrigger id="update-priority" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
-                          <SelectValue placeholder="Select priority" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                          <SelectItem value="p1_critical" className="py-2.5 font-bold text-rose-600">P1 Critical</SelectItem>
-                          <SelectItem value="p2_high" className="py-2.5 font-bold text-orange-500">P2 High</SelectItem>
-                          <SelectItem value="p3_medium" className="py-2.5 font-bold text-amber-500">P3 Medium</SelectItem>
-                          <SelectItem value="p4_low" className="py-2.5 font-bold text-blue-500">P4 Low</SelectItem>
-                        </SelectContent>
-                      </Select>
+                  {/* Left side: Incident Properties */}
+                  <div className="bg-card p-8 sm:p-10 rounded-3xl space-y-8 flex flex-col h-full border border-zinc-100 dark:border-zinc-800/50">
+                    <div className="flex flex-col gap-2 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2.5 rounded-xl">
+                          <Settings className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                        </div>
+                        <h3 className="font-bold text-xl text-zinc-800 dark:text-zinc-100">Incident Properties</h3>
+                      </div>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Update the current status and priority level.</p>
                     </div>
                     
-                    <div className="space-y-3">
-                      <Label htmlFor="update-team" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Team Assignment</Label>
-                      <Select value={updateTeam} onValueChange={setUpdateTeam}>
-                        <SelectTrigger id="update-team" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
-                          <SelectValue placeholder="-- Unassigned --" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                          <SelectItem value="unassigned" className="py-2.5 italic text-zinc-500">-- Unassigned --</SelectItem>
-                          {teams.map(t => (
-                            <SelectItem key={t.id} value={t.id} className="py-2.5 font-medium">{t.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <div className="flex flex-col gap-6 flex-1">
+                      <div className="space-y-3">
+                        <Label htmlFor="update-status" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Status</Label>
+                        <Select value={updateStatus} onValueChange={setUpdateStatus}>
+                          <SelectTrigger id="update-status" className="h-14 rounded-xl">
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="new" className="py-3 font-medium text-rose-600">New</SelectItem>
+                            <SelectItem value="in_progress" className="py-3 font-medium text-amber-600">In Progress</SelectItem>
+                            <SelectItem value="resolved" className="py-3 font-medium text-emerald-600">Resolved</SelectItem>
+                            <SelectItem value="closed" className="py-3 font-medium text-zinc-600">Closed</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                    <div className="space-y-3">
-                      <Label htmlFor="update-assignee" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Assignee (Person)</Label>
-                      <Select value={updateAssignee} onValueChange={setUpdateAssignee}>
-                        <SelectTrigger id="update-assignee" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800 disabled:opacity-50" disabled={!updateTeam}>
-                          <SelectValue placeholder={updateTeam ? "-- Unassigned --" : "Select team first"} />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                          <SelectItem value="unassigned" className="py-2.5 italic text-zinc-500">-- Unassigned --</SelectItem>
-                          {assignableUsers.map(u => (
-                            <SelectItem key={u.id} value={u.id} className="py-2.5 font-medium">{u.users?.full_name || u.users?.email || u.id}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <div className="space-y-3">
+                        <Label htmlFor="update-priority" className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                          <AlertCircle className="h-4 w-4 text-zinc-500" /> Priority
+                        </Label>
+                        <Select value={updatePriority} onValueChange={setUpdatePriority}>
+                          <SelectTrigger id="update-priority" className="h-14 rounded-xl">
+                            <SelectValue placeholder="Select priority" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="p1_critical" className="py-3 font-bold text-rose-600">P1 Critical</SelectItem>
+                            <SelectItem value="p2_high" className="py-3 font-bold text-orange-500">P2 High</SelectItem>
+                            <SelectItem value="p3_medium" className="py-3 font-bold text-amber-500">P3 Medium</SelectItem>
+                            <SelectItem value="p4_low" className="py-3 font-bold text-blue-500">P4 Low</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right side: Reassignment / Assignment */}
+                  <div className="bg-card p-8 sm:p-10 rounded-3xl space-y-8 flex flex-col h-full border border-zinc-100 dark:border-zinc-800/50">
+                    <div className="flex flex-col gap-2 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-emerald-100 dark:bg-emerald-900/30 p-2.5 rounded-xl">
+                          <Ticket className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                        </div>
+                        <h3 className="font-bold text-xl text-zinc-800 dark:text-zinc-100">Reassignment</h3>
+                      </div>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Transfer ownership of this incident to a different team or person.</p>
+                    </div>
+                    
+                    <div className="flex flex-col gap-6 flex-1">
+                      <div className="space-y-3">
+                        <Label htmlFor="update-team" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Assign to Team</Label>
+                        <Select value={updateTeam} onValueChange={setUpdateTeam}>
+                          <SelectTrigger id="update-team" className="h-14 rounded-xl">
+                            <SelectValue placeholder="Select team" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="unassigned" className="py-3 italic text-zinc-500">-- Unassigned --</SelectItem>
+                            {teams.map(t => (
+                              <SelectItem key={t.id} value={t.id} className="py-3 font-medium">{t.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="update-assignee" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Assign to Person</Label>
+                        <Select value={updateAssignee} onValueChange={setUpdateAssignee}>
+                          <SelectTrigger id="update-assignee" className="h-14 rounded-xl disabled:opacity-50" disabled={!updateTeam}>
+                            <SelectValue placeholder={updateTeam ? "Select person" : "Select team first"} />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="unassigned" className="py-3 italic text-zinc-500">-- Unassigned --</SelectItem>
+                            {assignableUsers.map(u => (
+                              <SelectItem key={u.id} value={u.id} className="py-3 font-medium">
+                                {u.users?.full_name || u.users?.email || u.id}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                   </div>
                 </div>

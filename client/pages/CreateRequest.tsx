@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Send, MessageSquare } from "lucide-react";
+import { ArrowLeft, Send, MessageSquare, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useOrganization } from "../hooks/useOrganization";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
@@ -69,47 +70,67 @@ export default function CreateRequest() {
       >
         <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden">
           <form onSubmit={handleSubmit}>
-            <div className="p-8 space-y-8">
-              <div className="grid gap-2">
-                <Label htmlFor="title" className="font-bold text-zinc-900 dark:text-zinc-100 text-base flex items-center gap-2">
-                  Request Summary
-                </Label>
-                <Input 
-                  id="title" 
-                  value={title} 
-                  onChange={e => setTitle(e.target.value)} 
-                  placeholder="e.g. Need access to GitHub" 
-                  required 
-                  className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 focus-visible:ring-indigo-500"
-                />
+            <div className="p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
+              {/* Basic Info */}
+              <div className="flex flex-col w-full space-y-6 bg-card p-6 sm:p-8 rounded-3xl shadow-sm border border-zinc-100 dark:border-zinc-800/50">
+                <div className="flex flex-col space-y-1.5 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-5">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-xl">
+                      <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <h3 className="font-bold text-xl text-zinc-800 dark:text-zinc-100 tracking-tight">Basic Information</h3>
+                  </div>
+                  <p className="text-zinc-500 dark:text-zinc-400 text-sm ml-12">Provide a clear and concise summary along with additional details for this request.</p>
+                </div>
+                
+                <div className="w-full space-y-5 text-left pt-1">
+                  <div className="space-y-3">
+                    <Label htmlFor="title" className="text-base font-bold text-zinc-700 dark:text-zinc-300">
+                      Request Summary <span className="text-rose-500">*</span>
+                    </Label>
+                    <Input 
+                      id="title" 
+                      value={title} 
+                      onChange={e => setTitle(e.target.value)} 
+                      placeholder="e.g. Need access to GitHub" 
+                      required 
+                      className="h-14 rounded-xl text-lg font-medium px-5"
+                    />
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <Label htmlFor="details" className="text-base font-bold text-zinc-700 dark:text-zinc-300">
+                      Additional Details
+                    </Label>
+                    <Textarea
+                      id="details" 
+                      value={details}
+                      onChange={e => setDetails(e.target.value)}
+                      placeholder="Why do you need this? Any approvals?"
+                      className="min-h-[160px] rounded-xl resize-y p-5 text-base"
+                    />
+                  </div>
+                </div>
               </div>
-              
-              <div className="grid gap-2">
-                <Label htmlFor="details" className="font-bold text-zinc-900 dark:text-zinc-100 text-base">
-                  Additional Details
-                </Label>
-                <textarea 
-                  id="details" 
-                  value={details}
-                  onChange={e => setDetails(e.target.value)}
-                  className="flex min-h-[200px] w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 px-4 py-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20 focus-visible:border-indigo-500 transition-all resize-y"
-                  placeholder="Why do you need this? Any approvals?"
-                />
+
+              <div className="flex items-center justify-end gap-4 p-6 sm:p-8 bg-zinc-50/50 dark:bg-zinc-900/30 border-t border-zinc-100 dark:border-zinc-800 rounded-3xl mt-8">
+                <Button type="button" variant="ghost" asChild className="rounded-xl font-semibold hover:bg-zinc-100 dark:hover:bg-zinc-800">
+                  <Link to="/dashboard/requests">Cancel</Link>
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={submitting || !title.trim()} 
+                  className="h-11 px-8 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-500/20 transition-all active:scale-[0.98]"
+                >
+                  {submitting ? (
+                    <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  ) : (
+                    <>
+                      <Send className="mr-2 h-4 w-4" /> Submit Request
+                    </>
+                  )}
+                </Button>
               </div>
-            </div>
-            
-            <div className="p-6 bg-zinc-50/50 dark:bg-zinc-900/30 border-t border-zinc-100 dark:border-zinc-800 flex justify-end">
-              <Button 
-                type="submit" 
-                disabled={submitting || !title.trim()} 
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/25 px-8 rounded-xl h-12 font-bold"
-              >
-                {submitting ? "Submitting..." : (
-                  <>
-                    <Send className="mr-2 h-5 w-5" /> Submit Request
-                  </>
-                )}
-              </Button>
             </div>
           </form>
         </Card>
