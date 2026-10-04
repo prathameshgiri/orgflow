@@ -299,7 +299,7 @@ export default function ProjectHistory() {
         {/* Progress Input Section */}
         {activeTab === 'timeline' && (
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
-          <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden relative">
+          <Card className="rounded-3xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#141414] shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
             
             <div className="p-6">
@@ -357,7 +357,7 @@ export default function ProjectHistory() {
         {activeTab === 'timeline' && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
           {/* Timeline Card */}
-          <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden">
+          <Card className="rounded-3xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#141414] shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden">
           <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/30">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm">
@@ -502,7 +502,7 @@ export default function ProjectHistory() {
 
       {activeTab === 'files' && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
-          <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden">
+          <Card className="rounded-3xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#141414] shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden">
             <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/30">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm">
@@ -562,7 +562,7 @@ export default function ProjectHistory() {
           
           {/* Create Task Form */}
           {isCreatingTask ? (
-          <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden relative">
+          <Card className="rounded-3xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#141414] shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
             <div className="p-6">
               <div className="flex items-center justify-between mb-5">
@@ -705,7 +705,7 @@ export default function ProjectHistory() {
 
           {/* Tasks Table List */}
           {tasks.length === 0 ? (
-            <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden mt-6">
+            <Card className="rounded-3xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#141414] shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden mt-6">
               <div className="p-12 flex flex-col items-center justify-center text-center">
                 <div className="h-16 w-16 bg-zinc-100 dark:bg-zinc-900 rounded-2xl flex items-center justify-center mb-4">
                   <FileText className="h-8 w-8 text-zinc-400" />
@@ -715,9 +715,9 @@ export default function ProjectHistory() {
               </div>
             </Card>
           ) : (
-            <div className="bg-[#141414] rounded-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_1px_2px_rgba(255,255,255,0.05)] border border-white/5 overflow-hidden mt-8">
+            <div className="bg-white dark:bg-[#141414] rounded-2xl shadow-sm dark:shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_1px_2px_rgba(255,255,255,0.05)] border border-zinc-200 dark:border-white/5 overflow-hidden mt-8">
               {/* Table Header */}
-              <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-white/5 bg-[#0a0a0a]/50 text-[11px] font-bold text-zinc-400 uppercase tracking-wider">
+              <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-[#0a0a0a]/50 text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 <div className="col-span-4">Task Details</div>
                 <div className="col-span-3">Project & Team</div>
                 <div className="col-span-2">Status</div>
@@ -741,7 +741,7 @@ export default function ProjectHistory() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.04 }}
                       key={task.id} 
-                      className={`grid grid-cols-12 gap-4 items-center px-6 py-4 hover:bg-[#1a1a1a] transition-all cursor-pointer group border-b border-white/5 last:border-0 ${task.id.startsWith('temp-') ? 'opacity-50 animate-pulse' : ''}`}
+                      className={`grid grid-cols-12 gap-4 items-center px-6 py-4 hover:bg-zinc-50 dark:hover:bg-[#1a1a1a] transition-all cursor-pointer group border-b border-zinc-100 dark:border-white/5 last:border-0 ${task.id.startsWith('temp-') ? 'opacity-50 animate-pulse' : ''}`}
                       onClick={() => navigate('/dashboard/tasks/' + task.id)}
                     >
                       {/* TASK DETAILS */}

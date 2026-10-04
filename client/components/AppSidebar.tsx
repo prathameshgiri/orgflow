@@ -132,7 +132,7 @@ export default function AppSidebar({ organizations, onSignOut, isMobile }: Sideb
                     className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-300 text-sm font-medium relative ${
                       isActive 
                         ? "active-nav-item text-[#00e5ff] font-bold" 
-                        : "text-zinc-500 hover:text-zinc-300 hover:bg-[#141414] hover:shadow-[4px_4px_10px_rgba(0,0,0,0.6),-4px_-4px_10px_rgba(255,255,255,0.03)] hover:-translate-y-[1px]"
+                        : "text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-[#141414] dark:hover:shadow-[4px_4px_10px_rgba(0,0,0,0.6),-4px_-4px_10px_rgba(255,255,255,0.03)] hover:-translate-y-[1px]"
                     }`}
                   >
                     <Icon size={16} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-[#00e5ff]" : ""} />

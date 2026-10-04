@@ -4,11 +4,42 @@
 
 @layer base {
   :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 262.1 83.3% 57.8%; /* indigo-600 roughly for light mode primary */
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 262.1 83.3% 57.8%;
+    --radius: 0.75rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  
+  .dark {
     --background: 0 0% 4%; /* #0a0a0a */
     --foreground: 0 0% 98%;
     --card: 0 0% 8%; /* #141414 */
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 8%;
+    --popover: 0 0% 8%; /* #141414 */
     --popover-foreground: 0 0% 98%;
     --primary: 190 100% 50%; /* #00e5ff */
     --primary-foreground: 0 0% 0%;
@@ -23,38 +54,7 @@
     --border: 0 0% 12%;
     --input: 0 0% 8%;
     --ring: 190 100% 50%;
-    --radius: 0.75rem;
     --sidebar-background: 0 0% 8%; /* #141414 */
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 190 100% 50%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 0 0% 12%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 12%;
-    --sidebar-ring: 190 100% 50%;
-  }
-  
-  .dark {
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 8%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 190 100% 50%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 12%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 190 100% 50%;
-    --accent-foreground: 0 0% 0%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 12%;
-    --input: 0 0% 8%;
-    --ring: 190 100% 50%;
-    --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 190 100% 50%;
     --sidebar-primary-foreground: 0 0% 0%;
@@ -70,53 +70,56 @@
   .font-display { font-family: "Outfit", sans-serif; }
   :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) { overflow-wrap: anywhere; }
 
-  /* Global Dark Neumorphism Overrides for Dashboard */
-  .bg-card, .bg-popover, .bg-sidebar {
+  /* Global Dark Neumorphism Overrides ONLY for Dark Mode */
+  .dark .bg-card, .dark .bg-popover, .dark .bg-sidebar {
     background-color: #141414 !important;
     box-shadow: 4px 4px 10px rgba(0,0,0,0.6), -4px -4px 10px rgba(255,255,255,0.03) !important;
     border: none !important;
   }
   
-  /* Inputs, Textareas, Selects */
-  input:not([type="checkbox"]):not([type="radio"]), textarea, select, .bg-muted {
+  /* Inputs, Textareas, Selects - Dark Mode */
+  .dark input:not([type="checkbox"]):not([type="radio"]), .dark textarea, .dark select, .dark .bg-muted {
     background-color: #141414 !important;
     box-shadow: inset 2px 2px 5px rgba(0,0,0,0.6), inset -2px -2px 5px rgba(255,255,255,0.03) !important;
     border: none !important;
   }
 
-  /* Buttons */
-  button.bg-primary, .bg-primary {
+  /* Inputs, Textareas, Selects - Light Mode fallback styles for better aesthetics */
+  html:not(.dark) input:not([type="checkbox"]):not([type="radio"]), html:not(.dark) textarea, html:not(.dark) select {
+    background-color: #ffffff !important;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05), inset -2px -2px 5px rgba(255,255,255,0.8) !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #0f172a !important;
+  }
+
+  /* Buttons - Dark Mode */
+  .dark button.bg-primary, .dark .bg-primary {
     background-color: #141414 !important;
     color: #00e5ff !important;
     box-shadow: 4px 4px 10px rgba(0,0,0,0.6), -4px -4px 10px rgba(255,255,255,0.03) !important;
     border: none !important;
     transition: all 0.2s ease-in-out !important;
   }
-  button.bg-primary:hover, .bg-primary:hover {
+  .dark button.bg-primary:hover, .dark .bg-primary:hover {
     box-shadow: 2px 2px 5px rgba(0,0,0,0.6), -2px -2px 5px rgba(255,255,255,0.03) !important;
     transform: translateY(1px) !important;
   }
 
-  button.bg-secondary, .bg-secondary {
+  .dark button.bg-secondary, .dark .bg-secondary {
     background-color: #141414 !important;
     box-shadow: 4px 4px 10px rgba(0,0,0,0.6), -4px -4px 10px rgba(255,255,255,0.03) !important;
     border: none !important;
     transition: all 0.2s ease-in-out !important;
   }
-  button.bg-secondary:hover, .bg-secondary:hover {
+  .dark button.bg-secondary:hover, .dark .bg-secondary:hover {
     box-shadow: 2px 2px 5px rgba(0,0,0,0.6), -2px -2px 5px rgba(255,255,255,0.03) !important;
     transform: translateY(1px) !important;
   }
 
-  /* Light Theme Overrides for Auth Pages */
+  /* Light Theme Overrides for specific explicit classes (Auth) */
   .light-theme .bg-card {
     background-color: #ffffff !important;
     box-shadow: 10px 10px 20px #d9d9d9, -10px -10px 20px #ffffff !important;
-  }
-  .light-theme input:not([type="checkbox"]):not([type="radio"]), .light-theme textarea, .light-theme select {
-    background-color: #f8fafc !important; /* light slate */
-    box-shadow: inset 4px 4px 8px #d9d9d9, inset -4px -4px 8px #ffffff !important;
-    color: #0f172a !important; /* dark text */
   }
   .light-theme button.bg-primary, .light-theme .bg-primary {
     background-color: #ffffff !important;
@@ -128,11 +131,16 @@
   }
 
   /* Additional Neumorphic Utilities */
-  .neumorphic-pressed, .active-nav-item {
+  .dark .neumorphic-pressed, .dark .active-nav-item {
     background-color: #141414 !important;
     box-shadow: inset 3px 3px 6px rgba(0,0,0,0.8), inset -3px -3px 6px rgba(255,255,255,0.02) !important;
     border: none !important;
     transform: translateY(1px);
+  }
+  html:not(.dark) .active-nav-item {
+    background-color: #f1f5f9 !important;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05) !important;
+    color: #4f46e5 !important; /* indigo */
   }
 
   .glow-cyan {

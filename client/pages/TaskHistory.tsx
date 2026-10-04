@@ -181,7 +181,7 @@ export default function TaskHistory() {
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
         {/* Update Progress Card */}
-        <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden relative mb-8 group">
+        <Card className="rounded-3xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#141414] shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden relative mb-8 group">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
           
           <div className="p-6 sm:p-8">
@@ -237,7 +237,7 @@ export default function TaskHistory() {
         </Card>
 
         {/* Timeline Card */}
-        <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden">
+        <Card className="rounded-3xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-[#141414] shadow-sm dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden">
           <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/30">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm">
