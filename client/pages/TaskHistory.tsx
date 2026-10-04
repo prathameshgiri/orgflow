@@ -158,7 +158,7 @@ export default function TaskHistory() {
         </div>
         
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="icon" asChild className="rounded-full h-10 w-10 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 shadow-sm shrink-0">
+          <Button variant="outline" size="icon" asChild className="rounded-xl h-10 w-10 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 shadow-sm shrink-0">
             <Link to="/dashboard/tasks">
               <ArrowLeft className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
             </Link>

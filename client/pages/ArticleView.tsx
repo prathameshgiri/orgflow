@@ -127,7 +127,7 @@ export default function ArticleView() {
     <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen pt-4">
       <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-6">
         <div className="flex items-center gap-4 flex-1">
-          <Button variant="outline" size="icon" className="rounded-full h-10 w-10 shrink-0" asChild>
+          <Button variant="outline" size="icon" className="rounded-xl h-10 w-10 shrink-0" asChild>
             <Link to="/dashboard/knowledge">
               <ArrowLeft className="h-5 w-5" />
             </Link>
