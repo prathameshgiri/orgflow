@@ -60,7 +60,7 @@ export default function Footer() {
                 <li><a href="#" className="transition hover:text-[#00e5ff]">About Us</a></li>
                 <li><a href="#" className="transition hover:text-[#00e5ff]">Careers</a></li>
                 <li><a href="#" className="transition hover:text-[#00e5ff]">Blog</a></li>
-                <li><a href="#" className="transition hover:text-[#00e5ff]">Contact</a></li>
+                <li><a href="mailto:contact@prathameshgiri.in" className="transition hover:text-[#00e5ff]">Contact</a></li>
               </ul>
             </div>
             <div className="col-span-2 sm:col-span-1">
