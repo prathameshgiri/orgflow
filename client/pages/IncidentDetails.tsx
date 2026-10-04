@@ -113,7 +113,7 @@ export default function IncidentDetails() {
         
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4 flex-1">
-            <Button variant="outline" size="icon" onClick={() => navigate(-1)} className="rounded-full h-10 w-10 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 shadow-sm shrink-0">
+            <Button variant="outline" size="icon" onClick={() => navigate(-1)} className="rounded-xl h-10 w-10 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 shadow-sm shrink-0">
               <ArrowLeft className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
             </Button>
             <div className="flex items-center gap-4">
@@ -184,7 +184,7 @@ export default function IncidentDetails() {
 
                 {/* Assigned Team */}
                 <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex-1">
-                  <div className="h-10 w-10 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 border border-blue-100 dark:border-blue-900">
+                  <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 border border-blue-100 dark:border-blue-900">
                     <Users className="h-4 w-4" />
                   </div>
                   <div>

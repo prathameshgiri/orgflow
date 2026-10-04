@@ -213,7 +213,7 @@ export default function TaskDetails() {
         {/* Top Header / Breadcrumbs */}
         <div className="flex items-center justify-between py-6 sticky top-0 bg-[#FDFDFD]/90 dark:bg-zinc-950/90 backdrop-blur-md z-10 border-b border-zinc-100 dark:border-zinc-800">
           <div className="flex items-center gap-3 text-sm font-medium text-zinc-500">
-            <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="h-8 w-8 mr-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-900">
+            <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="h-8 w-8 mr-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-900">
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <Link to="/dashboard/projects" className="hover:text-indigo-600 transition-colors">Projects</Link>

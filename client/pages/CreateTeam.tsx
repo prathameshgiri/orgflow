@@ -85,7 +85,7 @@ export default function CreateTeam() {
   return (
     <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out py-8">
       <div className="flex items-center space-x-4 mb-8">
-        <Button variant="ghost" size="icon" asChild className="rounded-full">
+        <Button variant="ghost" size="icon" asChild className="rounded-xl">
           <Link to="/dashboard/teams">
             <ArrowLeft className="h-5 w-5" />
           </Link>
@@ -153,7 +153,7 @@ export default function CreateTeam() {
             <Button 
               type="submit" 
               disabled={isSubmitting || !name.trim()}
-              className="bg-[#4f6bff] hover:bg-[#435be0] text-white rounded-full px-8 shadow-md"
+              className="bg-[#4f6bff] hover:bg-[#435be0] text-white rounded-xl px-8 shadow-md"
             >
               {isSubmitting ? "Creating..." : "Create Team"}
             </Button>

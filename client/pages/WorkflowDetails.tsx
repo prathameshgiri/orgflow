@@ -210,7 +210,7 @@ export default function WorkflowDetails() {
         <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate("/dashboard/workflows")}
-            className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors text-zinc-500"
+            className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors text-zinc-500"
           >
             <ArrowLeft size={20} />
           </button>
