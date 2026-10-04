@@ -146,7 +146,7 @@ export default function CreateApproval() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen pt-4">
+    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen pt-4">
       <div className="flex items-center gap-4 border-b border-zinc-200 dark:border-zinc-800 pb-6">
         <Button variant="outline" size="icon" className="rounded-xl h-10 w-10 shrink-0" asChild>
           <Link to="/dashboard/approvals">

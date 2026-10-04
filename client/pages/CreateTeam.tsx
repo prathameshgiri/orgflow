@@ -83,7 +83,7 @@ export default function CreateTeam() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out py-8">
+    <div className="max-w-5xl mx-auto space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out py-8">
       <div className="flex items-center space-x-4 mb-8">
         <Button variant="ghost" size="icon" asChild className="rounded-xl">
           <Link to="/dashboard/teams">

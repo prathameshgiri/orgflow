@@ -44,7 +44,7 @@ export default function CreateOrgUpdate() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700 max-w-3xl mx-auto pb-20">
+    <div className="space-y-8 animate-in fade-in duration-700 max-w-5xl mx-auto pb-20">
       
       {/* Header Area */}
       <div className="flex flex-col border-b border-zinc-200 dark:border-zinc-800 pb-6 pt-4">

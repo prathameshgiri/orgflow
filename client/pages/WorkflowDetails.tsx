@@ -205,7 +205,7 @@ export default function WorkflowDetails() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-20">
+    <div className="space-y-6 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out pb-20">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
           <button 
