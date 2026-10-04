@@ -165,17 +165,19 @@ export default function CreateTask() {
             <div className="p-6 sm:p-8 space-y-8">
               
               <div className="p-6 sm:p-10 space-y-12">
-                {/* Basic Info (Centered) */}
-                <div className="flex flex-col items-center max-w-4xl mx-auto space-y-8 bg-card p-8 sm:p-10 rounded-3xl">
-                  <div className="flex flex-col items-center text-center space-y-3">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-2xl">
-                      <FileText className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                {/* Basic Info */}
+                <div className="flex flex-col w-full space-y-6 bg-card p-6 sm:p-8 rounded-3xl shadow-sm border border-zinc-100 dark:border-zinc-800/50">
+                  <div className="flex flex-col space-y-1.5 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-5">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-xl">
+                        <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <h3 className="font-bold text-xl text-zinc-800 dark:text-zinc-100 tracking-tight">Basic Information</h3>
                     </div>
-                    <h3 className="font-bold text-2xl text-zinc-800 dark:text-zinc-100 tracking-tight">Basic Information</h3>
-                    <p className="text-zinc-500 dark:text-zinc-400 max-w-lg">Provide a clear and concise title along with a detailed description for this task.</p>
+                    <p className="text-zinc-500 dark:text-zinc-400 text-sm ml-12">Provide a clear and concise title along with a detailed description for this task.</p>
                   </div>
                   
-                  <div className="w-full space-y-6 text-left">
+                  <div className="w-full space-y-5 text-left pt-1">
                     <div className="space-y-3">
                       <Label htmlFor="title" className="text-base font-bold text-zinc-700 dark:text-zinc-300">
                         Task Title <span className="text-rose-500">*</span>
