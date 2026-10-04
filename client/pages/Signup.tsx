@@ -109,7 +109,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-50 light-theme">
       {/* Light Ambient background glows */}
       <div className="pointer-events-none absolute left-0 top-0 h-full w-full bg-[radial-gradient(ellipse_50%_50%_at_20%_30%,rgba(0,229,255,0.06),transparent)]" />
       <div className="pointer-events-none absolute right-0 bottom-0 h-full w-full bg-[radial-gradient(ellipse_40%_40%_at_80%_80%,rgba(139,92,246,0.06),transparent)]" />

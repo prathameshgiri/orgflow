@@ -11,6 +11,11 @@ import {
   Search, Sliders, Smartphone, Webhook
 } from "lucide-react";
 
+// Neumorphic shadow constants
+const shadowRaised = "shadow-[4px_4px_10px_rgba(0,0,0,0.6),-4px_-4px_10px_rgba(255,255,255,0.03)]";
+const shadowPressedInput = "shadow-[inset_2px_2px_5px_rgba(0,0,0,0.6),inset_-2px_-2px_5px_rgba(255,255,255,0.03)]";
+const shadowRaisedHover = "hover:shadow-[2px_2px_5px_rgba(0,0,0,0.6),-2px_-2px_5px_rgba(255,255,255,0.03)] hover:translate-y-[1px]";
+
 // ══════════════════════════════════════════════════════════════════════════════
 // REUSABLE UI COMPONENTS FOR DOCUMENTATION
 // ══════════════════════════════════════════════════════════════════════════════
@@ -65,8 +70,8 @@ const InfoAlert = ({ title, children, type = "info" }: { title: string, children
 };
 
 const CodeBlock = ({ code, language = "json" }: { code: string, language?: string }) => (
-  <div className="my-8 rounded-xl overflow-hidden border border-white/10 bg-[#050505] shadow-2xl">
-    <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-[#111]">
+  <div className={`my-8 rounded-xl overflow-hidden border-none bg-[#141414] ${shadowRaised} border-none shadow-2xl`}>
+    <div className={`flex items-center justify-between px-4 py-3 border-b border-white/5 bg-[#141414] ${shadowRaised} border-none`}>
       <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider">{language} snippet</span>
       <div className="flex gap-2">
         <div className="w-3 h-3 rounded-full bg-rose-500/50"></div>
@@ -83,7 +88,7 @@ const CodeBlock = ({ code, language = "json" }: { code: string, language?: strin
 );
 
 const StepBox = ({ number, title, children }: { number: number, title: string, children: React.ReactNode }) => (
-  <div className="flex gap-5 p-6 rounded-2xl border border-white/5 bg-[#111] hover:bg-[#151515] hover:border-white/10 transition-all shadow-md">
+  <div className={`flex gap-5 p-6 rounded-2xl border-none bg-[#141414] ${shadowRaised} border-none hover:bg-[#151515] hover:border-white/10 transition-all shadow-md`}>
     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#00e5ff]/10 border border-[#00e5ff]/20 flex items-center justify-center text-[#00e5ff] font-bold text-lg">
       {number}
     </div>
@@ -95,9 +100,9 @@ const StepBox = ({ number, title, children }: { number: number, title: string, c
 );
 
 const DataTable = ({ headers, rows }: { headers: string[], rows: React.ReactNode[][] }) => (
-  <div className="overflow-x-auto my-8 rounded-xl border border-white/10 bg-[#111] shadow-xl">
+  <div className={`overflow-x-auto my-8 rounded-xl border-none bg-[#141414] ${shadowRaised} border-none shadow-xl`}>
     <table className="w-full text-left text-sm whitespace-nowrap">
-      <thead className="bg-[#1a1a1a] text-zinc-300 font-medium tracking-wide">
+      <thead className={`bg-[#141414] ${shadowPressedInput} border-none text-zinc-300 font-medium tracking-wide`}>
         <tr>
           {headers.map((h, i) => (
             <th key={i} className="px-6 py-4 border-b border-white/5 uppercase text-xs">{h}</th>
@@ -257,13 +262,10 @@ export default function HowItWorks() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.1) {
-            setActiveSection(entry.target.id);
-          }
-        });
+        const visible = entries.filter(e => e.isIntersecting);
+        if (visible.length > 0) setActiveSection(visible[0].target.id);
       },
-      { rootMargin: "-10% 0px -80% 0px", threshold: [0.1, 0.5, 1.0] }
+      { rootMargin: "-20% 0px -50% 0px", threshold: 0 }
     );
 
     const sections = document.querySelectorAll("div[id]");
@@ -273,7 +275,7 @@ export default function HowItWorks() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#040404] text-white selection:bg-[#00e5ff]/30 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#00e5ff]/30 flex flex-col font-sans">
       <Navbar />
 
       <main className="flex-1 flex pt-16 relative">
@@ -293,7 +295,7 @@ export default function HowItWorks() {
           initial={{ x: -300 }}
           animate={{ x: isSidebarOpen ? 0 : window.innerWidth >= 1024 ? 0 : -300 }}
           transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-          className="fixed lg:sticky top-16 left-0 z-50 h-[calc(100vh-4rem)] w-80 shrink-0 border-r border-white/10 bg-[#080808] overflow-y-auto shadow-2xl custom-scrollbar"
+          className="fixed lg:sticky top-16 left-0 z-50 h-[calc(100vh-4rem)] w-80 shrink-0 border-r border-white/10 bg-[#0a0a0a] overflow-y-auto shadow-2xl custom-scrollbar"
         >
           <div className="p-8">
             <h3 className="font-display text-xl font-bold text-white mb-8 flex items-center gap-3 border-b border-white/5 pb-4">
@@ -308,11 +310,12 @@ export default function HowItWorks() {
                       <li key={link.id}>
                         <a 
                           href={`#${link.id}`}
-                          onClick={() => setIsSidebarOpen(false)}
+                          onClick={(e) => {
+                            setIsSidebarOpen(false);
+                            setActiveSection(link.id);
+                          }}
                           className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-[13px] font-medium transition-all ${
-                            activeSection === link.id 
-                              ? "bg-gradient-to-r from-[#00e5ff]/15 to-transparent text-[#00e5ff] border-l-2 border-[#00e5ff]" 
-                              : "text-zinc-400 hover:text-white hover:bg-white/[0.03] border-l-2 border-transparent"
+                            activeSection === link.id ? `bg-[#141414] ${shadowRaised} ${shadowRaisedHover} text-[#00e5ff] font-bold` : 'text-zinc-400 hover:text-white hover:bg-[#141414] hover:shadow-[2px_2px_5px_rgba(0,0,0,0.6),-2px_-2px_5px_rgba(255,255,255,0.03)] border-l-2 border-transparent'
                           }`}
                         >
                           {activeSection === link.id && <ChevronRight size={14} className="shrink-0" />}
@@ -330,9 +333,9 @@ export default function HowItWorks() {
         </motion.aside>
 
         {/* Main Content Area */}
-        <div className="flex-1 min-w-0 bg-[#040404]">
+        <div className="flex-1 min-w-0 bg-[#0a0a0a]">
           {/* Mobile Header Toggle */}
-          <div className="lg:hidden sticky top-16 z-30 flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#080808]/90 backdrop-blur-md">
+          <div className="lg:hidden sticky top-16 z-30 flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0a0a0a]/90 backdrop-blur-md">
             <span className="font-display font-bold flex items-center gap-2"><Book size={16} className="text-[#00e5ff]" /> Documentation</span>
             <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 -mr-2 text-zinc-400 hover:text-white transition-colors">
               {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
@@ -344,7 +347,7 @@ export default function HowItWorks() {
             {/* Page Header */}
             <div className="mb-24 relative">
               <div className="absolute -top-32 -right-32 w-96 h-96 bg-[#00e5ff]/5 rounded-full blur-[100px] pointer-events-none"></div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#111111] px-4 py-2 text-xs font-bold text-[#00e5ff] shadow-sm mb-8">
+              <div className={`inline-flex items-center gap-2 rounded-full border-none bg-[#141414] ${shadowRaised} border-none px-4 py-2 text-xs font-bold text-[#00e5ff] shadow-sm mb-8`}>
                 <Sparkles size={14} /> Official Technical Manual v2.0
               </div>
               <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-8 leading-[1.1]">
@@ -419,15 +422,15 @@ USING (
               </p>
               <h4 className="text-white font-bold text-xl mt-10 mb-6">Step-by-Step Creation Guide</h4>
               <div className="space-y-6">
-                <div className="p-6 bg-white/[0.02] border border-white/5 rounded-xl">
+                <div className={`p-6 bg-[#141414] ${shadowRaised} border-none border-none rounded-xl`}>
                   <h5 className="font-bold text-[#00e5ff] mb-2">Step 1: Initiation</h5>
                   <p className="text-zinc-400">Log into your account. If your account is completely orphaned (belongs to zero organizations), the system will force you into the onboarding flow. Otherwise, click your avatar and select <strong>"Create New Workspace"</strong>.</p>
                 </div>
-                <div className="p-6 bg-white/[0.02] border border-white/5 rounded-xl">
+                <div className={`p-6 bg-[#141414] ${shadowRaised} border-none border-none rounded-xl`}>
                   <h5 className="font-bold text-[#00e5ff] mb-2">Step 2: Configuration</h5>
                   <p className="text-zinc-400">Enter the <strong>Organization Name</strong> (e.g., "Stark Industries"). Select the primary timezone—this is critical as it dictates business hours and SLA breach calculations.</p>
                 </div>
-                <div className="p-6 bg-white/[0.02] border border-white/5 rounded-xl">
+                <div className={`p-6 bg-[#141414] ${shadowRaised} border-none border-none rounded-xl`}>
                   <h5 className="font-bold text-[#00e5ff] mb-2">Step 3: Provisioning</h5>
                   <p className="text-zinc-400">Click Submit. The system generates a unique UUID <code>org_id</code>, creates default roles (Admin, Member, Read-Only), and assigns you the immutable system role of <strong>Organization Owner</strong>.</p>
                 </div>
@@ -677,7 +680,7 @@ Result:
 
             <DocSubSection id="task-statuses" title="Task Status Flow Matrix">
               <p>Tasks move through a strict state machine. Moving backward is possible, but logged.</p>
-              <div className="flex flex-wrap items-center gap-3 mt-6 p-6 bg-[#111] rounded-xl border border-white/5 shadow-inner">
+              <div className={`flex flex-wrap items-center gap-3 mt-6 p-6 bg-[#141414] ${shadowRaised} border-none rounded-xl border-none shadow-inner`}>
                 <StatusBadge status="TODO" color="zinc" />
                 <ArrowRight size={16} className="text-zinc-600" />
                 <StatusBadge status="IN_PROGRESS" color="blue" />
@@ -775,7 +778,7 @@ Result:
 
             <DocSubSection id="approval-workflows" title="Multi-Level Approvals">
               <p>Many requests require managerial or financial approval before IT is allowed to fulfill them. ORG MAN handles this via automated, conditional workflows.</p>
-              <div className="p-8 bg-[#0a0a0a] rounded-2xl border border-white/5 mt-6 shadow-2xl relative overflow-hidden">
+              <div className="p-8 bg-[#0a0a0a] rounded-2xl border-none mt-6 shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#00e5ff]/5 rounded-bl-full"></div>
                 <div className="space-y-8 relative z-10">
                   <div className="flex items-start gap-5">

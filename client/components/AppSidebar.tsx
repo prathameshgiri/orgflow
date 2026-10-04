@@ -131,11 +131,11 @@ export default function AppSidebar({ organizations, onSignOut, isMobile }: Sideb
                     to={path} 
                     className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-300 text-sm font-medium relative ${
                       isActive 
-                        ? "bg-gradient-to-b from-indigo-500 to-indigo-600 shadow-[inset_0px_1px_1px_rgba(255,255,255,0.25),_0px_4px_10px_rgba(79,70,229,0.35)] border border-indigo-500/80 text-white font-bold -translate-y-[1px]" 
-                        : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-900/50 hover:text-zinc-900 dark:hover:text-zinc-100 hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:-translate-y-[1px]"
+                        ? "active-nav-item text-[#00e5ff] font-bold" 
+                        : "text-zinc-500 hover:text-zinc-300 hover:bg-[#141414] hover:shadow-[4px_4px_10px_rgba(0,0,0,0.6),-4px_-4px_10px_rgba(255,255,255,0.03)] hover:-translate-y-[1px]"
                     }`}
                   >
-                    <Icon size={16} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-indigo-100 drop-shadow-sm" : ""} />
+                    <Icon size={16} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-[#00e5ff]" : ""} />
                     {label}
                   </Link>
                 );

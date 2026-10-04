@@ -188,7 +188,7 @@ function CTASection() {
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 <Link
                   to="/signup"
-                  className={`group flex items-center gap-2 rounded-xl bg-[#141414] px-7 py-3 text-sm font-bold text-[#00e5ff] transition-all ${shadowRaised} ${shadowRaisedHover} whitespace-nowrap`}
+                  className={`group flex items-center gap-2 rounded-xl bg-[#141414] px-7 py-3 text-sm font-bold text-[#00e5ff] transition-all glow-cyan whitespace-nowrap hover:scale-105`}
                 >
                   Create your workspace <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
                 </Link>
@@ -396,7 +396,7 @@ export default function Index() {
                 <motion.div variants={reveal} className="flex flex-col sm:flex-row flex-wrap gap-3 mb-7">
                   <Link
                     to="/signup"
-                    className={`group relative overflow-hidden rounded-xl bg-[#141414] px-6 py-2.5 text-sm font-bold text-[#00e5ff] transition-all ${shadowRaised} ${shadowRaisedHover} w-full sm:w-auto text-center justify-center flex`}
+                    className={`group relative overflow-hidden rounded-xl bg-[#141414] px-6 py-2.5 text-sm font-bold text-[#00e5ff] transition-all glow-cyan w-full sm:w-auto text-center justify-center flex hover:scale-105`}
                   >
                     <motion.div
                       animate={{ x: ["-100%", "200%"] }}
@@ -875,40 +875,7 @@ function DashboardPreview() {
         />
       </div>
 
-      {/* Floating permission pill — desktop only */}
-      <motion.div
-        initial={{ opacity: 0, y: 10, x: 10 }}
-        animate={{ opacity: 1, y: [10, 0, 10], x: 10 }}
-        transition={{ opacity: { delay: 1.6, duration: 0.6 }, y: { repeat: Infinity, duration: 4, ease: "easeInOut", delay: 1.8 } }}
-        className={`hidden lg:flex absolute -right-4 top-20 z-20 items-center gap-2 rounded-xl border border-emerald-500/25 bg-[#141414] ${shadowRaised} px-3.5 py-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl`}
-      >
-        <div className="h-6 w-6 rounded-full bg-emerald-500/15 flex items-center justify-center">
-          <LockKeyhole size={11} className="text-emerald-400" />
-        </div>
-        <div>
-          <div className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest">Permission</div>
-          <div className="text-[11px] font-bold text-white">incidents.create</div>
-        </div>
-        <div className="ml-1 h-4 w-4 rounded-full bg-emerald-500 flex items-center justify-center">
-          <Check size={8} strokeWidth={3} className="text-black" />
-        </div>
-      </motion.div>
 
-      {/* Floating alert pill — desktop only */}
-      <motion.div
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: [-10, 0, -10] }}
-        transition={{ opacity: { delay: 2, duration: 0.6 }, x: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 2.2 } }}
-        className={`hidden lg:flex absolute -left-6 bottom-20 z-20 items-center gap-2.5 rounded-xl border border-[#00e5ff]/20 bg-[#141414] ${shadowRaised} px-3.5 py-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl`}
-      >
-        <div className="h-6 w-6 rounded-full bg-[#00e5ff]/10 flex items-center justify-center">
-          <Zap size={11} className="text-[#00e5ff]" />
-        </div>
-        <div>
-          <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Auto-provisioned</div>
-          <div className="text-[11px] font-bold text-white">3 roles assigned</div>
-        </div>
-      </motion.div>
     </div>
   );
 }
