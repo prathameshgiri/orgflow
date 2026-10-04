@@ -24,9 +24,9 @@ const DocSection = ({ id, title, icon: Icon, children }: { id: string, title: st
   <div id={id} className="scroll-mt-32 mb-20 border-t border-white/5 pt-12 mt-12">
     <div className="flex items-center gap-3 mb-6 pb-2 border-b border-white/10">
       {Icon && <Icon className="text-[#00e5ff]" size={28} />}
-      <h2 className="text-4xl font-display font-bold text-white group cursor-pointer hover:text-[#00e5ff] transition-colors">
-        <a href={`#${id}`} className="flex items-center gap-2">
-          {title} <Hash size={20} className="opacity-0 group-hover:opacity-100 text-zinc-500" />
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white group cursor-pointer hover:text-[#00e5ff] transition-colors">
+        <a href={`#${id}`} className="flex flex-wrap items-center gap-2 break-words">
+          <span>{title}</span> <Hash size={20} className="shrink-0 opacity-0 group-hover:opacity-100 text-zinc-500" />
         </a>
       </h2>
     </div>
@@ -37,10 +37,10 @@ const DocSection = ({ id, title, icon: Icon, children }: { id: string, title: st
 );
 
 const DocSubSection = ({ id, title, children }: { id: string, title: string, children: React.ReactNode }) => (
-  <div id={id} className="scroll-mt-32 mt-16 mb-8 pl-4 border-l-2 border-white/5 hover:border-[#00e5ff]/50 transition-colors">
-    <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2 group cursor-pointer hover:text-[#00e5ff] transition-colors">
-      <a href={`#${id}`} className="flex items-center gap-2">
-        {title} <Hash size={16} className="opacity-0 group-hover:opacity-100 text-zinc-500" />
+  <div id={id} className="scroll-mt-32 mt-16 mb-8 transition-colors">
+    <h3 className="text-xl sm:text-2xl font-bold text-white mb-6 flex flex-wrap items-center gap-2 group cursor-pointer hover:text-[#00e5ff] transition-colors">
+      <a href={`#${id}`} className="flex flex-wrap items-center gap-2 break-words">
+        <span>{title}</span> <Hash size={16} className="shrink-0 opacity-0 group-hover:opacity-100 text-zinc-500" />
       </a>
     </h3>
     <div className="space-y-5 text-zinc-400 text-base leading-7">
@@ -99,7 +99,7 @@ const StepBox = ({ number, title, children }: { number: number, title: string, c
   </div>
 );
 
-const DataTable = ({ headers, rows }: { headers: string[], rows: React.ReactNode[][] }) => (
+const DataTable = ({ headers, rows }: { headers: string[], rows: React.ReactNode[][] }) => (<div className="w-full max-w-full overflow-hidden">
   <div className={`overflow-x-auto my-8 rounded-xl border-none bg-[#141414] ${shadowRaised} border-none shadow-xl`}>
     <table className="w-full text-left text-sm whitespace-nowrap">
       <thead className={`bg-[#141414] ${shadowPressedInput} border-none text-zinc-300 font-medium tracking-wide`}>
@@ -120,6 +120,7 @@ const DataTable = ({ headers, rows }: { headers: string[], rows: React.ReactNode
       </tbody>
     </table>
   </div>
+</div>
 );
 
 const StatusBadge = ({ status, color }: { status: string, color: string }) => {
@@ -275,10 +276,10 @@ export default function HowItWorks() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#00e5ff]/30 flex flex-col font-sans">
+    <div className="min-h-screen w-full overflow-x-clip bg-[#0a0a0a] text-white selection:bg-[#00e5ff]/30 flex flex-col font-sans">
       <Navbar />
 
-      <main className="flex-1 flex pt-16 relative">
+      <main className="flex-1 flex pt-0 relative">
         {/* Mobile Sidebar Overlay */}
         <AnimatePresence>
           {isSidebarOpen && (
@@ -292,8 +293,8 @@ export default function HowItWorks() {
 
         {/* Sidebar Navigation */}
         <motion.aside
-          initial={{ x: -300 }}
-          animate={{ x: isSidebarOpen ? 0 : window.innerWidth >= 1024 ? 0 : -300 }}
+          initial={{ x: "-100%" }}
+          animate={{ x: isSidebarOpen ? 0 : window.innerWidth >= 1024 ? 0 : "-100%" }}
           transition={{ type: "spring", bounce: 0, duration: 0.4 }}
           className="fixed lg:sticky top-16 left-0 z-50 h-[calc(100vh-4rem)] w-80 shrink-0 border-r border-white/10 bg-[#0a0a0a] overflow-y-auto shadow-2xl custom-scrollbar"
         >
@@ -335,22 +336,22 @@ export default function HowItWorks() {
         {/* Main Content Area */}
         <div className="flex-1 min-w-0 bg-[#0a0a0a]">
           {/* Mobile Header Toggle */}
-          <div className="lg:hidden sticky top-16 z-30 flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0a0a0a]/90 backdrop-blur-md">
+          <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between px-5 py-2.5 border-b border-white/10 bg-[#0a0a0a]/90 backdrop-blur-md shadow-sm">
             <span className="font-display font-bold flex items-center gap-2"><Book size={16} className="text-[#00e5ff]" /> Documentation</span>
             <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 -mr-2 text-zinc-400 hover:text-white transition-colors">
               {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
 
-          <div className="max-w-5xl mx-auto px-6 py-16 lg:px-16 lg:py-24">
+          <div className="max-w-5xl mx-auto px-5 py-8 lg:px-16 lg:py-24">
             
             {/* Page Header */}
-            <div className="mb-24 relative">
+            <div className="mb-12 lg:mb-24 relative">
               <div className="absolute -top-32 -right-32 w-96 h-96 bg-[#00e5ff]/5 rounded-full blur-[100px] pointer-events-none"></div>
-              <div className={`inline-flex items-center gap-2 rounded-full border-none bg-[#141414] ${shadowRaised} border-none px-4 py-2 text-xs font-bold text-[#00e5ff] shadow-sm mb-8`}>
+              <div className={`inline-flex items-center gap-2 rounded-full border-none bg-[#141414] ${shadowRaised} border-none px-4 py-2 text-xs font-bold text-[#00e5ff] shadow-sm mb-5 lg:mb-8`}>
                 <Sparkles size={14} /> Official Technical Manual v2.0
               </div>
-              <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-8 leading-[1.1]">
+              <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 lg:mb-8 leading-[1.1]">
                 Organization Management <br /> Documentation
               </h1>
               <p className="text-xl text-zinc-400 leading-relaxed max-w-3xl">
@@ -565,8 +566,8 @@ USING (
                   <h4 className="text-xl text-white font-bold mb-3">System Roles</h4>
                   <p className="text-sm text-zinc-400 leading-relaxed mb-4">Hardcoded, immutable roles that exist across the entire platform. Cannot be edited.</p>
                   <ul className="text-sm space-y-2 text-zinc-300 border-t border-white/10 pt-4">
-                    <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-purple-400"/> <strong>Super Admin:</strong> Platform maintainers only.</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-purple-400"/> <strong>Org Owner:</strong> The billing owner of a specific tenant.</li>
+                    <li className="flex items-start gap-2"><CheckCircle2 size={14} className="text-purple-400 shrink-0 mt-0.5"/> <span><strong>Super Admin:</strong> Platform maintainers only.</span></li>
+                    <li className="flex items-start gap-2"><CheckCircle2 size={14} className="text-purple-400 shrink-0 mt-0.5"/> <span><strong>Org Owner:</strong> The billing owner of a specific tenant.</span></li>
                   </ul>
                 </div>
                 <div className="p-8 border border-[#00e5ff]/20 bg-gradient-to-br from-[#00e5ff]/10 to-transparent rounded-2xl shadow-lg">
@@ -577,8 +578,8 @@ USING (
                   <p className="text-sm text-zinc-400 leading-relaxed mb-4">Roles defined entirely within a specific tenant. Fully customizable by Org Admins.</p>
                   <ul className="text-sm space-y-2 text-zinc-300 border-t border-white/10 pt-4">
                     <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[#00e5ff]"/> <strong>Admin:</strong> Has <code>*:*</code> permissions locally.</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[#00e5ff]"/> <strong>IT Agent:</strong> Can resolve and manage tickets.</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 size={14} className="text-[#00e5ff]"/> <strong>Employee:</strong> Default. Can only submit requests.</li>
+                    <li className="flex items-start gap-2"><CheckCircle2 size={14} className="text-[#00e5ff] shrink-0 mt-0.5"/> <span><strong>IT Agent:</strong> Can resolve and manage tickets.</span></li>
+                    <li className="flex items-start gap-2"><CheckCircle2 size={14} className="text-[#00e5ff] shrink-0 mt-0.5"/> <span><strong>Employee:</strong> Default. Can only submit requests.</span></li>
                   </ul>
                 </div>
               </div>
@@ -908,8 +909,7 @@ Result:
               </ul>
             </DocSubSection>
 
-            {/* Bottom Padding */}
-            <div className="h-64"></div>
+            
 
           </div>
         </div>

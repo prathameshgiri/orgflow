@@ -71,7 +71,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="relative z-20 bg-[#141414]">
+      <header className="relative z-50 bg-[#141414] border-b border-white/5 shadow-md">
         {/* ── Desktop ── */}
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 lg:px-8">
 
