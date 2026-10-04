@@ -31,7 +31,7 @@ export default function Pricing() {
         <div className="mx-auto grid max-w-5xl gap-8 relative z-10">
           {/* Free Tier */}
           <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ delay: 0.1 }}>
-            <div className="relative rounded-[2rem] border border-[#00e5ff]/30 bg-[#111111] p-8 sm:p-10 shadow-2xl shadow-[#00e5ff]/5 overflow-hidden group hover:border-[#00e5ff]/50 transition-colors duration-300">
+            <div className="relative rounded-[2rem] border border-[#00e5ff]/30 bg-[#141414] p-8 sm:p-10 shadow-[0_0_40px_rgba(0,229,255,0.1)] overflow-hidden group hover:border-[#00e5ff]/60 hover:shadow-[0_0_60px_rgba(0,229,255,0.2)] transition-all duration-500 scale-100 hover:scale-[1.02]">
               <div className="absolute inset-0 bg-gradient-to-br from-[#00e5ff]/10 to-transparent opacity-50" />
               <div className="relative grid gap-10 md:grid-cols-[1fr_1.5fr] md:items-center">
                 <div>
@@ -62,7 +62,7 @@ export default function Pricing() {
 
           {/* Enterprise Tier */}
           <motion.div initial="hidden" animate="visible" variants={reveal} transition={{ delay: 0.2 }}>
-            <div className="relative rounded-[2rem] border border-white/5 bg-[#0a0a0a] p-8 sm:p-10 transition hover:bg-[#111111] hover:border-white/10 group">
+            <div className="relative rounded-[2rem] border border-white/5 bg-[#141414] shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)] p-8 sm:p-10 transition-all duration-500 hover:bg-[#181818] hover:border-white/20 group hover:shadow-[0_0_40px_rgba(255,255,255,0.05)] scale-100 hover:scale-[1.02]">
               <div className="relative grid gap-10 md:grid-cols-[1fr_1.5fr] md:items-center">
                 <div>
                   <div className="inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-bold tracking-widest text-zinc-400 uppercase">
@@ -80,7 +80,7 @@ export default function Pricing() {
                 <div className="md:border-l md:border-white/5 md:pl-10">
                   <p className="mb-5 text-xs font-bold uppercase tracking-wider text-zinc-500">Everything in Free, plus</p>
                   <ul className="grid gap-4 sm:grid-cols-2 text-sm font-medium text-zinc-300">
-                    {["Unlimited organizations", "Unlimited team members", "Custom roles & permissions", "Custom API Integrations", "24/7 Dedicated Support", "99.99% Uptime SLA", "Activity mail for admin and teams", "SAML SSO & Advanced Security"].map(x => (
+                    {["Unlimited organizations", "Unlimited team members", "Custom Domain (e.g. your-company.com)", "Your Dedicated Personal Database", "Custom & Premium Features", "Custom roles & permissions", "SAML SSO & Advanced Security", "24/7 Dedicated Support"].map(x => (
                       <li key={x} className="flex items-start gap-3"><ShieldCheck className="mt-0.5 shrink-0 text-emerald-400" size={16} /><span>{x}</span></li>
                     ))}
                   </ul>

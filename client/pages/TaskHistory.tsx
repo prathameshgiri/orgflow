@@ -152,9 +152,9 @@ export default function TaskHistory() {
         <div className="flex items-center gap-2 text-sm font-medium text-zinc-500">
           <Link to="/dashboard/tasks" className="hover:text-blue-600 transition-colors">Tasks</Link>
           <span>/</span>
-          <span className="text-zinc-900 dark:text-zinc-100 truncate max-w-[200px] sm:max-w-xs">{task?.title || 'Loading...'}</span>
+          <span className="text-white truncate max-w-[200px] sm:max-w-xs">{task?.title || 'Loading...'}</span>
           <span>/</span>
-          <span className="text-zinc-900 dark:text-zinc-100">History</span>
+          <span className="text-white">History</span>
         </div>
         
         <div className="flex items-center gap-4">
@@ -168,7 +168,7 @@ export default function TaskHistory() {
               <History className="h-7 w-7" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+              <h1 className="text-3xl font-bold tracking-tight text-white">
                 Task History
               </h1>
               <p className="text-zinc-500 text-sm mt-1 truncate max-w-sm md:max-w-xl">
@@ -181,13 +181,13 @@ export default function TaskHistory() {
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
         {/* Update Progress Card */}
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden relative mb-8 group">
+        <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden relative mb-8 group">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
           
           <div className="p-6 sm:p-8">
             <div className="flex items-center gap-2 mb-4">
               <MessageSquare className="h-5 w-5 text-blue-500" />
-              <h3 className="text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Update Progress</h3>
+              <h3 className="text-lg font-bold tracking-tight text-white">Update Progress</h3>
             </div>
             
             <div className="relative">
@@ -237,14 +237,14 @@ export default function TaskHistory() {
         </Card>
 
         {/* Timeline Card */}
-        <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden">
+        <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden">
           <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/30">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm">
                 <Clock className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Activity Timeline</h2>
+                <h2 className="text-lg font-bold text-white">Activity Timeline</h2>
                 <p className="text-sm font-medium text-zinc-500">Track all updates and progress</p>
               </div>
             </div>
@@ -266,7 +266,7 @@ export default function TaskHistory() {
                 <div className="h-24 w-24 rounded-full bg-zinc-50 dark:bg-zinc-900 flex items-center justify-center mb-6">
                   <FileText className="h-10 w-10 text-zinc-300 dark:text-zinc-600" />
                 </div>
-                <h3 className="text-2xl font-bold tracking-tight mb-2 text-zinc-900 dark:text-zinc-100">No History Yet</h3>
+                <h3 className="text-2xl font-bold tracking-tight mb-2 text-white">No History Yet</h3>
                 <p className="text-zinc-500 max-w-sm">Activities will appear here once progress is made or the task is updated.</p>
               </div>
             ) : (
@@ -298,7 +298,7 @@ export default function TaskHistory() {
                               </AvatarFallback>
                             </Avatar>
                             <div>
-                              <span className="font-bold text-zinc-900 dark:text-zinc-100 block">
+                              <span className="font-bold text-white block">
                                 {log.user?.full_name || 'System'}
                               </span>
                               <span className="text-xs text-zinc-500 font-medium capitalize">
@@ -350,7 +350,7 @@ export default function TaskHistory() {
                               )}
                             </div>
                           ) : (
-                            <span>Performed action: <strong className="text-zinc-800 dark:text-zinc-200">{log.action}</strong></span>
+                            <span>Performed action: <strong className="text-zinc-300">{log.action}</strong></span>
                           )}
                         </div>
                       </div>

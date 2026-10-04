@@ -247,9 +247,9 @@ export default function ProjectHistory() {
         <div className="flex items-center gap-2 text-sm font-medium text-zinc-500">
           <Link to="/dashboard/projects" className="hover:text-indigo-600 transition-colors">Projects</Link>
           <span>/</span>
-          <span className="text-zinc-900 dark:text-zinc-100 truncate max-w-[200px] sm:max-w-xs">{project?.name || 'Loading...'}</span>
+          <span className="text-white truncate max-w-[200px] sm:max-w-xs">{project?.name || 'Loading...'}</span>
           <span>/</span>
-          <span className="text-zinc-900 dark:text-zinc-100">History</span>
+          <span className="text-white">History</span>
         </div>
         
         <div className="flex items-center gap-4">
@@ -263,7 +263,7 @@ export default function ProjectHistory() {
               <History className="h-7 w-7" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+              <h1 className="text-3xl font-bold tracking-tight text-white">
                 Project History
               </h1>
               <p className="text-zinc-500 text-sm mt-1 truncate max-w-sm md:max-w-xl">
@@ -299,7 +299,7 @@ export default function ProjectHistory() {
         {/* Progress Input Section */}
         {activeTab === 'timeline' && (
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
-          <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden relative">
+          <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
             
             <div className="p-6">
@@ -357,14 +357,14 @@ export default function ProjectHistory() {
         {activeTab === 'timeline' && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
           {/* Timeline Card */}
-          <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden">
+          <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden">
           <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/30">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm">
                 <Clock className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Activity Timeline</h2>
+                <h2 className="text-lg font-bold text-white">Activity Timeline</h2>
                 <p className="text-sm font-medium text-zinc-500">Track all updates and progress</p>
               </div>
             </div>
@@ -386,7 +386,7 @@ export default function ProjectHistory() {
                 <div className="h-24 w-24 rounded-full bg-zinc-50 dark:bg-zinc-900 flex items-center justify-center mb-6">
                   <FileText className="h-10 w-10 text-zinc-300 dark:text-zinc-600" />
                 </div>
-                <h3 className="text-2xl font-bold tracking-tight mb-2 text-zinc-900 dark:text-zinc-100">No History Yet</h3>
+                <h3 className="text-2xl font-bold tracking-tight mb-2 text-white">No History Yet</h3>
                 <p className="text-zinc-500 max-w-sm">Activities will appear here once progress is made or the project is updated.</p>
               </div>
             ) : (
@@ -423,7 +423,7 @@ export default function ProjectHistory() {
                               </AvatarFallback>
                             </Avatar>
                             <div>
-                              <span className="font-bold text-zinc-900 dark:text-zinc-100 block">
+                              <span className="font-bold text-white block">
                                 {log.user?.full_name || 'System'}
                               </span>
                               <span className="text-xs text-zinc-500 font-medium capitalize">
@@ -486,7 +486,7 @@ export default function ProjectHistory() {
                                 </div>
                               )
                           ) : (
-                            <span>Performed action: <strong className="text-zinc-800 dark:text-zinc-200">{log.action}</strong></span>
+                            <span>Performed action: <strong className="text-zinc-300">{log.action}</strong></span>
                           )}
                         </div>
                       </div>
@@ -502,14 +502,14 @@ export default function ProjectHistory() {
 
       {activeTab === 'files' && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
-          <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden">
+          <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden">
             <div className="p-6 border-b border-zinc-100 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-900/30">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-sm">
                   <Grid className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">Project Files</h2>
+                  <h2 className="text-lg font-bold text-white">Project Files</h2>
                   <p className="text-sm font-medium text-zinc-500">All attachments uploaded to this project</p>
                 </div>
               </div>
@@ -532,7 +532,7 @@ export default function ProjectHistory() {
                       <div className="h-24 w-24 rounded-full bg-zinc-50 dark:bg-zinc-900 flex items-center justify-center mb-6">
                         <ImageIcon className="h-10 w-10 text-zinc-300 dark:text-zinc-600" />
                       </div>
-                      <h3 className="text-2xl font-bold tracking-tight mb-2 text-zinc-900 dark:text-zinc-100">No Files Yet</h3>
+                      <h3 className="text-2xl font-bold tracking-tight mb-2 text-white">No Files Yet</h3>
                       <p className="text-zinc-500 max-w-sm">Images and attachments pasted in progress updates will appear here.</p>
                     </div>
                   );
@@ -562,11 +562,11 @@ export default function ProjectHistory() {
           
           {/* Create Task Form */}
           {isCreatingTask ? (
-          <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden relative">
+          <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
             <div className="p-6">
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-lg font-bold tracking-tight flex items-center gap-2 text-zinc-900 dark:text-zinc-100">
+                <h3 className="text-lg font-bold tracking-tight flex items-center gap-2 text-white">
                   <Plus className="h-5 w-5 text-indigo-500" /> Create PTASK
                 </h3>
                 <button onClick={() => setIsCreatingTask(false)} className="h-8 w-8 rounded-full bg-zinc-100 dark:bg-zinc-900 hover:bg-zinc-200 dark:hover:bg-zinc-800 flex items-center justify-center text-zinc-500 transition-colors">
@@ -583,7 +583,7 @@ export default function ProjectHistory() {
                     value={newTaskTitle}
                     onChange={(e) => setNewTaskTitle(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && createTask()}
-                    className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
+                    className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-white placeholder:text-zinc-400"
                   />
                 </div>
                 <div className="md:col-span-2">
@@ -593,7 +593,7 @@ export default function ProjectHistory() {
                     value={newTaskDesc}
                     onChange={(e) => setNewTaskDesc(e.target.value)}
                     rows={2}
-                    className="w-full px-4 py-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none shadow-inner text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
+                    className="w-full px-4 py-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none resize-none shadow-inner text-white placeholder:text-zinc-400"
                   />
                 </div>
                 <div>
@@ -602,7 +602,7 @@ export default function ProjectHistory() {
                     type="date"
                     value={newTaskDeadline}
                     onChange={(e) => setNewTaskDeadline(e.target.value)}
-                    className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-zinc-900 dark:text-zinc-100"
+                    className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-white"
                   />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -611,7 +611,7 @@ export default function ProjectHistory() {
                     <select 
                       value={newTaskStatus}
                       onChange={(e) => setNewTaskStatus(e.target.value)}
-                      className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-zinc-900 dark:text-zinc-100"
+                      className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-white"
                     >
                       <option value="todo">New</option>
                       <option value="in_progress">In Progress</option>
@@ -624,7 +624,7 @@ export default function ProjectHistory() {
                     <select 
                       value={newTaskPriority}
                       onChange={(e) => setNewTaskPriority(e.target.value)}
-                      className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-zinc-900 dark:text-zinc-100"
+                      className="w-full h-11 px-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none shadow-inner text-white"
                     >
                       <option value="low">Low</option>
                       <option value="medium">Medium</option>
@@ -661,7 +661,7 @@ export default function ProjectHistory() {
                         e.currentTarget.value = '';
                       }
                     }}
-                    className="w-full h-11 px-4 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/30 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-solid outline-none text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 transition-all"
+                    className="w-full h-11 px-4 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/30 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-solid outline-none text-white placeholder:text-zinc-400 transition-all"
                   />
                 </div>
               </div>
@@ -693,7 +693,7 @@ export default function ProjectHistory() {
                   <Plus className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Create PTASK</h3>
+                  <h3 className="text-lg font-bold text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Create PTASK</h3>
                   <p className="text-sm text-zinc-500 font-medium">Add a new task to this project timeline</p>
                 </div>
               </div>
@@ -705,19 +705,19 @@ export default function ProjectHistory() {
 
           {/* Tasks Table List */}
           {tasks.length === 0 ? (
-            <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden mt-6">
+            <Card className="rounded-3xl border border-white/5 bg-[#141414] shadow-[0_8px_30px_rgb(0,0,0,0.5)] overflow-hidden mt-6">
               <div className="p-12 flex flex-col items-center justify-center text-center">
                 <div className="h-16 w-16 bg-zinc-100 dark:bg-zinc-900 rounded-2xl flex items-center justify-center mb-4">
                   <FileText className="h-8 w-8 text-zinc-400" />
                 </div>
-                <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-1">No Tasks Yet</h3>
+                <h3 className="text-lg font-bold text-white mb-1">No Tasks Yet</h3>
                 <p className="text-sm text-zinc-500">Create your first task using the form above to get started.</p>
               </div>
             </Card>
           ) : (
-            <div className="bg-white dark:bg-zinc-950 shadow-sm border border-zinc-200/60 dark:border-zinc-800/60 overflow-hidden mt-8">
+            <div className="bg-[#141414] rounded-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_1px_2px_rgba(255,255,255,0.05)] border border-white/5 overflow-hidden mt-8">
               {/* Table Header */}
-              <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-zinc-100 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-900/20 text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
+              <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-white/5 bg-[#0a0a0a]/50 text-[11px] font-bold text-zinc-400 uppercase tracking-wider">
                 <div className="col-span-4">Task Details</div>
                 <div className="col-span-3">Project & Team</div>
                 <div className="col-span-2">Status</div>
@@ -726,7 +726,7 @@ export default function ProjectHistory() {
               </div>
 
               {/* Table Body */}
-              <div className="divide-y divide-zinc-100 dark:divide-zinc-800/80">
+              <div className="flex flex-col">
                 {tasks.slice().reverse().map((task, idx) => {
                   
                   const pBadge = task.priority === 'urgent' ? { label: 'URGENT PRIORITY', classes: 'bg-rose-50 text-rose-500 border-rose-100 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/50' }
@@ -741,12 +741,12 @@ export default function ProjectHistory() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.04 }}
                       key={task.id} 
-                      className={`grid grid-cols-12 gap-4 items-center px-6 py-4 hover:bg-zinc-50/80 dark:hover:bg-zinc-900/50 transition-colors cursor-pointer group ${task.id.startsWith('temp-') ? 'opacity-50 animate-pulse' : ''}`}
+                      className={`grid grid-cols-12 gap-4 items-center px-6 py-4 hover:bg-[#1a1a1a] transition-all cursor-pointer group border-b border-white/5 last:border-0 ${task.id.startsWith('temp-') ? 'opacity-50 animate-pulse' : ''}`}
                       onClick={() => navigate('/dashboard/tasks/' + task.id)}
                     >
                       {/* TASK DETAILS */}
                       <div className="col-span-4 flex flex-col items-start gap-2">
-                        <span className="text-[14px] font-bold text-zinc-900 dark:text-zinc-100 leading-tight">
+                        <span className="text-[14px] font-bold text-white leading-tight">
                           {task.title}
                         </span>
                         <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border ${pBadge.classes}`}>
@@ -756,8 +756,8 @@ export default function ProjectHistory() {
                       
                       {/* PROJECT & TEAM */}
                       <div className="col-span-3 flex flex-col gap-0.5">
-                        <span className="text-[13px] font-bold text-zinc-800 dark:text-zinc-200">{project?.name || 'Organization Project'}</span>
-                        <span className="text-[11px] text-zinc-500 dark:text-zinc-400">Team: {project?.name || 'General'}</span>
+                        <span className="text-[13px] font-bold text-zinc-300">{project?.name || 'Organization Project'}</span>
+                        <span className="text-[11px] text-zinc-400">Team: {project?.name || 'General'}</span>
                       </div>
 
                       {/* STATUS */}
