@@ -73,7 +73,7 @@ export default function Pricing() {
                     <span className="font-display text-5xl font-bold text-white">Custom</span>
                   </div>
                   <p className="mt-4 text-sm leading-relaxed text-zinc-400">Advanced security, custom integrations, and dedicated support.</p>
-                  <a href="mailto:admin@orgman.com" className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#111111] py-4 text-sm font-bold text-white transition hover:border-white/20 hover:bg-[#161616]">
+                  <a href="mailto:contact@prathameshgiri.in" className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-[#111111] py-4 text-sm font-bold text-white transition hover:border-white/20 hover:bg-[#161616]">
                     Contact Admin
                   </a>
                 </div>
