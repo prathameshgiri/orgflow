@@ -184,7 +184,7 @@ export default function UpdateIncident() {
           <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden relative">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
             
-            <div className="p-8">
+            <div className="p-4 sm:p-6 lg:p-8">
               <div className="flex flex-col items-center w-full mb-10">
                 <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 mb-4 text-center">
                   {incident?.title.replace('[SCTASK] ', '')}

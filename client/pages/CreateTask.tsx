@@ -162,11 +162,10 @@ export default function CreateTask() {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
         <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden">
           <form onSubmit={handleSubmit}>
-            <div className="p-6 sm:p-8 space-y-8">
+            <div className="p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
               
-              <div className="p-6 sm:p-10 space-y-12">
-                {/* Basic Info */}
-                <div className="flex flex-col w-full space-y-6 bg-card p-6 sm:p-8 rounded-3xl shadow-sm border border-zinc-100 dark:border-zinc-800/50">
+              {/* Basic Info */}
+              <div className="flex flex-col w-full space-y-6 bg-card p-6 sm:p-8 rounded-3xl shadow-sm border border-zinc-100 dark:border-zinc-800/50">
                   <div className="flex flex-col space-y-1.5 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-5">
                     <div className="flex items-center gap-3">
                       <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-xl">
@@ -311,7 +310,6 @@ export default function CreateTask() {
                     </div>
                   </div>
                 </div>
-              </div>
             </div>
 
             <div className="flex items-center justify-end gap-4 p-6 sm:p-8 bg-zinc-50/50 dark:bg-zinc-900/30 border-t border-zinc-100 dark:border-zinc-800">

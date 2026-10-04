@@ -254,7 +254,7 @@ export default function UpdateTask() {
           </div>
         ) : (
           <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden">
-            <div className="p-6 sm:p-8 space-y-8">
+            <div className="p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
               
               {/* Task Summary Banner */}
               <div className="bg-zinc-50/80 dark:bg-zinc-900/40 rounded-2xl p-6 border border-zinc-100 dark:border-zinc-800/80 flex flex-col items-center text-center">
