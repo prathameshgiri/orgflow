@@ -5,7 +5,9 @@ import { useOrganization } from "../hooks/useOrganization";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, Activity, FileText, X } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { ArrowLeft, Clock, Activity, FileText, X, Edit, Send } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function RequestHistory() {
   const { id } = useParams<{ id: string }>();
@@ -110,67 +112,110 @@ export default function RequestHistory() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen pt-4">
-      <div className="flex items-center gap-4 border-b border-zinc-200 dark:border-zinc-800 pb-6">
-        <Button variant="outline" size="icon" className="rounded-xl h-10 w-10 shrink-0" asChild>
-          <Link to="/dashboard/requests">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <div>
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-100 flex items-center gap-3">
-            Request History
-          </h1>
-          <p className="text-zinc-500 mt-1">
-            {request ? `Audit log for request: ${request.title}` : 'Loading request details...'}
-          </p>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 space-y-8 animate-in fade-in duration-700 pb-10 bg-zinc-50/30 dark:bg-zinc-950/30 min-h-screen">
+      {/* Header */}
+      <div className="flex flex-col gap-6 border-b border-zinc-200 dark:border-zinc-800 pb-8 pt-4">
+        <div className="flex items-center gap-2 text-sm font-medium text-zinc-500">
+          <Link to="/dashboard/requests" className="hover:text-indigo-600 transition-colors">Requests</Link>
+          <span>/</span>
+          <span className="text-zinc-900 dark:text-zinc-100 truncate max-w-[200px] sm:max-w-xs">{request?.title || 'Loading...'}</span>
+          <span>/</span>
+          <span className="text-zinc-900 dark:text-zinc-100">History</span>
         </div>
-      </div>
-
-      {/* Update Progress Box */}
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-8 shadow-sm relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
-        <h3 className="text-xl font-extrabold mb-4 tracking-tight text-zinc-900 dark:text-zinc-100">Update Progress</h3>
-        <textarea
-          value={progressText}
-          onChange={e => setProgressText(e.target.value)}
-          onPaste={handlePaste}
-          placeholder="Enter your progress update, notes, or explanation here... (You can also paste images)"
-          className="w-full min-h-[100px] p-4 text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-y mb-4"
-        />
-        {pastedImages.length > 0 && (
-          <div className="flex flex-wrap gap-4 mb-4">
-            {pastedImages.map((img, idx) => (
-              <div key={idx} className="relative group rounded-md border border-zinc-200 overflow-hidden w-24 h-24">
-                <img src={img} alt="pasted" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <button onClick={() => setPastedImages(prev => prev.filter((_, i) => i !== idx))} className="text-white hover:text-red-400">
-                    <X className="w-6 h-6" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-        <div className="flex justify-end pt-2">
-          <Button onClick={submitProgress} disabled={submitting || (!progressText.trim() && pastedImages.length === 0)} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-8 h-12 shadow-lg shadow-blue-500/25 rounded-xl transition-all">
-            {submitting ? "Updating..." : "Update Progress"}
+        
+        <div className="flex items-center gap-4">
+          <Button variant="outline" size="icon" asChild className="rounded-xl h-10 w-10 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900 shadow-sm shrink-0">
+            <Link to="/dashboard/requests">
+              <ArrowLeft className="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
+            </Link>
           </Button>
+          <div className="flex items-center gap-4 flex-1">
+            <div className="h-14 w-14 rounded-2xl border-2 border-white dark:border-zinc-950 shadow-sm bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-400 flex items-center justify-center">
+              <Activity className="h-7 w-7" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+                Request History
+              </h1>
+              <p className="text-zinc-500 text-sm mt-1 flex items-center gap-2">
+                <FileText className="h-3.5 w-3.5" />
+                {request ? `Audit log for: ${request.title}` : 'Loading request details...'}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl overflow-hidden shadow-sm">
-        <div className="p-8 border-b border-zinc-100 dark:border-zinc-800 flex items-center gap-4 bg-zinc-50/50 dark:bg-zinc-900/30">
-          <div className="h-12 w-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600">
-            <Clock className="h-6 w-6" />
-          </div>
-          <div>
-            <h2 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-100">Activity Timeline</h2>
-            <p className="text-sm text-zinc-500 mt-1">All status and assignee changes made to this request.</p>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 gap-8">
+        {/* Progress Input Section */}
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
+          <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden relative">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+            
+            <div className="p-6">
+              <h3 className="text-lg font-bold tracking-tight mb-4 flex items-center gap-2 text-zinc-900 dark:text-zinc-100">
+                <Edit className="h-5 w-5 text-indigo-500" /> Add Progress Update
+              </h3>
+              
+              <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-transparent transition-all shadow-inner">
+                <textarea
+                  value={progressText}
+                  onChange={(e) => setProgressText(e.target.value)}
+                  onPaste={handlePaste}
+                  placeholder="Enter your progress update, notes, or explanation here... (You can also paste images)"
+                  className="w-full min-h-[120px] p-4 bg-transparent outline-none resize-y text-sm dark:text-zinc-100 placeholder:text-zinc-400"
+                />
+                
+                {/* Pasted Images Preview */}
+                {pastedImages.length > 0 && (
+                  <div className="px-4 pb-4 flex flex-wrap gap-3 border-t border-zinc-100 dark:border-zinc-800 pt-4 bg-white dark:bg-zinc-950">
+                    {pastedImages.map((src, idx) => (
+                      <div key={idx} className="relative group rounded-xl border border-zinc-200 dark:border-zinc-800 p-1 shadow-sm overflow-hidden bg-zinc-50 dark:bg-zinc-900">
+                        <img src={src} alt="Pasted" className="h-16 w-16 object-cover rounded-lg" />
+                        <button
+                          onClick={() => setPastedImages(prev => prev.filter((_, i) => i !== idx))}
+                          className="absolute -top-1 -right-1 bg-rose-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex justify-end mt-4">
+                <Button 
+                  onClick={submitProgress} 
+                  disabled={submitting || (!progressText.trim() && pastedImages.length === 0)}
+                  className="h-11 px-6 rounded-xl font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-500/20 transition-all active:scale-[0.98]"
+                >
+                  {submitting ? (
+                    <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  ) : (
+                    <>
+                      <Send className="mr-2 h-4 w-4" /> Update Progress
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
 
-        <div className="p-8">
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
+          <Card className="rounded-3xl border-zinc-200/60 dark:border-zinc-800/60 shadow-sm bg-white dark:bg-zinc-950 overflow-hidden relative">
+            <div className="p-8 border-b border-zinc-100 dark:border-zinc-800 flex items-center gap-4 bg-zinc-50/50 dark:bg-zinc-900/30">
+              <div className="h-12 w-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600">
+                <Clock className="h-6 w-6" />
+              </div>
+              <div>
+                <h2 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-100">Activity Timeline</h2>
+                <p className="text-sm text-zinc-500 mt-1">All status and assignee changes made to this request.</p>
+              </div>
+            </div>
+
+            <div className="p-8">
           {loading ? (
             <div className="py-12 text-center text-zinc-500 flex flex-col items-center justify-center">
               <Activity className="h-8 w-8 animate-pulse text-zinc-400 mb-4" />
@@ -179,7 +224,7 @@ export default function RequestHistory() {
           ) : history.length === 0 ? (
             <div className="py-12 text-center text-zinc-500 flex flex-col items-center justify-center">
               <FileText className="h-12 w-12 text-zinc-300 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No history found</h3>
+              <h3 className="text-lg font-semibold mb-2 text-zinc-900 dark:text-zinc-100">No history found</h3>
               <p className="text-zinc-500 max-w-sm">There are no recorded activities for this request yet.</p>
             </div>
           ) : (
@@ -265,8 +310,10 @@ export default function RequestHistory() {
             </div>
           )}
         </div>
-      </div>
-      {viewingImage && (
+      </Card>
+    </motion.div>
+  </div>
+  {viewingImage && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200"
           onClick={() => setViewingImage(null)}
