@@ -164,128 +164,149 @@ export default function CreateTask() {
           <form onSubmit={handleSubmit}>
             <div className="p-6 sm:p-8 space-y-8">
               
-              {/* Basic Info */}
-              <div className="space-y-5">
-                <div className="flex items-center gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-4">
-                  <FileText className="h-5 w-5 text-blue-500" />
-                  <h3 className="font-bold text-lg text-zinc-800 dark:text-zinc-200">Basic Information</h3>
-                </div>
-                
-                <div className="space-y-3">
-                  <Label htmlFor="title" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                    Task Title <span className="text-rose-500">*</span>
-                  </Label>
-                  <Input 
-                    id="title" 
-                    value={title} 
-                    onChange={e => setTitle(e.target.value)} 
-                    placeholder="e.g. Design new landing page mockups" 
-                    required 
-                    className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus-visible:ring-4 focus-visible:ring-blue-500/10 text-base"
-                  />
-                </div>
-                
-                <div className="space-y-3">
-                  <Label htmlFor="description" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                    Description
-                  </Label>
-                  <Textarea
-                    id="description"
-                    value={description}
-                    onChange={e => setDescription(e.target.value)}
-                    placeholder="Add more details, requirements, or acceptance criteria..."
-                    className="min-h-[120px] rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus-visible:ring-4 focus-visible:ring-blue-500/10 resize-y p-4 text-base"
-                  />
-                </div>
-              </div>
-
-              {/* Classification */}
-              <div className="space-y-5">
-                <div className="flex items-center gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-4 mt-8">
-                  <Briefcase className="h-5 w-5 text-indigo-500" />
-                  <h3 className="font-bold text-lg text-zinc-800 dark:text-zinc-200">Classification</h3>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <Label htmlFor="project" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Project (Optional)</Label>
-                    <Select value={projectId} onValueChange={setProjectId}>
-                      <SelectTrigger className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus:ring-4 focus:ring-blue-500/10">
-                        <SelectValue placeholder="Select a project" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl">
-                        <SelectItem value="none" className="py-2.5">No Project</SelectItem>
-                        {projects.map(p => (
-                          <SelectItem key={p.id} value={p.id} className="py-2.5">{p.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+              <div className="p-6 sm:p-10 space-y-12">
+                {/* Basic Info (Centered) */}
+                <div className="flex flex-col items-center max-w-4xl mx-auto space-y-8 bg-card p-8 sm:p-10 rounded-3xl">
+                  <div className="flex flex-col items-center text-center space-y-3">
+                    <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-2xl">
+                      <FileText className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <h3 className="font-bold text-2xl text-zinc-800 dark:text-zinc-100 tracking-tight">Basic Information</h3>
+                    <p className="text-zinc-500 dark:text-zinc-400 max-w-lg">Provide a clear and concise title along with a detailed description for this task.</p>
                   </div>
                   
-                  <div className="space-y-3">
-                    <Label htmlFor="priority" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
-                      <Flag className="h-4 w-4 text-zinc-400" /> Priority
-                    </Label>
-                    <Select value={priority} onValueChange={setPriority}>
-                      <SelectTrigger className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus:ring-4 focus:ring-blue-500/10">
-                        <SelectValue placeholder="Priority" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl">
-                        <SelectItem value="urgent" className="py-2.5 font-bold text-rose-600 dark:text-rose-400">Urgent</SelectItem>
-                        <SelectItem value="high" className="py-2.5 font-semibold text-amber-600 dark:text-amber-400">High</SelectItem>
-                        <SelectItem value="medium" className="py-2.5 font-medium text-blue-600 dark:text-blue-400">Medium</SelectItem>
-                        <SelectItem value="low" className="py-2.5 text-zinc-600 dark:text-zinc-400">Low</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <div className="w-full space-y-6 text-left">
+                    <div className="space-y-3">
+                      <Label htmlFor="title" className="text-base font-bold text-zinc-700 dark:text-zinc-300">
+                        Task Title <span className="text-rose-500">*</span>
+                      </Label>
+                      <Input 
+                        id="title" 
+                        value={title} 
+                        onChange={e => setTitle(e.target.value)} 
+                        placeholder="e.g. Design new landing page mockups" 
+                        required 
+                        className="h-14 rounded-xl text-lg font-medium px-5"
+                      />
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Label htmlFor="description" className="text-base font-bold text-zinc-700 dark:text-zinc-300">
+                        Description
+                      </Label>
+                      <Textarea
+                        id="description"
+                        value={description}
+                        onChange={e => setDescription(e.target.value)}
+                        placeholder="Add more details, requirements, or acceptance criteria..."
+                        className="min-h-[140px] rounded-xl resize-y p-5 text-base"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Assignment */}
-              <div className="space-y-5">
-                <div className="flex items-center gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-4 mt-8">
-                  <Users className="h-5 w-5 text-emerald-500" />
-                  <h3 className="font-bold text-lg text-zinc-800 dark:text-zinc-200">Assignment</h3>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-3">
-                    <Label htmlFor="team" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Assign to Team</Label>
-                    <Select value={teamId} onValueChange={setTeamId}>
-                      <SelectTrigger className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus:ring-4 focus:ring-blue-500/10">
-                        <SelectValue placeholder="Select a team" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl">
-                        <SelectItem value="none" className="py-2.5">No Team</SelectItem>
-                        {teams.map(t => (
-                          <SelectItem key={t.id} value={t.id} className="py-2.5">{t.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                {/* Left/Right Grid for Classification and Assignment */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                   
-                  <div className="space-y-3">
-                    <Label htmlFor="assignee" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
-                      <UserPlus className="h-4 w-4 text-zinc-400" /> Assign to Person
-                    </Label>
-                    <Select value={assigneeId} onValueChange={setAssigneeId}>
-                      <SelectTrigger className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus:ring-4 focus:ring-blue-500/10">
-                        <SelectValue placeholder="Select a person" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl">
-                        <SelectItem value="none" className="py-2.5">Unassigned</SelectItem>
-                        {assignableUsers.map(u => (
-                          <SelectItem key={u.id} value={u.id} className="py-2.5">
-                            <div className="flex items-center gap-2">
-                              <Avatar className="h-5 w-5 border border-zinc-200 dark:border-zinc-800">
-                                <AvatarFallback className="text-[9px] bg-zinc-100 text-zinc-600">{getInitials(u.full_name)}</AvatarFallback>
-                              </Avatar>
-                              {u.full_name || u.email}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  {/* Left side: Task Properties */}
+                  <div className="bg-card p-8 sm:p-10 rounded-3xl space-y-8 flex flex-col h-full">
+                    <div className="flex flex-col gap-2 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2.5 rounded-xl">
+                          <Briefcase className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                        </div>
+                        <h3 className="font-bold text-xl text-zinc-800 dark:text-zinc-100">Task Properties</h3>
+                      </div>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Set the project grouping and priority level.</p>
+                    </div>
+                    
+                    <div className="flex flex-col gap-6 flex-1">
+                      <div className="space-y-3">
+                        <Label htmlFor="project" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Project (Optional)</Label>
+                        <Select value={projectId} onValueChange={setProjectId}>
+                          <SelectTrigger className="h-14 rounded-xl">
+                            <SelectValue placeholder="Select a project" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="none" className="py-3">No Project</SelectItem>
+                            {projects.map(p => (
+                              <SelectItem key={p.id} value={p.id} className="py-3 font-medium">{p.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <Label htmlFor="priority" className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                          <Flag className="h-4 w-4 text-zinc-500" /> Priority Level
+                        </Label>
+                        <Select value={priority} onValueChange={setPriority}>
+                          <SelectTrigger className="h-14 rounded-xl">
+                            <SelectValue placeholder="Priority" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="urgent" className="py-3 font-bold text-rose-600 dark:text-rose-400">Urgent</SelectItem>
+                            <SelectItem value="high" className="py-3 font-bold text-amber-600 dark:text-amber-400">High</SelectItem>
+                            <SelectItem value="medium" className="py-3 font-bold text-blue-600 dark:text-blue-400">Medium</SelectItem>
+                            <SelectItem value="low" className="py-3 font-bold text-zinc-600 dark:text-zinc-400">Low</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right side: Reassignment / Assignment */}
+                  <div className="bg-card p-8 sm:p-10 rounded-3xl space-y-8 flex flex-col h-full">
+                    <div className="flex flex-col gap-2 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-emerald-100 dark:bg-emerald-900/30 p-2.5 rounded-xl">
+                          <Users className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                        </div>
+                        <h3 className="font-bold text-xl text-zinc-800 dark:text-zinc-100">Reassignment</h3>
+                      </div>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Assign this task to a specific team or member.</p>
+                    </div>
+                    
+                    <div className="flex flex-col gap-6 flex-1">
+                      <div className="space-y-3">
+                        <Label htmlFor="team" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Assign to Team</Label>
+                        <Select value={teamId} onValueChange={setTeamId}>
+                          <SelectTrigger className="h-14 rounded-xl">
+                            <SelectValue placeholder="Select a team" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="none" className="py-3">No Team</SelectItem>
+                            {teams.map(t => (
+                              <SelectItem key={t.id} value={t.id} className="py-3 font-medium">{t.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <Label htmlFor="assignee" className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                          <UserPlus className="h-4 w-4 text-zinc-500" /> Assign to Person
+                        </Label>
+                        <Select value={assigneeId} onValueChange={setAssigneeId}>
+                          <SelectTrigger className="h-14 rounded-xl">
+                            <SelectValue placeholder="Select a person" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="none" className="py-3">Unassigned</SelectItem>
+                            {assignableUsers.map(u => (
+                              <SelectItem key={u.id} value={u.id} className="py-3">
+                                <div className="flex items-center gap-3 font-medium">
+                                  <Avatar className="h-6 w-6 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                                    <AvatarFallback className="text-[10px] bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">{getInitials(u.full_name)}</AvatarFallback>
+                                  </Avatar>
+                                  {u.full_name || u.email}
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

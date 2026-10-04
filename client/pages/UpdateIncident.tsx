@@ -207,70 +207,78 @@ export default function UpdateIncident() {
               </div>
 
               {/* Update Form */}
-              <form onSubmit={handleUpdate} className="space-y-8 pt-8 border-t border-zinc-100 dark:border-zinc-800/50">
-                <h3 className="text-xl font-bold tracking-tight flex items-center gap-2">
-                   <Settings className="h-5 w-5 text-indigo-500" /> Update Details
-                </h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-zinc-50/50 dark:bg-zinc-900/30 p-6 rounded-2xl border border-zinc-100 dark:border-zinc-800">
-                  <div className="space-y-3">
-                    <Label htmlFor="update-status" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Status</Label>
-                    <Select value={updateStatus} onValueChange={setUpdateStatus}>
-                      <SelectTrigger id="update-status" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl">
-                        <SelectItem value="new" className="py-2.5 font-medium text-rose-600">New</SelectItem>
-                        <SelectItem value="in_progress" className="py-2.5 font-medium text-amber-600">In Progress</SelectItem>
-                        <SelectItem value="resolved" className="py-2.5 font-medium text-emerald-600">Resolved</SelectItem>
-                        <SelectItem value="closed" className="py-2.5 font-medium text-zinc-600">Closed</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-3">
-                    <Label htmlFor="update-priority" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Priority</Label>
-                    <Select value={updatePriority} onValueChange={setUpdatePriority}>
-                      <SelectTrigger id="update-priority" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
-                        <SelectValue placeholder="Select priority" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl">
-                        <SelectItem value="p1_critical" className="py-2.5 font-bold text-rose-600">P1 Critical</SelectItem>
-                        <SelectItem value="p2_high" className="py-2.5 font-bold text-orange-500">P2 High</SelectItem>
-                        <SelectItem value="p3_medium" className="py-2.5 font-bold text-amber-500">P3 Medium</SelectItem>
-                        <SelectItem value="p4_low" className="py-2.5 font-bold text-blue-500">P4 Low</SelectItem>
-                      </SelectContent>
-                    </Select>
+              <form onSubmit={handleUpdate} className="space-y-8 pt-10 border-t border-zinc-100 dark:border-zinc-800/50">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 pb-4">
+                  <div className="lg:col-span-1 space-y-2">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-lg">
+                        <Settings className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                      </div>
+                      <h3 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Update Details</h3>
+                    </div>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Update the status, priority, and assignments for this incident.</p>
                   </div>
                   
-                  <div className="space-y-3">
-                    <Label htmlFor="update-team" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Team Assignment</Label>
-                    <Select value={updateTeam} onValueChange={setUpdateTeam}>
-                      <SelectTrigger id="update-team" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
-                        <SelectValue placeholder="-- Unassigned --" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl">
-                        <SelectItem value="unassigned" className="py-2.5 italic text-zinc-500">-- Unassigned --</SelectItem>
-                        {teams.map(t => (
-                          <SelectItem key={t.id} value={t.id} className="py-2.5 font-medium">{t.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <div className="lg:col-span-2 flex flex-col gap-6 max-w-md">
+                    <div className="space-y-3">
+                      <Label htmlFor="update-status" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Status</Label>
+                      <Select value={updateStatus} onValueChange={setUpdateStatus}>
+                        <SelectTrigger id="update-status" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="new" className="py-2.5 font-medium text-rose-600">New</SelectItem>
+                          <SelectItem value="in_progress" className="py-2.5 font-medium text-amber-600">In Progress</SelectItem>
+                          <SelectItem value="resolved" className="py-2.5 font-medium text-emerald-600">Resolved</SelectItem>
+                          <SelectItem value="closed" className="py-2.5 font-medium text-zinc-600">Closed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                  <div className="space-y-3">
-                    <Label htmlFor="update-assignee" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Assignee (Person)</Label>
-                    <Select value={updateAssignee} onValueChange={setUpdateAssignee}>
-                      <SelectTrigger id="update-assignee" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800 disabled:opacity-50" disabled={!updateTeam}>
-                        <SelectValue placeholder={updateTeam ? "-- Unassigned --" : "Select team first"} />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl">
-                        <SelectItem value="unassigned" className="py-2.5 italic text-zinc-500">-- Unassigned --</SelectItem>
-                        {assignableUsers.map(u => (
-                          <SelectItem key={u.id} value={u.id} className="py-2.5 font-medium">{u.users?.full_name || u.users?.email || u.id}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="space-y-3">
+                      <Label htmlFor="update-priority" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Priority</Label>
+                      <Select value={updatePriority} onValueChange={setUpdatePriority}>
+                        <SelectTrigger id="update-priority" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
+                          <SelectValue placeholder="Select priority" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="p1_critical" className="py-2.5 font-bold text-rose-600">P1 Critical</SelectItem>
+                          <SelectItem value="p2_high" className="py-2.5 font-bold text-orange-500">P2 High</SelectItem>
+                          <SelectItem value="p3_medium" className="py-2.5 font-bold text-amber-500">P3 Medium</SelectItem>
+                          <SelectItem value="p4_low" className="py-2.5 font-bold text-blue-500">P4 Low</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Label htmlFor="update-team" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Team Assignment</Label>
+                      <Select value={updateTeam} onValueChange={setUpdateTeam}>
+                        <SelectTrigger id="update-team" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800">
+                          <SelectValue placeholder="-- Unassigned --" />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="unassigned" className="py-2.5 italic text-zinc-500">-- Unassigned --</SelectItem>
+                          {teams.map(t => (
+                            <SelectItem key={t.id} value={t.id} className="py-2.5 font-medium">{t.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="update-assignee" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Assignee (Person)</Label>
+                      <Select value={updateAssignee} onValueChange={setUpdateAssignee}>
+                        <SelectTrigger id="update-assignee" className="h-12 w-full rounded-xl bg-white dark:bg-zinc-950 shadow-sm border-zinc-200 dark:border-zinc-800 disabled:opacity-50" disabled={!updateTeam}>
+                          <SelectValue placeholder={updateTeam ? "-- Unassigned --" : "Select team first"} />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          <SelectItem value="unassigned" className="py-2.5 italic text-zinc-500">-- Unassigned --</SelectItem>
+                          {assignableUsers.map(u => (
+                            <SelectItem key={u.id} value={u.id} className="py-2.5 font-medium">{u.users?.full_name || u.users?.email || u.id}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 </div>
 

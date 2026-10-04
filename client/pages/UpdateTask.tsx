@@ -286,93 +286,107 @@ export default function UpdateTask() {
 
               <form onSubmit={handleUpdate} className="space-y-8">
                 
-                {/* Properties */}
-                <div className="space-y-5">
-                  <div className="flex items-center gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-4">
-                    <Settings2 className="h-5 w-5 text-indigo-500" />
-                    <h3 className="font-bold text-lg text-zinc-800 dark:text-zinc-200">Task Properties</h3>
-                  </div>
+                {/* Left/Right Grid for Classification and Assignment */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 pt-6">
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <Label htmlFor="update-status" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center h-5">Status</Label>
-                      <Select value={updateStatus} onValueChange={setUpdateStatus}>
-                        <SelectTrigger id="update-status" className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus:ring-4 focus:ring-blue-500/10">
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                          <SelectItem value="todo" className="py-2.5">Created</SelectItem>
-                          <SelectItem value="in_progress" className="py-2.5">In Progress</SelectItem>
-                          <SelectItem value="review" className="py-2.5">Needs Review</SelectItem>
-                          <SelectItem value="done" className="py-2.5">Closed</SelectItem>
-                        </SelectContent>
-                      </Select>
+                  {/* Left side: Task Properties */}
+                  <div className="bg-card p-8 sm:p-10 rounded-3xl space-y-8 flex flex-col h-full border border-zinc-100 dark:border-zinc-800/50">
+                    <div className="flex flex-col gap-2 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2.5 rounded-xl">
+                          <Settings2 className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                        </div>
+                        <h3 className="font-bold text-xl text-zinc-800 dark:text-zinc-100">Task Properties</h3>
+                      </div>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Update the current status and priority level.</p>
                     </div>
+                    
+                    <div className="flex flex-col gap-6 flex-1">
+                      <div className="space-y-3">
+                        <Label htmlFor="update-status" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Status</Label>
+                        <Select value={updateStatus} onValueChange={setUpdateStatus}>
+                          <SelectTrigger id="update-status" className="h-14 rounded-xl">
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="todo" className="py-3 font-medium">Created</SelectItem>
+                            <SelectItem value="in_progress" className="py-3 font-medium text-amber-600 dark:text-amber-400">In Progress</SelectItem>
+                            <SelectItem value="review" className="py-3 font-medium text-blue-600 dark:text-blue-400">Needs Review</SelectItem>
+                            <SelectItem value="done" className="py-3 font-medium text-emerald-600 dark:text-emerald-400">Closed</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                    <div className="space-y-3">
-                      <Label htmlFor="update-priority" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5 h-5">
-                        <ShieldAlert className="h-4 w-4 text-zinc-400" /> Priority
-                      </Label>
-                      <Select value={updatePriority} onValueChange={setUpdatePriority}>
-                        <SelectTrigger id="update-priority" className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus:ring-4 focus:ring-blue-500/10">
-                          <SelectValue placeholder="Select priority" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                          <SelectItem value="urgent" className="py-2.5 font-bold text-rose-600 dark:text-rose-400">Urgent</SelectItem>
-                          <SelectItem value="high" className="py-2.5 font-semibold text-amber-600 dark:text-amber-400">High</SelectItem>
-                          <SelectItem value="medium" className="py-2.5 font-medium text-blue-600 dark:text-blue-400">Medium</SelectItem>
-                          <SelectItem value="low" className="py-2.5 text-zinc-600 dark:text-zinc-400">Low</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="space-y-3">
+                        <Label htmlFor="update-priority" className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                          <ShieldAlert className="h-4 w-4 text-zinc-500" /> Priority
+                        </Label>
+                        <Select value={updatePriority} onValueChange={setUpdatePriority}>
+                          <SelectTrigger id="update-priority" className="h-14 rounded-xl">
+                            <SelectValue placeholder="Select priority" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="urgent" className="py-3 font-bold text-rose-600 dark:text-rose-400">Urgent</SelectItem>
+                            <SelectItem value="high" className="py-3 font-bold text-amber-600 dark:text-amber-400">High</SelectItem>
+                            <SelectItem value="medium" className="py-3 font-bold text-blue-600 dark:text-blue-400">Medium</SelectItem>
+                            <SelectItem value="low" className="py-3 font-bold text-zinc-600 dark:text-zinc-400">Low</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Assignment */}
-                <div className="space-y-5">
-                  <div className="flex items-center gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-2 mb-4 mt-8">
-                    <Users className="h-5 w-5 text-emerald-500" />
-                    <h3 className="font-bold text-lg text-zinc-800 dark:text-zinc-200">Reassignment</h3>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <Label htmlFor="update-team" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center h-5">Assign to Team</Label>
-                      <Select value={updateTeamId} onValueChange={setUpdateTeamId}>
-                        <SelectTrigger id="update-team" className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus:ring-4 focus:ring-blue-500/10">
-                          <SelectValue placeholder="Select team" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                          <SelectItem value="none" className="py-2.5">No Team</SelectItem>
-                          {teams.map(t => (
-                            <SelectItem key={t.id} value={t.id} className="py-2.5">{t.name}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                  {/* Right side: Reassignment / Assignment */}
+                  <div className="bg-card p-8 sm:p-10 rounded-3xl space-y-8 flex flex-col h-full border border-zinc-100 dark:border-zinc-800/50">
+                    <div className="flex flex-col gap-2 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-emerald-100 dark:bg-emerald-900/30 p-2.5 rounded-xl">
+                          <Users className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                        </div>
+                        <h3 className="font-bold text-xl text-zinc-800 dark:text-zinc-100">Reassignment</h3>
+                      </div>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Transfer ownership of this task to a different team or person.</p>
                     </div>
+                    
+                    <div className="flex flex-col gap-6 flex-1">
+                      <div className="space-y-3">
+                        <Label htmlFor="update-team" className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Assign to Team</Label>
+                        <Select value={updateTeamId} onValueChange={setUpdateTeamId}>
+                          <SelectTrigger id="update-team" className="h-14 rounded-xl">
+                            <SelectValue placeholder="Select team" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="none" className="py-3">No Team</SelectItem>
+                            {teams.map(t => (
+                              <SelectItem key={t.id} value={t.id} className="py-3 font-medium">{t.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                    <div className="space-y-3">
-                      <Label htmlFor="update-assignee" className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5 h-5">
-                        <UserPlus className="h-4 w-4 text-zinc-400" /> Assign to Person
-                      </Label>
-                      <Select value={updateAssigneeId} onValueChange={setUpdateAssigneeId}>
-                        <SelectTrigger id="update-assignee" className="h-12 rounded-xl bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 focus:ring-4 focus:ring-blue-500/10">
-                          <SelectValue placeholder="Select person" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                          <SelectItem value="none" className="py-2.5">Unassigned</SelectItem>
-                          {assignableUsers.map(u => (
-                            <SelectItem key={u.id} value={u.id} className="py-2.5">
-                              <div className="flex items-center gap-2">
-                                <Avatar className="h-5 w-5 border border-zinc-200 dark:border-zinc-800">
-                                  <AvatarFallback className="text-[9px] bg-zinc-100 text-zinc-600">{getInitials(u.full_name)}</AvatarFallback>
-                                </Avatar>
-                                {u.full_name || u.email}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <div className="space-y-3">
+                        <Label htmlFor="update-assignee" className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                          <UserPlus className="h-4 w-4 text-zinc-500" /> Assign to Person
+                        </Label>
+                        <Select value={updateAssigneeId} onValueChange={setUpdateAssigneeId}>
+                          <SelectTrigger id="update-assignee" className="h-14 rounded-xl">
+                            <SelectValue placeholder="Select person" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-xl">
+                            <SelectItem value="none" className="py-3">Unassigned</SelectItem>
+                            {assignableUsers.map(u => (
+                              <SelectItem key={u.id} value={u.id} className="py-3">
+                                <div className="flex items-center gap-3 font-medium">
+                                  <Avatar className="h-6 w-6 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                                    <AvatarFallback className="text-[10px] bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">{getInitials(u.full_name)}</AvatarFallback>
+                                  </Avatar>
+                                  {u.full_name || u.email}
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                   </div>
                 </div>

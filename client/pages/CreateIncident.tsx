@@ -163,39 +163,51 @@ export default function CreateIncident() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-zinc-50/50 dark:bg-zinc-900/30 rounded-2xl border border-zinc-100 dark:border-zinc-800">
-                <div className="space-y-3">
-                  <Label htmlFor="priority" className="text-sm font-bold flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
-                    <AlertCircle className="h-4 w-4 text-rose-500" /> Priority Level
-                  </Label>
-                  <Select value={priority} onValueChange={setPriority}>
-                    <SelectTrigger className="h-12 rounded-xl bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 shadow-sm">
-                      <SelectValue placeholder="Select priority" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl">
-                      <SelectItem value="p1_critical" className="py-3 text-rose-600 font-bold">P1 Critical</SelectItem>
-                      <SelectItem value="p2_high" className="py-3 text-orange-500 font-bold">P2 High</SelectItem>
-                      <SelectItem value="p3_medium" className="py-3 text-amber-500 font-bold">P3 Medium</SelectItem>
-                      <SelectItem value="p4_low" className="py-3 text-blue-500 font-bold">P4 Low</SelectItem>
-                    </SelectContent>
-                  </Select>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 pt-8 border-t border-zinc-100 dark:border-zinc-800">
+                <div className="lg:col-span-1 space-y-2">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="bg-indigo-100 dark:bg-indigo-900/30 p-2 rounded-lg">
+                      <Activity className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                    </div>
+                    <h3 className="font-bold text-lg text-zinc-800 dark:text-zinc-200">Incident Details</h3>
+                  </div>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">Specify the priority level and assign a specific team to handle this ticket.</p>
                 </div>
-                
-                <div className="space-y-3">
-                  <Label htmlFor="team" className="text-sm font-bold flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
-                    <Ticket className="h-4 w-4 text-emerald-500" /> Assign to Team (Optional)
-                  </Label>
-                  <Select value={teamId} onValueChange={setTeamId}>
-                    <SelectTrigger className="h-12 rounded-xl bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 shadow-sm">
-                      <SelectValue placeholder="Select team" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl">
-                      <SelectItem value="unassigned" className="py-3 italic text-zinc-500">Unassigned (Queue)</SelectItem>
-                      {teams.map(team => (
-                        <SelectItem key={team.id} value={team.id} className="py-3 font-medium">{team.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+
+                <div className="lg:col-span-2 flex flex-col gap-6 max-w-md">
+                  <div className="space-y-3">
+                    <Label htmlFor="priority" className="text-sm font-bold flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
+                      <AlertCircle className="h-4 w-4 text-rose-500" /> Priority Level
+                    </Label>
+                    <Select value={priority} onValueChange={setPriority}>
+                      <SelectTrigger className="h-12 rounded-xl bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 shadow-sm">
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl">
+                        <SelectItem value="p1_critical" className="py-3 text-rose-600 font-bold">P1 Critical</SelectItem>
+                        <SelectItem value="p2_high" className="py-3 text-orange-500 font-bold">P2 High</SelectItem>
+                        <SelectItem value="p3_medium" className="py-3 text-amber-500 font-bold">P3 Medium</SelectItem>
+                        <SelectItem value="p4_low" className="py-3 text-blue-500 font-bold">P4 Low</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <Label htmlFor="team" className="text-sm font-bold flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
+                      <Ticket className="h-4 w-4 text-emerald-500" /> Assign to Team (Optional)
+                    </Label>
+                    <Select value={teamId} onValueChange={setTeamId}>
+                      <SelectTrigger className="h-12 rounded-xl bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 shadow-sm">
+                        <SelectValue placeholder="Select team" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-xl">
+                        <SelectItem value="unassigned" className="py-3 italic text-zinc-500">Unassigned (Queue)</SelectItem>
+                        {teams.map(team => (
+                          <SelectItem key={team.id} value={team.id} className="py-3 font-medium">{team.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
 
