@@ -760,10 +760,10 @@ export default function Index() {
 
 function DashboardPreview() {
   const members = [
-    { name: "Alex Cooper",     role: "Superadmin",  badge: "bg-[#00e5ff] text-black",      avatar: "from-[#00e5ff] to-blue-500",     delay: 0 },
-    { name: "Sarah Jenkins",   role: "Manager",     badge: "bg-violet-500/20 text-violet-300", avatar: "from-violet-400 to-indigo-500", delay: 0.15 },
-    { name: "Mike Ross",       role: "Editor",      badge: "bg-emerald-500/15 text-emerald-400", avatar: "from-emerald-400 to-teal-500", delay: 0.3 },
-    { name: "Jessica Pearson", role: "Viewer",      badge: "bg-zinc-700/60 text-zinc-400",  avatar: "from-pink-400 to-rose-500",     delay: 0.45 },
+    { name: "Rahul Sharma",    role: "Superadmin",  badge: "bg-[#00e5ff] text-black",      avatar: "from-[#00e5ff] to-blue-500",     delay: 0 },
+    { name: "Priya Patel",     role: "Admin",       badge: "bg-orange-500/20 text-orange-300", avatar: "from-orange-400 to-red-500", delay: 0.15 },
+    { name: "Amit Kumar",      role: "Manager",     badge: "bg-violet-500/20 text-violet-300", avatar: "from-violet-400 to-indigo-500", delay: 0.3 },
+    { name: "Neha Gupta",      role: "Readonly",    badge: "bg-zinc-700/60 text-zinc-400",  avatar: "from-pink-400 to-rose-500",     delay: 0.45 },
   ];
 
   return (
@@ -795,7 +795,7 @@ function DashboardPreview() {
         <div className="px-5 pt-5 pb-2 flex items-center justify-between">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#00e5ff] mb-1">Organization</p>
-            <h3 className="text-base font-bold text-white">Acme Corp</h3>
+            <h3 className="text-base font-bold text-white">BWPG ORG</h3>
           </div>
           <div className="flex items-center gap-2">
             <div className="rounded-lg border border-white/5 bg-white/5 px-2.5 py-1.5 text-[10px] font-bold text-zinc-400">
@@ -840,7 +840,7 @@ function DashboardPreview() {
               {/* Info */}
               <div className="flex-1 min-w-0">
                 <div className="text-[12px] font-bold text-white truncate">{m.name}</div>
-                <div className="text-[10px] text-zinc-500 truncate">{m.name.toLowerCase().replace(" ", ".")}@acme.com</div>
+                <div className="text-[10px] text-zinc-500 truncate">{m.name.toLowerCase().replace(" ", ".")}@bwpg.org</div>
               </div>
 
               {/* Role badge */}
